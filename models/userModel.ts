@@ -6,7 +6,6 @@ import { NameTagContent } from "@/components/NameTagForm";
 
 interface UserDocument extends Document {
   email: string;
-  name: string;
   password: string;
   role: "admin" | "user";
   nameTag: NameTagContent;
@@ -19,7 +18,6 @@ interface Methods {
 //DB Schema
 const userSchema = new Schema<UserDocument, {}, Methods>({
   email: { type: String, required: true, unique: true },
-  name: { type: String, required: true, trim: true },
   password: { type: String, required: true },
   role: { type: String, enum: ["admin", "user"], default: "user" },
   nameTag: {

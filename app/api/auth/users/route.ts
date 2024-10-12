@@ -4,14 +4,12 @@ import UserModel from "@/models/userModel";
 import { NextResponse } from "next/server";
 
 interface NewUserRequest {
-  name: string;
   email: string;
   password: string;
 }
 
 interface NewUserResponse {
   id: string;
-  name: string;
   email: string;
   role: string;
 }
@@ -33,7 +31,6 @@ export const POST = async (req: Request): Promise<NewResponse> => {
     user: {
       id: user._id.toString(),
       email: user.email,
-      name: user.name,
       role: user.role,
     },
   });

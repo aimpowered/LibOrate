@@ -19,6 +19,13 @@ const Login = () => {
     setUserInfo({ ...userInfo, [name]: value });
   };
 
+  const newLogActionRequest = {
+    userEmail: "",
+    action: "",
+    timestamp: new Date(),
+    metadata: JSON.stringify({}),
+  };
+
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
 
@@ -28,7 +35,26 @@ const Login = () => {
       redirect: false,
     });
 
-    if (res?.error) return setError(res.error);
+    //setting values of newLogActionRequest
+    newLogActionRequest.userEmail = email;
+    newLogActionRequest.timestamp = new Date();
+    newLogActionRequest.metadata = JSON.stringify(res);
+
+    if (res?.error) {
+      newLogActionRequest.action = "user_sign_in_error";
+      await fetch("/api/log", {
+        method: "POST",
+        body: JSON.stringify(newLogActionRequest),
+      }).then((res) => res.json());
+      return setError(res.error);
+    } else {
+      newLogActionRequest.action = "user_sign_in";
+      await fetch("/api/log", {
+        method: "POST",
+        body: JSON.stringify(newLogActionRequest),
+      }).then((res) => res.json());
+    }
+
     router.replace("/main");
   };
 

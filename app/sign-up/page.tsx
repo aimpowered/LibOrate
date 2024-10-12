@@ -6,13 +6,19 @@ import "../css/sign-up.css"; // Import CSS file
 const SignUp = () => {
   const [busy, setBusy] = useState(false);
   const [userInfo, setUserInfo] = useState({
-    name: "",
     email: "",
     password: "",
   });
   const [isUserCreated, setIsUserCreated] = useState(false); // State variable to track user creation
 
-  const { name, email, password } = userInfo;
+  const { email, password } = userInfo;
+
+  const newLogActionRequest = {
+    userEmail: "",
+    action: "",
+    timestamp: new Date(),
+    metadata: JSON.stringify({}),
+  };
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = ({ target }) => {
     const { name, value } = target;
@@ -25,8 +31,32 @@ const SignUp = () => {
     await fetch("/api/auth/users", {
       method: "POST",
       body: JSON.stringify(userInfo),
-    }).then((res) => res.json());
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        //setting values for newLogActionRequest
+        if (Object.keys(data)[0] == "user") {
+          newLogActionRequest.userEmail = data["user"]["email"];
+          newLogActionRequest.action = "user_sign_up";
+          newLogActionRequest.timestamp = new Date();
+          newLogActionRequest.metadata = JSON.stringify(data);
+        } else {
+          newLogActionRequest.userEmail = "null";
+          newLogActionRequest.action = "user_sign_up_error";
+          newLogActionRequest.timestamp = new Date();
+          newLogActionRequest.metadata = JSON.stringify(data);
+        }
+      });
+
     setIsUserCreated(true);
+    setBusy(false);
+
+    //posting log data to db
+    setBusy(true);
+    await fetch("/api/log", {
+      method: "POST",
+      body: JSON.stringify(newLogActionRequest),
+    }).then((res) => res.json());
     setBusy(false);
   };
 
@@ -42,18 +72,6 @@ const SignUp = () => {
           </div>
         )}
         <form className="space-y-4" onSubmit={handleSubmit}>
-          <div>
-            <input
-              placeholder="Username"
-              type="text"
-              id="name"
-              name="name"
-              value={name}
-              onChange={handleChange}
-              className="w-full mt-2 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
-              required
-            />
-          </div>
           <div>
             <input
               placeholder="Email"
