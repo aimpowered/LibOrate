@@ -121,15 +121,6 @@ export function NameTagForm({ content, onNameTagContentChange }: NameTagProps) {
         </div>
         <div className="form-container">
           <div className="controller-container">
-            {/* Add the Button here to manually trigger DB update */}
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleSaveButtonClick} // Handle click to update DB
-              style={{ marginBottom: "20px" }}
-            >
-              Save Name Tag
-            </Button>
             <Controller
               control={control}
               name="visible"
