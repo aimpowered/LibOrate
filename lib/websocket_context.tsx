@@ -12,11 +12,13 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
     const [socket, setSocket] = useState<WebSocket | null>(null);
 
     useEffect(() => {
-        const ws = new WebSocket("wss://d614-41-66-123-120.ngrok-free.app");
+        const ws = new WebSocket("wss://25b8-41-66-123-120.ngrok-free.app");
         setSocket(ws);
 
         ws.onopen = () => {
             console.log("WebSocket connection established");
+	    // Notify I am a receiver client
+	    ws.send("receiver");
         };
 
         ws.onclose = () => {
