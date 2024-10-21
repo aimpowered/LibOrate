@@ -2,17 +2,28 @@ import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 import startDB from "@/lib/db";
 import UserModel from '@/models/userModel';
+import crypto from 'crypto';
 
 
 export async function POST(request: Request) {
   const { email } = await request.json();
-  console.log("first look")
   try {
     // Find user by email
     await startDB()
     const User = await UserModel.findOne({ email: email });
+
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetTokenExpiry = new Date(Date.now() + 3600000);
+
     if(User){
-        console.log("made it")
+
+        User.resetToken = resetToken;
+        User.resetTokenExpiry = resetTokenExpiry;
+        await User.save();
+
+        // Create the password reset link
+        const resetUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/change-password?token=${resetToken}`;
+
         const transporter = nodemailer.createTransport({
             service:"Gmail",
             host: "smtp.gmail.com",
@@ -27,7 +38,7 @@ export async function POST(request: Request) {
             from: process.env.EMAIL_USERNAME,
             to: email,
             subject: 'LibOrate Password Recovery',
-            text: `Your password is ${User.password}!`, // Remember to use hashed passwords in production!
+            text: `Please reset your password with this link: ${resetUrl}!`, // Remember to use hashed passwords in production!
         };
 
         await transporter.sendMail(mailOptions);

@@ -9,6 +9,8 @@ interface UserDocument extends Document {
   password: string;
   role: "admin" | "user";
   nameTag: NameTagContent;
+  resetToken: String;
+  resetTokenExpiry: Date;
 }
 
 interface Methods {
@@ -26,6 +28,8 @@ const userSchema = new Schema<UserDocument, {}, Methods>({
     disclosure: { type: String },
     visible: { type: Boolean },
   },
+  resetToken: { type: String, required: false, unique: true },
+  resetTokenExpiry: { type: Date, required: false, unique: false },
 });
 
 //Hash the password before saving
