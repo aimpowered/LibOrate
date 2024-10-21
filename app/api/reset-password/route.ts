@@ -7,18 +7,17 @@ export async function POST(request: Request) {
 
   try {
 
-    // Find the user with the reset token and check if the token is still valid
+    //Locate user with the right token
     const User = await UserModel.findOne({
       resetToken: token,
-      resetTokenExpiry: { $gt: Date.now() }, // Token should still be valid (not expired)
+      resetTokenExpiry: { $gt: Date.now() }, 
     });
 
     if (!User) {
       return NextResponse.json({ success: false, message: 'Invalid or expired token' }, { status: 400 });
     }
 
-
-    // Update the user's password and remove the reset token and expiry
+    // Update the user's password, remove the reset token, and set expiry date to current time for security
     User.password = newPassword;
     User.resetToken = "";
     User.resetTokenExpiry = new Date();
