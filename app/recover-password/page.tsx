@@ -28,42 +28,50 @@ const ForgotPassword: React.FC = () => {
 
   return (
     <Container maxWidth="sm">
-      <Box
-        display="flex"
-        flexDirection="column"
-        justifyContent="center"
-        alignItems="center"
-        mt={4}
-      >
-        <Typography variant="h4" gutterBottom>
-          Forgot Password
-        </Typography>
-        <form onSubmit={handleSubmit}>
-          <TextField
-            label="Email"
-            type="email"
-            fullWidth
-            required
-            margin="normal"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <Button type="submit" variant="contained" color="primary" fullWidth>
-            Send Email
-          </Button>
-        </form>
-        {message && (
-          <Typography variant="body1" color="primary" mt={2}>
-            {message}
-          </Typography>
-        )}
-        {error && (
-          <Typography variant="body1" color="error" mt={2}>
-            {error}
-          </Typography>
-        )}
-      </Box>
+        <div className="flex items-center justify-center min-h-screen bg-white">
+            <div className="max-w-md w-full p-6 bg-white rounded-lg">
+            <Typography variant="h4" gutterBottom className="text-2xl font-semibold mb-6 text-center">
+                Input your email to change your password
+            </Typography>
+            <form onSubmit={handleSubmit}>
+                <div className="mb-4">
+                <TextField
+                    placeholder="Email"
+                    type="email"
+                    id="email"
+                    name="email"
+                    className="w-full mt-2 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                />
+                </div>
+                <div className="flex justify-center items-center mt-8">
+                <Button 
+                    type="submit" 
+                    variant="contained" 
+                    fullWidth 
+                    className="w-full text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors"
+                    style={{ maxWidth: "150px", backgroundColor: "#d68071" }}
+                >
+                    Send Email
+                </Button>
+                </div>
+            </form>
+            {message && (
+                <Typography variant="body1" color="primary" className="mt-2 text-center text-gray-500">
+                {message}
+                </Typography>
+            )}
+            {error && (
+                <Typography variant="body1" color="error" className="mt-2 text-center text-red-500">
+                {error}
+                </Typography>
+            )}
+            </div>
+        </div>
     </Container>
+
   );
 };
 

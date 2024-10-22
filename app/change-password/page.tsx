@@ -47,46 +47,52 @@ const ResetPassword: React.FC = () => {
   };
 
   return (
-    <Container maxWidth="sm">
-      <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" mt={4}>
-        <Typography variant="h4" gutterBottom>
+    <div className="flex items-center justify-center min-h-screen bg-white">
+  <div className="max-w-md w-full p-6 bg-white rounded-lg">
+    <h1 className="text-2xl font-semibold mb-6 text-center">
+      Reset Password
+    </h1>
+    <form onSubmit={handleSubmit}>
+      <div className="mb-4">
+        <input
+          placeholder="New Password"
+          type="password"
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
+          className="w-full mt-2 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
+          required
+        />
+      </div>
+      <div className="mb-4">
+        <input
+          placeholder="Confirm Password"
+          type="password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          className="w-full mt-2 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
+          required
+        />
+      </div>
+      <div className="flex justify-center items-center mt-8">
+        <button
+          type="submit"
+          className="w-full text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors"
+          style={{ maxWidth: "170px", backgroundColor: "#d68071" }}
+        >
           Reset Password
-        </Typography>
-        <form onSubmit={handleSubmit}>
-          <TextField
-            label="New Password"
-            type="password"
-            fullWidth
-            required
-            margin="normal"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-          />
-          <TextField
-            label="Confirm Password"
-            type="password"
-            fullWidth
-            required
-            margin="normal"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          />
-          <Button type="submit" variant="contained" color="primary" fullWidth>
-            Reset Password
-          </Button>
-        </form>
-        {message && (
-          <Typography variant="body1" color="primary" mt={2}>
-            {message}
-          </Typography>
-        )}
-        {error && (
-          <Typography variant="body1" color="error" mt={2}>
-            {error}
-          </Typography>
-        )}
-      </Box>
-    </Container>
+        </button>
+      </div>
+    </form>
+
+    {message && (
+      <p className="mt-8 text-center text-gray-500">{message}</p>
+    )}
+    {error && (
+      <p className="mt-8 text-center text-red-500">{error}</p>
+    )}
+  </div>
+</div>
+
   );
 };
 

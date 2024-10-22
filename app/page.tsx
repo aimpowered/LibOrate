@@ -112,7 +112,7 @@ const Login = () => {
           now!
         </p>
         <p className="mt-8 text-center text-gray-500">
-         forgot password,{" "}
+         Forgot password,{" "}
           <a
             href="/recover-password"
             className="text-blue-500 underline"
