@@ -7,7 +7,6 @@ import "@/app/css/NameTag.css";
 import Switch from "@mui/material/Switch";
 import Button from "@mui/material/Button";
 import { updateNameTagInDB } from "@/lib/nametag_db";
-import { getSession } from "next-auth/react";
 
 // TODO: deduplicate this with EnabledNameTagBadge
 export interface NameTagContent {
@@ -32,13 +31,6 @@ export function NameTagForm({ content, onNameTagContentChange }: NameTagProps) {
   const isOverLimit = disclosureValue.length > maxDisclosureLength;
   const bottom_padding = 12;
 
-  const newLogActionRequest = {
-    userEmail: "",
-    action: "",
-    timestamp: new Date(),
-    metadata: JSON.stringify({}),
-  };
-
   // Button click handler to manually update database with specific fields
   const handleSaveButtonClick = () => {
     const updatedData = {
@@ -49,29 +41,6 @@ export function NameTagForm({ content, onNameTagContentChange }: NameTagProps) {
     };
     updateNameTagInDB(updatedData); // Update DB with current form data
   };
-
-  async function logNameTagDisplay() {
-    const session = await getSession();
-
-    if (session && session.user) {
-      const logUpdatedData = {
-        preferredName: watch("preferredName", content.preferredName),
-        pronouns: watch("pronouns", content.pronouns),
-        disclosure: watch("disclosure", content.disclosure),
-        visible: watch("visible", content.visible),
-      };
-
-      newLogActionRequest.userEmail = session.user.email as string;
-      newLogActionRequest.action = "nametag_display_change";
-      newLogActionRequest.timestamp = new Date();
-      newLogActionRequest.metadata = JSON.stringify(logUpdatedData);
-
-      await fetch("/api/log", {
-        method: "POST",
-        body: JSON.stringify(newLogActionRequest),
-      }).then((res) => res.json());
-    }
-  }
 
   return (
     <div className="tab-container">
@@ -132,7 +101,6 @@ export function NameTagForm({ content, onNameTagContentChange }: NameTagProps) {
                       checked={value}
                       onChange={(e) => {
                         onChange(e);
-                        logNameTagDisplay();
                         handleSubmit(onNameTagContentChange)();
                       }}
                       type="checkbox"
