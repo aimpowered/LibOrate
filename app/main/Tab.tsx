@@ -3,7 +3,6 @@
 "use client";
 
 import React from "react";
-import PropTypes from "prop-types";
 
 interface TabProps {
   activeTab: string;
@@ -12,12 +11,6 @@ interface TabProps {
 }
 
 class Tab extends React.Component<TabProps> {
-  static propTypes = {
-    activeTab: PropTypes.string.isRequired,
-    "page-label": PropTypes.string.isRequired,
-    onClick: PropTypes.func.isRequired,
-  };
-
   onClick = () => {
     const { "page-label": dataLabel, onClick } = this.props;
     onClick(dataLabel);
