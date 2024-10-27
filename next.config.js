@@ -18,7 +18,7 @@ module.exports = {
                    "frame-src 'self' https://www.youtube.com *.youtube.com https://www.youtube.com/embed/ *.youtube.com/embed/; " +
                    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google-analytics.com/ https://www.youtube.com/ https://s.ytimg.com; " +
                    "object-src 'self'; " +
-                   "connect-src 'self' wss://25b8-41-66-123-120.ngrok-free.app; " +
+                   "connect-src 'self' wss://44ec-41-66-123-120.ngrok-free.app; " +
                    "child-src https://www.youtube.com/ https://s.ytimg.com"
           },
 
