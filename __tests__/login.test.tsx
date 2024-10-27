@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen } from "@testing-library/react";
 import Page from "../app/page";
-import mockRouter from 'next-router-mock';
+import mockRouter from "next-router-mock";
 
 jest.mock("next/navigation", () => jest.requireActual("next-router-mock"));
 
@@ -38,4 +38,3 @@ describe("Landing page", () => {
     // TODO, test sign up flow
   });
 });
-
