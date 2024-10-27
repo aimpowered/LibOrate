@@ -4,12 +4,14 @@ import Page from "../app/sign-up/page";
 
 jest.mock("next/navigation", () => jest.requireActual("next-router-mock"));
 
-describe("Page", () => {
-  it("creates email sign up field", () => {
+describe("Sign-up page", () => {
+  it("renders an email and password input", () => {
     render(<Page />);
 
-    const username = screen.queryByPlaceholderText("Username");
+    const emailInput = screen.getByLabelText("Email");
+    expect(emailInput).toBeInTheDocument();
 
-    expect(username).not.toBeInTheDocument();
+    const passwordInput = screen.getByLabelText("Password");
+    expect(passwordInput).toBeInTheDocument();
   });
 });

@@ -5,7 +5,7 @@ import mockRouter from 'next-router-mock';
 
 jest.mock("next/navigation", () => jest.requireActual("next-router-mock"));
 
-describe("Page", () => {
+describe("Landing page", () => {
   it("renders an email and password input", () => {
     render(<Page />);
 

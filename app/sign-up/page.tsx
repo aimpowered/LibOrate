@@ -73,8 +73,8 @@ const SignUp = () => {
         )}
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
+            <label htmlFor="email">Email</label>
             <input
-              placeholder="Email"
               type="email"
               id="email"
               name="email"
@@ -85,8 +85,8 @@ const SignUp = () => {
             />
           </div>
           <div>
+            <label htmlFor="password">Password</label>
             <input
-              placeholder="Password"
               type="password"
               id="password"
               name="password"
