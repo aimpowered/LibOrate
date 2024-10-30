@@ -2,8 +2,10 @@
 "use client";
 import React, { ChangeEventHandler, FormEventHandler, useState } from "react";
 import "../css/sign-up.css"; // Import CSS file
+import { useRouter } from "next/navigation";
 
 const SignUp = () => {
+  const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [userInfo, setUserInfo] = useState({
     email: "",
@@ -84,7 +86,7 @@ const SignUp = () => {
           <p className="mt-8 text-center text-gray-500">
             Already have an account,{" "}
             <a
-              href="/"
+              onClick={() => router.replace('/')}
               className="text-blue-500 underline"
               style={{ color: "#d68071" }}
             >

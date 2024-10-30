@@ -18,6 +18,7 @@ type NewResponse = NextResponse<{ user?: NewUserResponse; error?: string }>;
 
 // Make a POST request to create a new user
 export const POST = async (req: Request): Promise<NewResponse> => {
+  console.log(`Calling POST with req: ${req}`);
   const body = (await req.json()) as NewUserRequest;
 
   await startDB();
