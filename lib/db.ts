@@ -15,7 +15,7 @@ async function getDatabaseUrl() {
 }
 
 const databaseUrl = getDatabaseUrl();
-let connection: Promise<mongoose.Mongoose>;
+let connection: Promise<mongoose.Connection>;
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 declare namespace globalThis {
@@ -31,9 +31,10 @@ const startDB = () => {
 Starting database (important this this can only happen once!!!!)
 ================================================================
 ${globalThis.dbCounter++}
+${new Error().stack}
 
 `);
-      connection = databaseUrl.then(mongoose.connect)
+      connection = databaseUrl.then(mongoose.createConnection)
   }
   return connection;
 };

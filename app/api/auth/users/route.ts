@@ -1,5 +1,4 @@
 // Handle User SignIn and SignUp
-import startDB from "@/lib/db";
 import UserModel from "@/models/userModel";
 import { NextResponse } from "next/server";
 
@@ -21,13 +20,12 @@ export const POST = async (req: Request): Promise<NewResponse> => {
   console.log(`Calling POST with req: ${req}`);
   const body = (await req.json()) as NewUserRequest;
 
-  await startDB();
-
+  const userModel = await UserModel();
   console.log(`users/route.ts trying to find one`)
-  const oldUser = await UserModel.findOne({ email: body.email });
+  const oldUser = await userModel.findOne({ email: body.email });
   if (oldUser)
     return NextResponse.json({ error: "User already exists" }, { status: 422 });
-  const user = await UserModel.create({ ...body });
+  const user = await userModel.create({ ...body });
 
   return NextResponse.json({
     user: {

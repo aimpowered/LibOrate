@@ -1,5 +1,4 @@
 // SignIn API endpoint
-import startDB from "@/lib/db";
 import UserModel from "@/models/userModel";
 import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -19,16 +18,19 @@ const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       type: "credentials",
-      credentials: {},
+      credentials: {
+        email: {},
+        password: {},
+      },
       async authorize(credentials, req) {
-        const { email, password } = credentials as {
-          email: string;
-          password: string;
-        };
-        await startDB();
+        // console.log(credentials, req);
+        if (!credentials) throw new Error('No credentials found!')
+        const { email, password } = credentials;
 
-        console.log(`app/api/auth/[...nextauth].ts trying to find one`)
-        const user = await UserModel.findOne({ email });
+        const userModule = await UserModel();
+
+        console.log(`app/api/auth/[...nextauth].ts trying to find one with email: ${email}`)
+        const user = await userModule.findOne({ email });
         if (!user) throw Error("User not found!");
 
         const passwordMatch = await user.comparePassword(password);
