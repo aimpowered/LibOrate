@@ -2,26 +2,24 @@
 // MongoDB connection
 import mongoose from "mongoose";
 
-// Only use type import for 'mongodb-memory-server' so that we don't need to always use it
-import { type MongoMemoryServer } from 'mongodb-memory-server';
-
-function getDatabaseUrl() {
+async function getDatabaseUrl() {
   const url = process.env.DATABASE_URL;
   if (url == null) throw new Error('DATABASE_URL not found in environment')
+  if (url === 'test') {
+    // Only import 'mongodb-memory-server' when we really need it (in tests
+    const {MongoMemoryServer} = await import('mongodb-memory-server')
+    const mongoServer = await MongoMemoryServer.create();
+    return mongoServer.getUri();
+  }
   return url;
 }
 
 const databaseUrl = getDatabaseUrl();
-let connection: MongoMemoryServer | mongoose.Mongoose;
+let connection:  Promise<mongoose.Mongoose>;
 
-const startDB = async (url:string = databaseUrl) => {
+const startDB = () => {
   if (!connection)  {
-    if (url === 'test') {
-      const {MongoMemoryServer} = await import('mongodb-memory-server')
-      connection = await MongoMemoryServer.create();
-    } else {
-      connection = await mongoose.connect(url);
-    }
+      connection = databaseUrl.then(mongoose.connect)
   }
   return connection;
 };
