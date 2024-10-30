@@ -27,6 +27,7 @@ const authOptions: NextAuthOptions = {
         };
         await startDB();
 
+        console.log(`app/api/auth/[...nextauth].ts trying to find one`)
         const user = await UserModel.findOne({ email });
         if (!user) throw Error("User not found!");
 

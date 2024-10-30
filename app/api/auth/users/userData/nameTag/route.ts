@@ -30,6 +30,7 @@ export const GET = async (
 
   await startDB();
 
+  console.log(`users/userData/route.ts trying to find one`)
   const user = await UserModel.findOne({ email: userEmail });
 
   if (!user) {

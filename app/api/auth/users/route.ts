@@ -22,6 +22,7 @@ export const POST = async (req: Request): Promise<NewResponse> => {
 
   await startDB();
 
+  console.log(`users/route.ts trying to find one`)
   const oldUser = await UserModel.findOne({ email: body.email });
   if (oldUser)
     return NextResponse.json({ error: "User already exists" }, { status: 422 });
