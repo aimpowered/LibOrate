@@ -1,6 +1,6 @@
 // Creating Schema to save user data in mongoDB
 // Compare passwords, hash and store
-import { Model, models, model, Document, Schema } from "mongoose";
+import { models, model, Document, Schema } from "mongoose";
 import bcrypt from "bcrypt";
 import { NameTagContent } from "@/components/NameTagForm";
 
@@ -44,4 +44,4 @@ userSchema.methods.comparePassword = async function (password) {
 //Create User model if it doesn't exist
 const UserModel = models.User || model("User", userSchema);
 
-export default UserModel as Model<UserDocument, {}, Methods>;
+export default UserModel;
