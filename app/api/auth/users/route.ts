@@ -2,9 +2,11 @@
 import UserModel from "@/models/userModel";
 import { NextResponse } from "next/server";
 
-interface NewUserRequest {
-  email: string;
-  password: string;
+interface NewUserRequest extends Request {
+  json(): Promise<{
+    email: string,
+    password: string,
+  }>
 }
 
 interface NewUserResponse {
@@ -16,15 +18,13 @@ interface NewUserResponse {
 type NewResponse = NextResponse<{ user?: NewUserResponse; error?: string }>;
 
 // Make a POST request to create a new user
-export const POST = async (req: Request): Promise<NewResponse> => {
-  console.log(`Calling POST with req: ${req}`);
-  const body = (await req.json()) as NewUserRequest;
-
+export const POST = async (req: NewUserRequest): Promise<NewResponse> => {
   const userModel = await UserModel();
-  console.log(`users/route.ts trying to find one`)
+  const body = await req.json();
   const oldUser = await userModel.findOne({ email: body.email });
-  if (oldUser)
+  if (oldUser) {
     return NextResponse.json({ error: "User already exists" }, { status: 422 });
+  }
   const user = await userModel.create({ ...body });
 
   return NextResponse.json({
