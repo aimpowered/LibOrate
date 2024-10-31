@@ -37,6 +37,8 @@
     "app/backup_page.js"
 , "app/post-installation/page.js", "app/post-installation/page.js"  ],
   "exclude": [
+    "cypress",
+    "cypress.config.ts",
     "node_modules"
   ]
 }
