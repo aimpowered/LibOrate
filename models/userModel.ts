@@ -1,6 +1,6 @@
 // Creating Schema to save user data in mongoDB
 // Compare passwords, hash and store
-import { Document, Schema, models, model} from "mongoose";
+import { Document, Schema, models, model } from "mongoose";
 import bcrypt from "bcrypt";
 
 interface NameTagContent {

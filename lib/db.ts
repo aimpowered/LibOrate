@@ -1,13 +1,13 @@
 // MongoDB connection
 import mongoose from "mongoose";
 
-const dataBaseUrlFromEnv:string = (() => {
+const dataBaseUrlFromEnv: string = (() => {
   const url = process.env.DATABASE_URL;
   if (url == null) throw new Error("DATABASE_URL not found in environment");
   return url;
 })();
 
-let dynamicDatabaseUrl:Promise<string>|undefined = undefined;
+let dynamicDatabaseUrl: Promise<string> | undefined = undefined;
 
 function getDatabaseUrl() {
   if (dataBaseUrlFromEnv !== "test") {
@@ -29,12 +29,12 @@ function getDatabaseUrl() {
 }
 
 function createConnection(url: string) {
-    console.log(`
+  console.log(`
 ================================================================
 Starting database with URL: ${url}
 ================================================================
 `);
-    return mongoose.connect(url);
+  return mongoose.connect(url);
 }
 
 let mongooseObject: Promise<mongoose.Mongoose>;
