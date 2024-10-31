@@ -79,7 +79,7 @@ const Login = () => {
         <p className="mt-8 text-center text-gray-500">
           Don&rsquo;t have an account,{" "}
           <a
-            onClick={() => router.replace("/sign-up")}
+            href="/sign-up"
             className="text-blue-500 underline"
             style={{ color: "#d68071" }}
           >
