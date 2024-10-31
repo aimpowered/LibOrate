@@ -51,7 +51,7 @@ jobs:
 
 
   cypress-run:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -63,6 +63,7 @@ jobs:
           echo "ZM_CLIENT_SECRET=csecret" >> .env
           echo "ZM_REDIRECT_URL=https://example.org" >> .env
           echo "SESSION_SECRET=ssecret" >> .env
+          echo "NEXTAUTH_SECRET=nsecret" >> .env
           echo "DATABASE_URL=test" >> .env
       - name: Cypress run
         uses: cypress-io/github-action@v6
