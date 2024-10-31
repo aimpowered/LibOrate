@@ -17,11 +17,11 @@ async function getDatabaseUrl() {
 const databaseUrl = getDatabaseUrl();
 let connection: Promise<mongoose.Connection>;
 
-// eslint-disable-next-line @typescript-eslint/no-namespace
-declare namespace globalThis {
-  export let dbCounter: number;
-}
-globalThis.dbCounter = 0;
+// // eslint-disable-next-line @typescript-eslint/no-namespace
+// declare namespace globalThis {
+//   export let dbCounter: number;
+// }
+// globalThis.dbCounter = 0;
 
 const startDB = () => {
   if (!connection)  {
@@ -30,10 +30,10 @@ const startDB = () => {
 ================================================================
 Starting database (important this this can only happen once!!!!)
 ================================================================
-${globalThis.dbCounter++}
-${new Error().stack}
 
 `);
+//${globalThis.dbCounter++}
+//${new Error().stack}
       connection = databaseUrl.then(mongoose.createConnection)
   }
   return connection;

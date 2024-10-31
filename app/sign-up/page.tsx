@@ -20,16 +20,19 @@ const SignUp = () => {
     setUserInfo({ ...userInfo, [name]: value });
   };
 
-  const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
-    setBusy(true);
+  const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-    await fetch("/api/auth/users", {
+    console.log(`submit event: `, e);
+    setBusy(true);
+    fetch("/api/auth/users", {
       method: "POST",
       body: JSON.stringify(userInfo),
+    }).then(() => {
+      setIsUserCreated(true);
+    }).finally(() => {
+      setBusy(false);
     });
 
-    setIsUserCreated(true);
-    setBusy(false);
   };
 
   return (
@@ -84,14 +87,11 @@ const SignUp = () => {
           </div>
 
           <p className="mt-8 text-center text-gray-500">
-            Already have an account,{" "}
-            <a
+            Already have an account, <a
               onClick={() => router.replace('/')}
               className="text-blue-500 underline"
               style={{ color: "#d68071" }}
-            >
-              sign in.
-            </a>
+            >sign in.</a>
           </p>
         </form>
       </div>
