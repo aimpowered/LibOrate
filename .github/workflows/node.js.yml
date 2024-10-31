@@ -57,6 +57,13 @@ jobs:
         uses: actions/checkout@v4
       # Install npm dependencies, cache them correctly
       # and run all Cypress tests
+      - name: 'Create env file'
+        run: |
+          echo "ZM_CLIENT_ID=id" > .env
+          echo "ZM_CLIENT_SECRET=csecret" >> .env
+          echo "ZM_REDIRECT_URL=https://example.org" >> .env
+          echo "SESSION_SECRET=ssecret" >> .env
+          echo "DATABASE_URL=test" >> .env
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
