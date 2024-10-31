@@ -29,7 +29,6 @@ export const GET = async (
 
   const userModel = await UserModel();
 
-  console.log(`users/userData/route.ts trying to find one`);
   const user = await userModel.findOne({ email: userEmail });
 
   if (!user) {

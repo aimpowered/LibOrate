@@ -22,7 +22,6 @@ const SignUp = () => {
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-    console.log(`submit event: `, e);
     setBusy(true);
     fetch("/api/auth/users", {
       method: "POST",

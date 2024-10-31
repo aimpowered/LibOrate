@@ -23,15 +23,11 @@ const authOptions: NextAuthOptions = {
         password: {},
       },
       async authorize(credentials, req) {
-        // console.log(credentials, req);
         if (!credentials) throw new Error("No credentials found!");
         const { email, password } = credentials;
 
         const userModule = await UserModel();
 
-        console.log(
-          `app/api/auth/[...nextauth].ts trying to find one with email: ${email}`,
-        );
         const user = await userModule.findOne({ email });
         if (!user) throw Error("User not found!");
 
