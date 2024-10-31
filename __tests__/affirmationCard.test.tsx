@@ -25,6 +25,8 @@ describe('Affirmation card works as expected', () => {
                 onAffirmationCardDeletion={affirmationCardProps.onAffirmationCardDelete}
             />
         );
+        const cardElement = screen.getByTestId('affirmation-card');
+        expect(cardElement).toBeInTheDocument();
         expect(screen.getByLabelText('more actions')).toBeTruthy();
         expect(screen.getByText('foo bar')).toBeTruthy();
         fireEvent.click(screen.getByLabelText('more actions'));

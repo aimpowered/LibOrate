@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/carousel"
 
 import '@/app/css/Affirmation.css'
+import { getAutocompleteUtilityClass } from '@mui/material';
 
 interface AffirmationCarouselProps {
   initialAffirmations: AffirmationCardContent[];
@@ -55,9 +56,9 @@ export function AffirmationCarousel({
 
   return (
     <Carousel>
-      <CarouselContent className="self-affirm-carousel">
+      <CarouselContent className="self-affirm-carousel" >
         {affirmationList.map(affirmation => (
-          <CarouselItem key={affirmation.text}>
+          <CarouselItem key={affirmation.id + affirmation.text}>
             <AffirmationCard
               initialContent={affirmation}
               onAffirmationCardUpdate={updateAffirmationCard}
@@ -71,8 +72,10 @@ export function AffirmationCarousel({
           />
         </CarouselItem>
       </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
+      {/* <CarouselPrevious />
+      <CarouselNext /> */}
+      <CarouselPrevious data-test-id="carousel-previous-button" />
+      <CarouselNext data-test-id="carousel-next-button"/>
     </Carousel>
   );
-}
+};

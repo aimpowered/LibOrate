@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom'
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, getByTestId, render, screen } from '@testing-library/react'
 import { AffirmationCarousel } from '@/components/AffirmationCarousel';
 
 
@@ -28,5 +28,9 @@ describe('Test the function of affirmation card carousel', () => {
             initialAffirmations={affirmationCarouselProps}
             />
         );
+        expect(screen.getByText("sample affirmation 1")).toBeTruthy();
+        expect(screen.getByTestId("carousel-previous-button")).toBeTruthy();
+        expect(screen.getByTestId("carousel-next-button")).toBeTruthy();
     });
+    
 });

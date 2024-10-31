@@ -47,7 +47,7 @@ export function AffirmationCard({
   };
 
   return (
-    <Card className="self-affirm-card">
+    <Card className="self-affirm-card" data-testid="affirmation-card">
       <CardActions 
         disableSpacing
         sx={{
