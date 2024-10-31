@@ -1,4 +1,5 @@
 import { NameTagContent } from "@/components/NameTagForm";
+import startDB from "@/lib/db";
 import UserModel from "@/models/userModel";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -27,9 +28,9 @@ export const GET = async (
     );
   }
 
-  const userModel = await UserModel();
+  await startDB();
 
-  const user = await userModel.findOne({ email: userEmail });
+  const user = await UserModel.findOne({ email: userEmail });
 
   if (!user) {
     return NextResponse.json(
@@ -69,9 +70,9 @@ export const POST = async (
 ): Promise<UpdateUserNametagResponse> => {
   const body = (await req.json()) as UpdateUserNametagRequest;
 
-  const userModel = await UserModel();
+  await startDB();
 
-  await userModel.updateOne({ email: body.email }, { nameTag: body.nameTag });
+  await UserModel.updateOne({ email: body.email }, { nameTag: body.nameTag });
 
   return NextResponse.json({ success: true }, { status: 200 });
 };

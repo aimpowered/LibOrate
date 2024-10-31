@@ -4,6 +4,7 @@ import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 import { DefaultUser } from "next-auth";
+import startDB from "@/lib/db";
 declare module "next-auth" {
   interface User extends DefaultUser {
     role: string;
@@ -26,9 +27,9 @@ const authOptions: NextAuthOptions = {
         if (!credentials) throw new Error("No credentials found!");
         const { email, password } = credentials;
 
-        const userModule = await UserModel();
+        await startDB();
 
-        const user = await userModule.findOne({ email });
+        const user = await UserModel.findOne({ email });
         if (!user) throw Error("User not found!");
 
         const passwordMatch = await user.comparePassword(password);

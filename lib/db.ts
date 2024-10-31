@@ -34,15 +34,15 @@ function createConnection(url: string) {
 Starting database with URL: ${url}
 ================================================================
 `);
-    return mongoose.createConnection(url);
+    return mongoose.connect(url);
 }
 
-let connection: Promise<mongoose.Connection>;
+let mongooseObject: Promise<mongoose.Mongoose>;
 const startDB = () => {
-  if (!connection) {
-    connection = getDatabaseUrl().then(createConnection);
+  if (!mongooseObject) {
+    mongooseObject = getDatabaseUrl().then(createConnection);
   }
-  return connection;
+  return mongooseObject;
 };
 
 export default startDB;
