@@ -1,6 +1,6 @@
 // Creating Schema to save user data in mongoDB
 // Compare passwords, hash and store
-import mongoose, { Document, Schema, } from "mongoose";
+import mongoose, { Document, Schema } from "mongoose";
 import bcrypt from "bcrypt";
 import startDB from "@/lib/db";
 
@@ -54,7 +54,7 @@ userSchema.methods.comparePassword = async function (password) {
 let userModel: Promise<mongoose.Model<UserDocument, {}, Methods>>;
 function UserModel() {
   if (!userModel) {
-    return userModel = startDB().then((m) => m.model("User", userSchema))
+    return (userModel = startDB().then((m) => m.model("User", userSchema)));
   }
   return userModel;
 }

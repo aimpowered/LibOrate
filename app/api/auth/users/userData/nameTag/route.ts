@@ -29,7 +29,7 @@ export const GET = async (
 
   const userModel = await UserModel();
 
-  console.log(`users/userData/route.ts trying to find one`)
+  console.log(`users/userData/route.ts trying to find one`);
   const user = await userModel.findOne({ email: userEmail });
 
   if (!user) {
@@ -71,7 +71,6 @@ export const POST = async (
   const body = (await req.json()) as UpdateUserNametagRequest;
 
   const userModel = await UserModel();
-
 
   await userModel.updateOne({ email: body.email }, { nameTag: body.nameTag });
 

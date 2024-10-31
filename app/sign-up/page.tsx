@@ -27,12 +27,13 @@ const SignUp = () => {
     fetch("/api/auth/users", {
       method: "POST",
       body: JSON.stringify(userInfo),
-    }).then(() => {
-      setIsUserCreated(true);
-    }).finally(() => {
-      setBusy(false);
-    });
-
+    })
+      .then(() => {
+        setIsUserCreated(true);
+      })
+      .finally(() => {
+        setBusy(false);
+      });
   };
 
   return (
@@ -87,11 +88,14 @@ const SignUp = () => {
           </div>
 
           <p className="mt-8 text-center text-gray-500">
-            Already have an account, <a
-              onClick={() => router.replace('/')}
+            Already have an account,{" "}
+            <a
+              onClick={() => router.replace("/")}
               className="text-blue-500 underline"
               style={{ color: "#d68071" }}
-            >sign in.</a>
+            >
+              sign in.
+            </a>
           </p>
         </form>
       </div>

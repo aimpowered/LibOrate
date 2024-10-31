@@ -4,9 +4,9 @@ import { NextResponse } from "next/server";
 
 interface NewUserRequest extends Request {
   json(): Promise<{
-    email: string,
-    password: string,
-  }>
+    email: string;
+    password: string;
+  }>;
 }
 
 interface NewUserResponse {
