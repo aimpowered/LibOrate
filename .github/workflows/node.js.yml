@@ -5,7 +5,7 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "cypress-testing" ]
   pull_request:
     branches: [ "main" ]
 
@@ -35,7 +35,7 @@ jobs:
         echo "ZM_REDIRECT_URL=https://example.org" >> .env
         echo "SESSION_SECRET=ssecret" >> .env
     - run: npm run build --if-present
-    
+
   format:
     runs-on: ubuntu-latest
 
