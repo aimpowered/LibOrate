@@ -1,39 +1,46 @@
 // MongoDB connection
 import mongoose from "mongoose";
 
-async function getDatabaseUrl() {
+const dataBaseUrlFromEnv:string = (() => {
   const url = process.env.DATABASE_URL;
   if (url == null) throw new Error("DATABASE_URL not found in environment");
-  if (url === "test") {
-    // Only import 'mongodb-memory-server' when we really need it (in tests
+  return url;
+})();
+
+let dynamicDatabaseUrl:Promise<string>|undefined = undefined;
+
+function getDatabaseUrl() {
+  if (dataBaseUrlFromEnv !== "test") {
+    return Promise.resolve(dataBaseUrlFromEnv);
+  }
+  if (dynamicDatabaseUrl === undefined) {
+    dynamicDatabaseUrl = computeDatabaseUrlForTesting();
+  }
+  return dynamicDatabaseUrl;
+
+  async function computeDatabaseUrlForTesting() {
+    // Only import 'mongodb-memory-server' when we really need it
     const { MongoMemoryServer } = await import("mongodb-memory-server");
     const mongoServer = await MongoMemoryServer.create();
-    return mongoServer.getUri();
+    const newDatabaseUrl = mongoServer.getUri();
+    process.env.DATABASE_URL = newDatabaseUrl;
+    return newDatabaseUrl;
   }
-  return url;
 }
 
-const databaseUrl = getDatabaseUrl();
+function createConnection(url: string) {
+    console.log(`
+================================================================
+Starting database with URL: ${url}
+================================================================
+`);
+    return mongoose.createConnection(url);
+}
+
 let connection: Promise<mongoose.Connection>;
-
-// // eslint-disable-next-line @typescript-eslint/no-namespace
-// declare namespace globalThis {
-//   export let dbCounter: number;
-// }
-// globalThis.dbCounter = 0;
-
 const startDB = () => {
   if (!connection) {
-    console.log(`
-        
-================================================================
-Starting database (important this this can only happen once!!!!)
-================================================================
-
-`);
-    //${globalThis.dbCounter++}
-    //${new Error().stack}
-    connection = databaseUrl.then(mongoose.createConnection);
+    connection = getDatabaseUrl().then(createConnection);
   }
   return connection;
 };
