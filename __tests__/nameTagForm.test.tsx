@@ -11,9 +11,6 @@ const currentNameTag = {
   disclosure: "",
 };
 
-jest.mock("next/navigation", () => jest.requireActual("next-router-mock"));
-jest.mock("../lib/zoomapi", () => jest.requireActual("../lib/fakezoomapi"));
-
 describe("NameTagForm", () => {
   it("renders the heading and input fields", () => {
     render(
