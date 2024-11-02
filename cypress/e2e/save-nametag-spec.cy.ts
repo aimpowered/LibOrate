@@ -1,13 +1,5 @@
 describe("Save nametag button", () => {
-  // it("can find text in an input box", () => {
-  //   cy.visit("http://localhost:3000/main");
-  //   const displayName = 'Chester McAnderson III';
-  //   cy.contains("Preferred Name").click().type(`{selectall}${displayName}`);
-  //
-  //   cy.contains("Preferred Name").next().contains(displayName);
-  // });
-
-  it("is able to save nametag and reloadd it", () => {
+  it("is able to save nametag and persist it across logins", () => {
     const email = "foobar@example.com";
     const password = "secret";
     cy.visit("http://localhost:3000");
@@ -39,7 +31,7 @@ describe("Save nametag button", () => {
     cy.contains("Password").click().type(password);
     cy.contains("Sign In").click();
 
-    // TODO: Why doesn't this work???
-    //cy.contains("Preferred Name").next().contains(displayName);
+    // Check that preferred name is still there
+    cy.contains("Preferred Name").get('input').should('have.value', displayName);
   });
 });
