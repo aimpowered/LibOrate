@@ -63,7 +63,7 @@ describe("NameTagForm", () => {
   it("checks that self disclosure character length limit is working", async () => {
     render(
       <NameTagForm
-        content={{...emptyNameTag, disclosure: "I have a stutter"}}
+        content={{ ...emptyNameTag, disclosure: "I have a stutter" }}
         onNameTagContentChange={() => {}}
         onSaveButtonClick={() => {}}
       />,

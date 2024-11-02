@@ -28,7 +28,7 @@ describe("Save nametag button", () => {
     cy.contains("Password").click().type(password);
     cy.contains("Sign In").click();
 
-    const displayName = 'Chester McAnderson III';
+    const displayName = "Chester McAnderson III";
     // Type in info
     cy.contains("Preferred Name").click().type(`{selectall}${displayName}`);
     cy.contains("Save Name Tag").click();

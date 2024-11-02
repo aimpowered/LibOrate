@@ -39,15 +39,16 @@ const defaultAffirmations = [
   { id: 4, text: "I have the right to stutter" },
 ];
 
-const defaultNameTag : NameTagContent = {
-    visible: false,
-    preferredName: "",
-    pronouns: "",
-    disclosure: "I have a stutter",
-}
+const defaultNameTag: NameTagContent = {
+  visible: false,
+  preferredName: "",
+  pronouns: "",
+  disclosure: "I have a stutter",
+};
 
 function App() {
-  const [nameTagContent, setNameTagContent] = useState<NameTagContent>(defaultNameTag);
+  const [nameTagContent, setNameTagContent] =
+    useState<NameTagContent>(defaultNameTag);
 
   const [nameTagIsLoaded, setNameTagIsLoaded] = useState(false);
 

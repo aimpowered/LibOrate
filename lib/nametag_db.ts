@@ -17,11 +17,11 @@ export async function fetchNametagFromDB(): Promise<NameTagContent> {
 export async function updateNameTagInDB(newNameTag: NameTagContent) {
   const user = await getUser();
   return fetch("/api/auth/users/userData/nameTag", {
-      method: "POST",
-      body: JSON.stringify({
-        email: user.email,
-        nameTag: newNameTag,
-      }),
+    method: "POST",
+    body: JSON.stringify({
+      email: user.email,
+      nameTag: newNameTag,
+    }),
   });
 }
 
