@@ -19,7 +19,7 @@ type NewResponse = NextResponse<{ user?: NewUserResponse; error?: string }>;
 export const POST = async (req: NewUserRequest): Promise<NewResponse> => {
   const body = await req.json();
   if (!("email" in body)) {
-    throw new Error("Can't create user without email")
+    throw new Error("Can't create user without email");
   }
 
   await startDB();

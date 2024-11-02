@@ -21,7 +21,11 @@ interface NameTagProps {
   onSaveButtonClick: SubmitHandler<NameTagContent>;
 }
 
-export function NameTagForm({ content, onNameTagContentChange, onSaveButtonClick }: NameTagProps) {
+export function NameTagForm({
+  content,
+  onNameTagContentChange,
+  onSaveButtonClick,
+}: NameTagProps) {
   const { register, handleSubmit, control, watch } = useForm<NameTagContent>();
   const maxDisclosureLength = 30;
   const disclosureValue = watch(
