@@ -2,7 +2,7 @@ describe("Logging in spec", () => {
   it("is able to create new account and log in with it", () => {
     const email = "foobar@example.com";
     const password = "secret";
-    cy.visit("http://localhost:3000");
+    cy.visit("/");
 
     // Sign-up
     cy.contains("sign up").click();

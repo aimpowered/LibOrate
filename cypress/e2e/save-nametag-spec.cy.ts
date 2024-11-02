@@ -2,7 +2,7 @@ describe("Save nametag button", () => {
   it("is able to save nametag and persist it across logins", () => {
     const email = "foobar@example.com";
     const password = "secret";
-    cy.visit("http://localhost:3000");
+    cy.visit("/");
 
     // Sign-up
     cy.contains("sign up").click();
@@ -26,7 +26,7 @@ describe("Save nametag button", () => {
     cy.contains("Save Name Tag").click();
 
     // Go back to homepage
-    cy.visit("http://localhost:3000");
+    cy.visit("/");
     cy.contains("Email").click().type(email);
     cy.contains("Password").click().type(password);
     cy.contains("Sign In").click();
