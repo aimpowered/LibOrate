@@ -30,11 +30,11 @@ const Login = () => {
     });
 
     if (res?.error) {
-      log(email, "sign_in_error", res)
+      log(email, "sign_in_error", res);
       return setError(res.error);
     }
     router.replace("/main");
-    log(email, "sign_in_success", res)
+    log(email, "sign_in_success", res);
   };
 
   return (
