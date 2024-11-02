@@ -17,6 +17,7 @@ describe("NameTagForm", () => {
       <NameTagForm
         content={emptyNameTag}
         onNameTagContentChange={() => {}}
+        onSaveButtonClick={() => {}}
       />,
     );
     expect(screen.getByText("Preferred Name")).toBeInTheDocument();
@@ -32,21 +33,20 @@ describe("NameTagForm", () => {
       <NameTagForm
         content={emptyNameTag}
         onNameTagContentChange={updateNameTagContent}
+        onSaveButtonClick={() => {}}
       />,
     );
 
-    const element = screen.getByLabelText("Display Name Tag");
-    expect(element).toBeInTheDocument();
+    const displayNameTag = screen.getByLabelText("Display Name Tag");
+    expect(displayNameTag).toBeInTheDocument();
 
-    let checkboxInput = screen.getByRole("checkbox");
+    const checkboxInput = screen.getByRole("checkbox");
+    expect(checkboxInput).toBe(displayNameTag);
+    expect(displayNameTag).not.toBeChecked();
 
-    expect(checkboxInput).toBe(element);
+    await userEvent.click(displayNameTag);
 
-    expect(checkboxInput).not.toBeChecked();
-    expect(emptyNameTag.visible).toBe(false);
-    await userEvent.click(checkboxInput);
-    expect(checkboxInput).toBeChecked();
-    //expect(currentNameTag.visible).toBe(true);
+    expect(displayNameTag).toBeChecked();
     await waitFor(() => {
       expect(updateNameTagContent).toHaveBeenCalled();
       expect(updateNameTagContent.mock.calls[0][0]).toEqual(
@@ -65,6 +65,7 @@ describe("NameTagForm", () => {
       <NameTagForm
         content={emptyNameTag}
         onNameTagContentChange={() => {}}
+        onSaveButtonClick={() => {}}
       />,
     );
 
@@ -90,11 +91,15 @@ describe("NameTagForm", () => {
       <NameTagForm
         content={emptyNameTag}
         onNameTagContentChange={() => {}}
+        onSaveButtonClick={saveButtonCallback}
       />,
     );
 
     const submit = screen.getByText("Save Name Tag");
 
     await userEvent.click(submit);
+    await waitFor(() => {
+      expect(saveButtonCallback).toHaveBeenCalled();
+    });
   });
 });

@@ -6,7 +6,6 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import "@/app/css/NameTag.css";
 import Switch from "@mui/material/Switch";
 import Button from "@mui/material/Button";
-import { updateNameTagInDB } from "@/lib/nametag_db";
 
 // TODO: deduplicate this with EnabledNameTagBadge
 export interface NameTagContent {
@@ -19,9 +18,10 @@ export interface NameTagContent {
 interface NameTagProps {
   content: NameTagContent;
   onNameTagContentChange: SubmitHandler<NameTagContent>;
+  onSaveButtonClick: SubmitHandler<NameTagContent>;
 }
 
-export function NameTagForm({ content, onNameTagContentChange }: NameTagProps) {
+export function NameTagForm({ content, onNameTagContentChange, onSaveButtonClick }: NameTagProps) {
   const { register, handleSubmit, control, watch } = useForm<NameTagContent>();
   const maxDisclosureLength = 30;
   const disclosureValue = watch(
@@ -36,10 +36,10 @@ export function NameTagForm({ content, onNameTagContentChange }: NameTagProps) {
     const updatedData = {
       preferredName: watch("preferredName", content.preferredName),
       pronouns: watch("pronouns", content.pronouns),
-      disclosure: watch("disclosure", content.disclosure),
+      disclosure: disclosureValue,
       visible: watch("visible", content.visible),
     };
-    updateNameTagInDB(updatedData); // Update DB with current form data
+    onSaveButtonClick(updatedData); // Update DB with current form data
   };
 
   return (
