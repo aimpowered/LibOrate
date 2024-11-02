@@ -4,18 +4,18 @@ import { userEvent } from "@testing-library/user-event";
 
 import { NameTagForm } from "@/components/NameTagForm";
 
-const currentNameTag = {
+const emptyNameTag = Object.freeze({
   visible: false,
   preferredName: "Test User",
   pronouns: "",
   disclosure: "",
-};
+});
 
 describe("NameTagForm", () => {
   it("renders the heading and input fields", () => {
     render(
       <NameTagForm
-        content={currentNameTag}
+        content={emptyNameTag}
         onNameTagContentChange={() => {}}
       />,
     );
@@ -30,7 +30,7 @@ describe("NameTagForm", () => {
     const updateNameTagContent = jest.fn();
     render(
       <NameTagForm
-        content={currentNameTag}
+        content={emptyNameTag}
         onNameTagContentChange={updateNameTagContent}
       />,
     );
@@ -43,7 +43,7 @@ describe("NameTagForm", () => {
     expect(checkboxInput).toBe(element);
 
     expect(checkboxInput).not.toBeChecked();
-    expect(currentNameTag.visible).toBe(false);
+    expect(emptyNameTag.visible).toBe(false);
     await userEvent.click(checkboxInput);
     expect(checkboxInput).toBeChecked();
     //expect(currentNameTag.visible).toBe(true);
@@ -63,7 +63,7 @@ describe("NameTagForm", () => {
   it("checks that self disclosure character length limit is working", async () => {
     render(
       <NameTagForm
-        content={currentNameTag}
+        content={emptyNameTag}
         onNameTagContentChange={() => {}}
       />,
     );
