@@ -52,17 +52,19 @@ export function NameTagForm({
 
       <form onSubmit={handleSubmit(onNameTagContentChange)}>
         <div style={{ paddingBottom: bottom_padding }}>
-          <label>Preferred Name</label>
+          <label htmlFor="name">Preferred Name</label>
           <input
             className="text-input"
+            id="name"
             defaultValue={content.preferredName}
             {...register("preferredName", { required: true })}
           />
         </div>
         <div style={{ paddingBottom: bottom_padding + 5 }}>
-          <label>Pronouns</label>
+          <label htmlFor="pronouns">Pronouns</label>
           <select
             className="select-input"
+            id="pronouns"
             defaultValue={content.pronouns}
             {...register("pronouns")}
           >
@@ -74,9 +76,10 @@ export function NameTagForm({
           </select>
         </div>
         <div style={{ paddingBottom: bottom_padding }}>
-          <label>Something About Me</label>
+          <label htmlFor="disclosure">Something About Me</label>
           <input
             className="text-input"
+            id="disclosure"
             defaultValue={content.disclosure || "I have a stutter"}
             {...register("disclosure", { maxLength: maxDisclosureLength })}
           />
