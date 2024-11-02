@@ -10,7 +10,6 @@ const currentNameTag = {
   pronouns: "",
   disclosure: "",
 };
-const updateNameTagContent = jest.fn();
 
 jest.mock("next/navigation", () => jest.requireActual("next-router-mock"));
 jest.mock("../lib/zoomapi", () => jest.requireActual("../lib/fakezoomapi"));
@@ -20,7 +19,7 @@ describe("NameTagForm", () => {
     render(
       <NameTagForm
         content={currentNameTag}
-        onNameTagContentChange={updateNameTagContent}
+        onNameTagContentChange={() => {}}
       />,
     );
     expect(screen.getByText("Preferred Name")).toBeInTheDocument();
@@ -31,6 +30,7 @@ describe("NameTagForm", () => {
   });
 
   it("verifies that the nametag display checkbox can be checked", async () => {
+    const updateNameTagContent = jest.fn();
     render(
       <NameTagForm
         content={currentNameTag}
@@ -67,7 +67,7 @@ describe("NameTagForm", () => {
     render(
       <NameTagForm
         content={currentNameTag}
-        onNameTagContentChange={updateNameTagContent}
+        onNameTagContentChange={() => {}}
       />,
     );
 
