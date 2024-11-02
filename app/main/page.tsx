@@ -39,13 +39,15 @@ const defaultAffirmations = [
   { id: 4, text: "I have the right to stutter" },
 ];
 
-function App() {
-  const [nameTagContent, setNameTagContent] = useState<NameTagContent>({
+const defaultNameTag : NameTagContent = {
     visible: false,
     preferredName: "",
     pronouns: "",
-    disclosure: "",
-  });
+    disclosure: "I have a stutter",
+}
+
+function App() {
+  const [nameTagContent, setNameTagContent] = useState<NameTagContent>(defaultNameTag);
 
   const [nameTagIsLoaded, setNameTagIsLoaded] = useState(false);
 
@@ -57,9 +59,6 @@ function App() {
   const updateHandWaveBadge = (badge: HandWaveBadge) => {
     foregroundDrawer.drawHandWave(badge);
   };
-
-  //TODO: query and load user saved buttons;
-  const savedWaveHandButtons = defaultWaveHandButtons;
 
   useEffect(() => {
     fetchNametagFromDB().then((newNameTag) => {
@@ -77,7 +76,7 @@ function App() {
       </div>
 
       <WaveHandPicker
-        initialHands={savedWaveHandButtons}
+        initialHands={defaultWaveHandButtons}
         updateHandWaveBadge={updateHandWaveBadge}
       />
 

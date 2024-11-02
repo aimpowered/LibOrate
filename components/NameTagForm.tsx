@@ -30,7 +30,7 @@ export function NameTagForm({
   const maxDisclosureLength = 30;
   const disclosureValue = watch(
     "disclosure",
-    content.disclosure || "I have a stutter",
+    content.disclosure ?? '',
   );
   const isOverLimit = disclosureValue.length > maxDisclosureLength;
   const bottom_padding = 12;
@@ -38,10 +38,10 @@ export function NameTagForm({
   // Button click handler to manually update database with specific fields
   const handleSaveButtonClick = () => {
     const updatedData = {
-      preferredName: watch("preferredName", content.preferredName),
-      pronouns: watch("pronouns", content.pronouns),
+      preferredName: watch("preferredName", content.preferredName ?? ''),
+      pronouns: watch("pronouns", content.pronouns ?? ''),
       disclosure: disclosureValue,
-      visible: watch("visible", content.visible),
+      visible: watch("visible", content.visible ?? false),
     };
     onSaveButtonClick(updatedData); // Update DB with current form data
   };
@@ -80,7 +80,7 @@ export function NameTagForm({
           <input
             className="text-input"
             id="disclosure"
-            defaultValue={content.disclosure || "I have a stutter"}
+            defaultValue={content.disclosure}
             {...register("disclosure", { maxLength: maxDisclosureLength })}
           />
           <div className={`char-count ${isOverLimit ? "warning" : ""}`}>
