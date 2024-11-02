@@ -6,46 +6,39 @@ export async function fetchNametagFromDB(): Promise<
 > {
   const session = await getSession();
 
-  if (session && session.user) {
-    let nameTagToReturn = undefined;
+  if (!session || !session.user) {
+    console.error("User session is not defined.");
+    return;
+  }
 
-    await fetch(
+  try {
+    const res = await fetch(
       "/api/auth/users/userData/nameTag?userEmail=" + session.user.email,
       { method: "GET" },
     )
-      .then((res) => res.json())
-      .then((resJson) => {
-        if (resJson.success && resJson.nameTag) {
-          nameTagToReturn = resJson.nameTag;
-        } else {
-          console.log("No nametag stored in DB.");
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-
-    return nameTagToReturn;
-  } else {
-    console.error("User session is not defined.");
-    return undefined;
+    const json = await res.json();
+    if (json.success && json.nameTag) {
+      return json.nameTag;
+    }
+    console.log("No nametag stored in DB.");
+  } catch (e) {
+      console.error(e);
   }
 }
 
 export async function updateNameTagInDB(newNameTag: NameTagContent) {
   const session = await getSession();
 
-  if (session && session.user) {
-    await fetch("/api/auth/users/userData/nameTag", {
+  if (!session || !session.user) {
+    console.error("User session is not defined.");
+    return;
+  }
+
+  return fetch("/api/auth/users/userData/nameTag", {
       method: "POST",
       body: JSON.stringify({
         email: session.user.email,
         nameTag: newNameTag,
       }),
-    })
-      .then((res) => res.json())
-      .catch((error) => {
-        console.error(error);
-      });
-  }
+  });
 }
