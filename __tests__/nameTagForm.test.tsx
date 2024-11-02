@@ -83,4 +83,18 @@ describe("NameTagForm", () => {
       screen.getByText((content) => content.includes("Exceeded length limit!")),
     ).toBeInTheDocument();
   });
+
+  it("checks that the submit buton works", async () => {
+    const saveButtonCallback = jest.fn();
+    render(
+      <NameTagForm
+        content={emptyNameTag}
+        onNameTagContentChange={() => {}}
+      />,
+    );
+
+    const submit = screen.getByText("Save Name Tag");
+
+    await userEvent.click(submit);
+  });
 });
