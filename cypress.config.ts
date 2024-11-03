@@ -5,6 +5,6 @@ export default defineConfig({
   viewportHeight: 900,
 
   e2e: {
-    baseUrl: 'http://localhost:3000',
+    baseUrl: "http://localhost:3000",
   },
 });

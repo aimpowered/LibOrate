@@ -32,6 +32,8 @@ describe("Save nametag button", () => {
     cy.contains("Sign In").click();
 
     // Check that preferred name is still there
-    cy.contains("Preferred Name").get('input').should('have.value', displayName);
+    cy.contains("Preferred Name")
+      .get("input")
+      .should("have.value", displayName);
   });
 });
