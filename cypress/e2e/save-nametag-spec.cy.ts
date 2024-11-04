@@ -1,6 +1,6 @@
 describe("Save nametag button", () => {
   it("is able to save nametag and persist it across logins", () => {
-    const email = `foobar@example.com`;
+    const email = "foobar@example.com";
     const password = "secret";
     cy.visit("/");
 
