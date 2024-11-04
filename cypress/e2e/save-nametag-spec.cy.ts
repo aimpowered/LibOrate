@@ -22,7 +22,7 @@ describe("Save nametag button", () => {
 
     // Enter name tag information
     const displayName = "Chester McAnderson III";
-    const pronoun = "They/Them";
+    const pronoun = "He/Him";
     const disclosure = "I love spaghetti! 🍝";
     cy.contains("Preferred Name").click().type(`{selectall}${displayName}`);
     cy.contains("Pronouns").next().select(`${pronoun}`);
