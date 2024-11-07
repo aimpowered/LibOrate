@@ -67,7 +67,7 @@ function App() {
         setNameTagContent(newNameTag);
       }
       setNameTagIsLoaded(true);
-    });
+    }).catch((err) => console.error(err));
   }, []);
 
   return (
