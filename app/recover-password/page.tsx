@@ -17,7 +17,9 @@ const ForgotPassword: React.FC = () => {
       // Send a request to the back-end to handle the forgot password logic
       const response = await axios.post("/api/pwd-recover", { email });
       if (response.data.success) {
-        setMessage("An email with a link to reset your password has been sent to you.");
+        setMessage(
+          "An email with a link to reset your password has been sent to you.",
+        );
       } else {
         setError("Failed to send email. Please try again.");
       }
