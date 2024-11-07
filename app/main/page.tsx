@@ -86,12 +86,13 @@ function App() {
       <div>
         <Tabs>
           <div page-label="nametag">
-            <NameTagForm
-              content={nameTagContent}
-              disabled={!nameTagIsLoaded}
-              onNameTagContentChange={updateNameTagContent}
-              onSaveButtonClick={updateNameTagInDB}
-            />
+            {nameTagIsLoaded && (
+              <NameTagForm
+                content={nameTagContent}
+                onNameTagContentChange={updateNameTagContent}
+                onSaveButtonClick={updateNameTagInDB}
+              />
+            )}
           </div>
 
           <div page-label="mindfulness">

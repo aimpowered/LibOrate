@@ -17,20 +17,16 @@ export interface NameTagContent {
 
 interface NameTagProps {
   content: NameTagContent;
-  disabled: boolean;
   onNameTagContentChange: SubmitHandler<NameTagContent>;
   onSaveButtonClick: SubmitHandler<NameTagContent>;
 }
 
 export function NameTagForm({
   content,
-  disabled,
   onNameTagContentChange,
   onSaveButtonClick,
 }: NameTagProps) {
-  const { register, handleSubmit, control, watch } = useForm<NameTagContent>({
-    disabled,
-  });
+  const { register, handleSubmit, control, watch } = useForm<NameTagContent>();
   const maxDisclosureLength = 30;
   const disclosureValue = watch("disclosure", content.disclosure ?? "");
   const isOverLimit = disclosureValue.length > maxDisclosureLength;

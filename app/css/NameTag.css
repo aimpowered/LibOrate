@@ -93,8 +93,3 @@
   margin-top: 5px;
   color: red;
 }
-
-:disabled {
-  background-color: #eee;
-  opacity: 0.3;
-}
