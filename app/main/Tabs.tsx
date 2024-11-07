@@ -1,7 +1,6 @@
 // Under Review
 
 import React, { Component, ReactNode } from "react";
-import PropTypes from "prop-types";
 import Tab from "./Tab";
 
 interface TabsProps {
@@ -15,10 +14,6 @@ interface TabsState {
 type TabElement = React.ReactElement<React.ComponentProps<typeof Tab>>;
 
 class Tabs extends Component<TabsProps, TabsState> {
-  static propTypes = {
-    children: PropTypes.instanceOf(Array).isRequired,
-  };
-
   constructor(props: TabsProps) {
     super(props);
 

@@ -1,10 +1,10 @@
 // SignIn API endpoint
-import startDB from "@/lib/db";
 import UserModel from "@/models/userModel";
 import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 import { DefaultUser } from "next-auth";
+import startDB from "@/lib/db";
 declare module "next-auth" {
   interface User extends DefaultUser {
     role: string;
@@ -19,12 +19,14 @@ const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       type: "credentials",
-      credentials: {},
+      credentials: {
+        email: {},
+        password: {},
+      },
       async authorize(credentials, req) {
-        const { email, password } = credentials as {
-          email: string;
-          password: string;
-        };
+        if (!credentials) throw new Error("No credentials found!");
+        const { email, password } = credentials;
+
         await startDB();
 
         const user = await UserModel.findOne({ email });

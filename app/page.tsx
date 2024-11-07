@@ -4,6 +4,7 @@ import React, { ChangeEventHandler, FormEventHandler, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Alert from "@/components/Alert";
+import { log } from "@/lib/log";
 
 const Login = () => {
   const [error, setError] = useState("");
@@ -19,13 +20,6 @@ const Login = () => {
     setUserInfo({ ...userInfo, [name]: value });
   };
 
-  const newLogActionRequest = {
-    userEmail: "",
-    action: "",
-    timestamp: new Date(),
-    metadata: JSON.stringify({}),
-  };
-
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
 
@@ -35,27 +29,12 @@ const Login = () => {
       redirect: false,
     });
 
-    //setting values of newLogActionRequest
-    newLogActionRequest.userEmail = email;
-    newLogActionRequest.timestamp = new Date();
-    newLogActionRequest.metadata = JSON.stringify(res);
-
     if (res?.error) {
-      newLogActionRequest.action = "user_sign_in_error";
-      await fetch("/api/log", {
-        method: "POST",
-        body: JSON.stringify(newLogActionRequest),
-      }).then((res) => res.json());
+      log(email, "sign_in_error", res);
       return setError(res.error);
-    } else {
-      newLogActionRequest.action = "user_sign_in";
-      await fetch("/api/log", {
-        method: "POST",
-        body: JSON.stringify(newLogActionRequest),
-      }).then((res) => res.json());
     }
-
     router.replace("/main");
+    log(email, "sign_in_success", res);
   };
 
   return (
@@ -67,8 +46,8 @@ const Login = () => {
         <form onSubmit={handleSubmit}>
           {error ? <Alert value={error} /> : null}
           <div className="mb-4">
+            <label htmlFor="email">Email</label>
             <input
-              placeholder="Email"
               type="email"
               id="email"
               name="email"
@@ -79,8 +58,8 @@ const Login = () => {
             />
           </div>
           <div className="mb-4">
+            <label htmlFor="password">Password</label>
             <input
-              placeholder="Password"
               type="password"
               id="password"
               name="password"

@@ -34,8 +34,9 @@ jobs:
         echo "ZM_CLIENT_SECRET=csecret" >> .env
         echo "ZM_REDIRECT_URL=https://example.org" >> .env
         echo "SESSION_SECRET=ssecret" >> .env
+        echo "DATABASE_URL=mongodb://example.org" >> .env
     - run: npm run build --if-present
-    
+
   format:
     runs-on: ubuntu-latest
 
@@ -48,3 +49,25 @@ jobs:
 
       - name: Check formatting
         run: npm run prettier:check
+
+
+  cypress-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      # Install npm dependencies, cache them correctly
+      # and run all Cypress tests
+      - name: 'Create env file'
+        run: |
+          echo "ZM_CLIENT_ID=id" > .env
+          echo "ZM_CLIENT_SECRET=csecret" >> .env
+          echo "ZM_REDIRECT_URL=https://example.org" >> .env
+          echo "SESSION_SECRET=ssecret" >> .env
+          echo "NEXTAUTH_SECRET=nsecret" >> .env
+          echo "DATABASE_URL=test" >> .env
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        with:
+          build: npm run build
+          start: npm start

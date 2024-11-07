@@ -4,29 +4,20 @@ import { userEvent } from "@testing-library/user-event";
 
 import { NameTagForm } from "@/components/NameTagForm";
 
-const currentNameTag = {
+const emptyNameTag = Object.freeze({
   visible: false,
   preferredName: "Test User",
   pronouns: "",
   disclosure: "",
-};
-const updateNameTagContent = jest.fn();
-
-jest.mock("next/navigation", () => jest.requireActual("next-router-mock"));
-jest.mock("../lib/zoomapi", () => jest.requireActual("../lib/fakezoomapi"));
-
-global.fetch = jest.fn(() =>
-  Promise.resolve({
-    json: () => Promise.resolve({}),
-  }),
-);
+});
 
 describe("NameTagForm", () => {
   it("renders the heading and input fields", () => {
     render(
       <NameTagForm
-        content={currentNameTag}
-        onNameTagContentChange={updateNameTagContent}
+        content={emptyNameTag}
+        onNameTagContentChange={() => {}}
+        onSaveButtonClick={() => {}}
       />,
     );
     expect(screen.getByText("Preferred Name")).toBeInTheDocument();
@@ -37,25 +28,25 @@ describe("NameTagForm", () => {
   });
 
   it("verifies that the nametag display checkbox can be checked", async () => {
+    const updateNameTagContent = jest.fn();
     render(
       <NameTagForm
-        content={currentNameTag}
+        content={emptyNameTag}
         onNameTagContentChange={updateNameTagContent}
+        onSaveButtonClick={() => {}}
       />,
     );
 
-    const element = screen.getByLabelText("Display Name Tag");
-    expect(element).toBeInTheDocument();
+    const displayNameTag = screen.getByLabelText("Display Name Tag");
+    expect(displayNameTag).toBeInTheDocument();
 
-    let checkboxInput = screen.getByRole("checkbox");
+    const checkboxInput = screen.getByRole("checkbox");
+    expect(checkboxInput).toBe(displayNameTag);
+    expect(displayNameTag).not.toBeChecked();
 
-    expect(checkboxInput).toBe(element);
+    await userEvent.click(displayNameTag);
 
-    expect(checkboxInput).not.toBeChecked();
-    expect(currentNameTag.visible).toBe(false);
-    await userEvent.click(checkboxInput);
-    expect(checkboxInput).toBeChecked();
-    //expect(currentNameTag.visible).toBe(true);
+    expect(displayNameTag).toBeChecked();
     await waitFor(() => {
       expect(updateNameTagContent).toHaveBeenCalled();
       expect(updateNameTagContent.mock.calls[0][0]).toEqual(
@@ -72,8 +63,9 @@ describe("NameTagForm", () => {
   it("checks that self disclosure character length limit is working", async () => {
     render(
       <NameTagForm
-        content={currentNameTag}
-        onNameTagContentChange={updateNameTagContent}
+        content={{ ...emptyNameTag, disclosure: "I have a stutter" }}
+        onNameTagContentChange={() => {}}
+        onSaveButtonClick={() => {}}
       />,
     );
 
@@ -91,5 +83,23 @@ describe("NameTagForm", () => {
     expect(
       screen.getByText((content) => content.includes("Exceeded length limit!")),
     ).toBeInTheDocument();
+  });
+
+  it("checks that the submit buton works", async () => {
+    const saveButtonCallback = jest.fn();
+    render(
+      <NameTagForm
+        content={emptyNameTag}
+        onNameTagContentChange={() => {}}
+        onSaveButtonClick={saveButtonCallback}
+      />,
+    );
+
+    const submit = screen.getByText("Save Name Tag");
+
+    await userEvent.click(submit);
+    await waitFor(() => {
+      expect(saveButtonCallback).toHaveBeenCalled();
+    });
   });
 });

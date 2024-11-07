@@ -6,8 +6,6 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import "@/app/css/NameTag.css";
 import Switch from "@mui/material/Switch";
 import Button from "@mui/material/Button";
-import { updateNameTagInDB } from "@/lib/nametag_db";
-import { getSession } from "next-auth/react";
 
 // TODO: deduplicate this with EnabledNameTagBadge
 export interface NameTagContent {
@@ -20,58 +18,30 @@ export interface NameTagContent {
 interface NameTagProps {
   content: NameTagContent;
   onNameTagContentChange: SubmitHandler<NameTagContent>;
+  onSaveButtonClick: SubmitHandler<NameTagContent>;
 }
 
-export function NameTagForm({ content, onNameTagContentChange }: NameTagProps) {
+export function NameTagForm({
+  content,
+  onNameTagContentChange,
+  onSaveButtonClick,
+}: NameTagProps) {
   const { register, handleSubmit, control, watch } = useForm<NameTagContent>();
   const maxDisclosureLength = 30;
-  const disclosureValue = watch(
-    "disclosure",
-    content.disclosure || "I have a stutter",
-  );
+  const disclosureValue = watch("disclosure", content.disclosure ?? "");
   const isOverLimit = disclosureValue.length > maxDisclosureLength;
   const bottom_padding = 12;
-
-  const newLogActionRequest = {
-    userEmail: "",
-    action: "",
-    timestamp: new Date(),
-    metadata: JSON.stringify({}),
-  };
 
   // Button click handler to manually update database with specific fields
   const handleSaveButtonClick = () => {
     const updatedData = {
-      preferredName: watch("preferredName", content.preferredName),
-      pronouns: watch("pronouns", content.pronouns),
-      disclosure: watch("disclosure", content.disclosure),
-      visible: watch("visible", content.visible),
+      preferredName: watch("preferredName", content.preferredName ?? ""),
+      pronouns: watch("pronouns", content.pronouns ?? ""),
+      disclosure: disclosureValue,
+      visible: watch("visible", content.visible ?? false),
     };
-    updateNameTagInDB(updatedData); // Update DB with current form data
+    onSaveButtonClick(updatedData); // Update DB with current form data
   };
-
-  async function logNameTagDisplay() {
-    const session = await getSession();
-
-    if (session && session.user) {
-      const logUpdatedData = {
-        preferredName: watch("preferredName", content.preferredName),
-        pronouns: watch("pronouns", content.pronouns),
-        disclosure: watch("disclosure", content.disclosure),
-        visible: watch("visible", content.visible),
-      };
-
-      newLogActionRequest.userEmail = session.user.email as string;
-      newLogActionRequest.action = "nametag_display_change";
-      newLogActionRequest.timestamp = new Date();
-      newLogActionRequest.metadata = JSON.stringify(logUpdatedData);
-
-      await fetch("/api/log", {
-        method: "POST",
-        body: JSON.stringify(newLogActionRequest),
-      }).then((res) => res.json());
-    }
-  }
 
   return (
     <div className="tab-container">
@@ -79,17 +49,19 @@ export function NameTagForm({ content, onNameTagContentChange }: NameTagProps) {
 
       <form onSubmit={handleSubmit(onNameTagContentChange)}>
         <div style={{ paddingBottom: bottom_padding }}>
-          <label>Preferred Name</label>
+          <label htmlFor="name">Preferred Name</label>
           <input
             className="text-input"
+            id="name"
             defaultValue={content.preferredName}
             {...register("preferredName", { required: true })}
           />
         </div>
         <div style={{ paddingBottom: bottom_padding + 5 }}>
-          <label>Pronouns</label>
+          <label htmlFor="pronouns">Pronouns</label>
           <select
             className="select-input"
+            id="pronouns"
             defaultValue={content.pronouns}
             {...register("pronouns")}
           >
@@ -101,10 +73,11 @@ export function NameTagForm({ content, onNameTagContentChange }: NameTagProps) {
           </select>
         </div>
         <div style={{ paddingBottom: bottom_padding }}>
-          <label>Something About Me</label>
+          <label htmlFor="disclosure">Something About Me</label>
           <input
             className="text-input"
-            defaultValue={content.disclosure || "I have a stutter"}
+            id="disclosure"
+            defaultValue={content.disclosure}
             {...register("disclosure", { maxLength: maxDisclosureLength })}
           />
           <div className={`char-count ${isOverLimit ? "warning" : ""}`}>
@@ -132,7 +105,6 @@ export function NameTagForm({ content, onNameTagContentChange }: NameTagProps) {
                       checked={value}
                       onChange={(e) => {
                         onChange(e);
-                        logNameTagDisplay();
                         handleSubmit(onNameTagContentChange)();
                       }}
                       type="checkbox"

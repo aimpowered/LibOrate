@@ -1,51 +1,34 @@
 import { NameTagContent } from "@/components/NameTagForm";
 import { getSession } from "next-auth/react";
 
-export async function fetchNametagFromDB(): Promise<
-  NameTagContent | undefined
-> {
-  const session = await getSession();
-
-  if (session && session.user) {
-    let nameTagToReturn = undefined;
-
-    await fetch(
-      "/api/auth/users/userData/nameTag?userEmail=" + session.user.email,
-      { method: "GET" },
-    )
-      .then((res) => res.json())
-      .then((resJson) => {
-        if (resJson.success && resJson.nameTag) {
-          nameTagToReturn = resJson.nameTag;
-        } else {
-          console.log("No nametag stored in DB.");
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-
-    return nameTagToReturn;
-  } else {
-    console.error("User session is not defined.");
-    return undefined;
+export async function fetchNametagFromDB(): Promise<NameTagContent> {
+  const user = await getUser();
+  const res = await fetch(
+    "/api/auth/users/userData/nameTag?userEmail=" + user.email,
+    { method: "GET" },
+  );
+  const json = await res.json();
+  if (json.success && json.nameTag) {
+    return json.nameTag;
   }
+  throw new Error("No nametag stored in DB.");
 }
 
 export async function updateNameTagInDB(newNameTag: NameTagContent) {
-  const session = await getSession();
+  const user = await getUser();
+  return fetch("/api/auth/users/userData/nameTag", {
+    method: "POST",
+    body: JSON.stringify({
+      email: user.email,
+      nameTag: newNameTag,
+    }),
+  });
+}
 
-  if (session && session.user) {
-    await fetch("/api/auth/users/userData/nameTag", {
-      method: "POST",
-      body: JSON.stringify({
-        email: session.user.email,
-        nameTag: newNameTag,
-      }),
-    })
-      .then((res) => res.json())
-      .catch((error) => {
-        console.error(error);
-      });
+async function getUser() {
+  const session = await getSession();
+  if (!session || !session.user) {
+    throw new Error("User session is not defined.");
   }
+  return session.user;
 }

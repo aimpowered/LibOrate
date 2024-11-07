@@ -1,5 +1,3 @@
-// Under Review
-
 "use client";
 
 import React from "react";
@@ -13,7 +11,7 @@ import { AffirmationCarousel } from "@/components/AffirmationCarousel";
 import { HandWaveBadge, DrawBadgeApi } from "@/lib/draw_badge_api";
 import { createFromConfig, ZoomApiWrapper } from "@/lib/zoomapi";
 import { ConfigOptions } from "@zoom/appssdk";
-import { fetchNametagFromDB } from "@/lib/nametag_db";
+import { fetchNametagFromDB, updateNameTagInDB } from "@/lib/nametag_db";
 import Divider from "@mui/material/Divider";
 
 const zoomConfigOptions: ConfigOptions = {
@@ -39,13 +37,16 @@ const defaultAffirmations = [
   { id: 4, text: "I have the right to stutter" },
 ];
 
+const defaultNameTag: NameTagContent = {
+  visible: false,
+  preferredName: "",
+  pronouns: "",
+  disclosure: "I have a stutter",
+};
+
 function App() {
-  const [nameTagContent, setNameTagContent] = useState<NameTagContent>({
-    visible: false,
-    preferredName: "",
-    pronouns: "",
-    disclosure: "",
-  });
+  const [nameTagContent, setNameTagContent] =
+    useState<NameTagContent>(defaultNameTag);
 
   const [nameTagIsLoaded, setNameTagIsLoaded] = useState(false);
 
@@ -57,9 +58,6 @@ function App() {
   const updateHandWaveBadge = (badge: HandWaveBadge) => {
     foregroundDrawer.drawHandWave(badge);
   };
-
-  //TODO: query and load user saved buttons;
-  const savedWaveHandButtons = defaultWaveHandButtons;
 
   useEffect(() => {
     fetchNametagFromDB().then((newNameTag) => {
@@ -77,7 +75,7 @@ function App() {
       </div>
 
       <WaveHandPicker
-        initialHands={savedWaveHandButtons}
+        initialHands={defaultWaveHandButtons}
         updateHandWaveBadge={updateHandWaveBadge}
       />
 
@@ -90,6 +88,7 @@ function App() {
               <NameTagForm
                 content={nameTagContent}
                 onNameTagContentChange={updateNameTagContent}
+                onSaveButtonClick={updateNameTagInDB}
               />
             )}
           </div>
