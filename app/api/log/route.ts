@@ -22,8 +22,8 @@ type NewResponse = NextResponse<{ log?: NewLogActionResponse; error?: string }>;
 // Make a POST request to create a new log
 export const POST = async (req: Request): Promise<NewResponse> => {
   const session = await getServerSession();
-  const {action, ...rest} = await req.json() as NewLogActionRequest;
-  const userEmail = session?.user?.email ?? rest.userEmail ?? 'NO_EMAIL';
+  const { action, ...rest } = (await req.json()) as NewLogActionRequest;
+  const userEmail = session?.user?.email ?? rest.userEmail ?? "NO_EMAIL";
 
   await startDB();
 
