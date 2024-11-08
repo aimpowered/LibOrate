@@ -1,30 +1,24 @@
-import { getSession } from "next-auth/react";
-
 interface NewLogActionRequest {
-  userEmail: string;
+  userEmail?: string;
   action: string;
   metadata?: object;
 }
 
-export function log(email: string, action: string, metadata?: object) {
-  const req: NewLogActionRequest = {
-    userEmail: email,
-    action,
-  };
+export enum Action {
+  SIGN_UP = "sign_up_success",
+  SIGN_UP_FAILURE = "sign_up_failure",
+  LOG_IN = "log_in_success",
+  LOG_IN_FAIL = "log_in_failure",
+  NAME_BADGE_ON = "name_badge_activated",
+  NAME_BADGE_OFF = "name_badge_deactivated",
+}
+
+export function log(action: Action, email?: string, metadata?: object) {
+  const req: NewLogActionRequest = { action };
+  if (email) req.userEmail = email;
   if (metadata) req.metadata = metadata;
   fetch("/api/log", {
     method: "POST",
     body: JSON.stringify(req),
   });
-}
-
-export async function logWithSession(action: string, metadata?: object) {
-  const session = await getSession();
-
-  let email = session?.user?.email;
-  if (email == null) {
-    email = "!!no logged in user session!!";
-  }
-
-  log(email, action, metadata);
 }

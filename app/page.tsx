@@ -4,7 +4,7 @@ import React, { ChangeEventHandler, FormEventHandler, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Alert from "@/components/Alert";
-import { log } from "@/lib/log";
+import { Action, log } from "@/lib/log";
 
 const Login = () => {
   const [error, setError] = useState("");
@@ -30,11 +30,11 @@ const Login = () => {
     });
 
     if (res?.error) {
-      log(email, "sign_in_error", res);
+      log(Action.LOG_IN_FAIL, email, res);
       return setError(res.error);
     }
     router.replace("/main");
-    log(email, "sign_in_success", res);
+    log(Action.LOG_IN, email);
   };
 
   return (
