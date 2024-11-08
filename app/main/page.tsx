@@ -62,12 +62,14 @@ function App() {
   };
 
   useEffect(() => {
-    fetchNametagFromDB().then((newNameTag) => {
-      if (newNameTag !== undefined) {
-        setNameTagContent(newNameTag);
-      }
-      setNameTagIsLoaded(true);
-    }).catch((err) => console.error(err));
+    fetchNametagFromDB()
+      .then((newNameTag) => {
+        if (newNameTag !== undefined) {
+          setNameTagContent(newNameTag);
+        }
+        setNameTagIsLoaded(true);
+      })
+      .catch((err) => console.error(err));
   }, []);
 
   return (

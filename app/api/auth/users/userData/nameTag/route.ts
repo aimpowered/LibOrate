@@ -9,12 +9,11 @@ import { getServerSession } from "next-auth/next";
  */
 
 type FetchUserNametagResponse = NextResponse<
-  | { nameTag: NameTagContent }
-  | { error: string }
+  { nameTag: NameTagContent } | { error: string }
 >;
 
 export const GET = async (): Promise<FetchUserNametagResponse> => {
-  const {userEmail, error} = await loggedInUserEmail();
+  const { userEmail, error } = await loggedInUserEmail();
 
   if (error) return NextResponse.json({ error }, { status: 400 });
 
@@ -29,25 +28,21 @@ export const GET = async (): Promise<FetchUserNametagResponse> => {
     );
   }
 
-  return NextResponse.json(
-    { nameTag: user.nameTag },
-    { status: 200 },
-  );
+  return NextResponse.json({ nameTag: user.nameTag }, { status: 200 });
 };
 
 /**
  * POST request to update the user's nametag
  */
 type UpdateUserNametagResponse = NextResponse<
-  | { success: true }
-  | { error: string }
+  { success: true } | { error: string }
 >;
 
 export const POST = async (
   req: NextRequest,
 ): Promise<UpdateUserNametagResponse> => {
   const body: object = await req.json();
-  const {userEmail, error} = await loggedInUserEmail();
+  const { userEmail, error } = await loggedInUserEmail();
   if (error) return NextResponse.json({ error }, { status: 400 });
 
   await startDB();
@@ -57,12 +52,12 @@ export const POST = async (
   return NextResponse.json({ success: true }, { status: 200 });
 };
 
-interface SessionResponse { 
-  userEmail?: string
-  error?: string,
+interface SessionResponse {
+  userEmail?: string;
+  error?: string;
 }
 
-async function loggedInUserEmail(): Promise<SessionResponse>  {
+async function loggedInUserEmail(): Promise<SessionResponse> {
   const session = await getServerSession();
   if (!session || !session.user) {
     return { error: "Session does not exist." };
@@ -71,5 +66,5 @@ async function loggedInUserEmail(): Promise<SessionResponse>  {
   if (user.email == null) {
     return { error: "User has no email." };
   }
-  return {userEmail: user.email};
+  return { userEmail: user.email };
 }
