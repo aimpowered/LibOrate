@@ -10,7 +10,6 @@ describe("Logging in spec", () => {
     cy.contains("Email").click().type(email);
     cy.contains("Password").click().type(password);
     cy.contains("Sign Up").click();
-    cy.wait(5000); // TODO: make this faster and remove this line
     // Sign up successful
     cy.contains("User created successfully");
 
