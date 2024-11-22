@@ -2,7 +2,7 @@
 "use client";
 import React, { ChangeEventHandler, FormEventHandler, useState } from "react";
 import "../css/sign-up.css"; // Import CSS file
-import { log } from "@/lib/log";
+import { Action, log } from "@/lib/log";
 
 const SignUp = () => {
   const [busy, setBusy] = useState(false);
@@ -28,10 +28,10 @@ const SignUp = () => {
     })
       .then((res) => {
         setIsUserCreated(true);
-        log(userInfo.email, "sign_up_success", res);
+        log(Action.SIGN_UP, userInfo.email, res);
       })
       .catch((e) => {
-        log(userInfo.email, "sign_up_failure", e);
+        log(Action.SIGN_UP_FAILURE, userInfo.email, e);
       })
       .finally(() => {
         setBusy(false);

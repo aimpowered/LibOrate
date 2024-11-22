@@ -71,3 +71,9 @@ jobs:
         with:
           build: npm run build
           start: npm start
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots

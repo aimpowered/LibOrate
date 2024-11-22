@@ -13,6 +13,7 @@ import { createFromConfig, ZoomApiWrapper } from "@/lib/zoomapi";
 import { ConfigOptions } from "@zoom/appssdk";
 import { fetchNametagFromDB, updateNameTagInDB } from "@/lib/nametag_db";
 import Divider from "@mui/material/Divider";
+import { Action, log } from "@/lib/log";
 
 const zoomConfigOptions: ConfigOptions = {
   capabilities: ["setVirtualForeground", "onMyMediaChange"],
@@ -51,6 +52,9 @@ function App() {
   const [nameTagIsLoaded, setNameTagIsLoaded] = useState(false);
 
   const updateNameTagContent: SubmitHandler<NameTagContent> = (data) => {
+    if (nameTagContent.visible !== data.visible) {
+      log(data.visible ? Action.NAME_BADGE_ON : Action.NAME_BADGE_OFF);
+    }
     setNameTagContent(data);
     foregroundDrawer.drawNameTag(data);
   };
@@ -60,12 +64,14 @@ function App() {
   };
 
   useEffect(() => {
-    fetchNametagFromDB().then((newNameTag) => {
-      if (newNameTag !== undefined) {
-        setNameTagContent(newNameTag);
-      }
-      setNameTagIsLoaded(true);
-    });
+    fetchNametagFromDB()
+      .then((newNameTag) => {
+        if (newNameTag !== undefined) {
+          setNameTagContent(newNameTag);
+        }
+        setNameTagIsLoaded(true);
+      })
+      .catch((err) => console.error(err));
   }, []);
 
   return (
