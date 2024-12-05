@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import MenuItem from "@mui/material/MenuItem";
 import { WriteAffirmationCardModal } from "@/components/WriteAffirmationCardModal";
-import '@/app/css/Affirmation.css';
+import "@/app/css/Affirmation.css";
 
 interface EditContentMenuItemProps {
   id: number;
@@ -12,7 +12,7 @@ interface EditContentMenuItemProps {
 export function EditContentMenuItem({
   id,
   initialText,
-  onCardEdit
+  onCardEdit,
 }: EditContentMenuItemProps) {
   const [text, setText] = useState(initialText);
   const [open, setOpen] = useState(false);
@@ -22,13 +22,11 @@ export function EditContentMenuItem({
     setText(updatedText);
     onCardEdit(updatedText);
     setOpen(false);
-  }
+  };
 
   return (
     <React.Fragment>
-      <MenuItem onClick={handleModalOpen}>
-        Edit
-      </MenuItem>
+      <MenuItem onClick={handleModalOpen}>Edit</MenuItem>
       <WriteAffirmationCardModal
         open={open}
         onModalClose={handleModalClose}

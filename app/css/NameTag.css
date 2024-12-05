@@ -25,13 +25,17 @@
 }
 
 .colored-switch .MuiSwitch-switchBase.Mui-checked:hover {
-  background-color: rgba(214, 128, 113, 0.04); /* Set the hover color using a hex value */
+  background-color: rgba(
+    214,
+    128,
+    113,
+    0.04
+  ); /* Set the hover color using a hex value */
 }
 
 .colored-switch .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track {
   background-color: #d68071; /* Set the track color using a hex value */
 }
-
 
 .form-container {
   display: flex;
@@ -62,9 +66,30 @@
   margin-left: 0px;
   margin-top: 10px;
   margin-bottom: 10px;
-  padding: 0px 5px 0px 5px; 
+  padding: 0px 5px 0px 5px;
 }
 
 .controller-container:hover {
   background-color: #f0f0f0; /* Change background color on hover */
+}
+
+.char-count {
+  margin-top: 5px;
+  font-size: 12px;
+  color: #666;
+}
+
+.char-count.warning {
+  color: red;
+}
+
+.char-limit-info {
+  margin-left: 5px;
+  font-style: italic;
+}
+
+.warning-message {
+  display: block;
+  margin-top: 5px;
+  color: red;
 }

@@ -1,110 +1,107 @@
-// Under Review
-
 "use client";
 
-import React from 'react';
-import { useState, useEffect } from 'react';
+import React from "react";
+import { useState, useEffect } from "react";
 import { SubmitHandler } from "react-hook-form";
 import Tabs from "./Tabs";
 import Mindfulness from "./Mindfulness";
 import { NameTagContent, NameTagForm } from "@/components/NameTagForm";
 import { WaveHandPicker } from "@/components/WaveHandPicker";
-import { AffirmationCarousel } from '@/components/AffirmationCarousel';
+import { AffirmationCarousel } from "@/components/AffirmationCarousel";
 import { HandWaveBadge, DrawBadgeApi } from "@/lib/draw_badge_api";
 import { createFromConfig, ZoomApiWrapper } from "@/lib/zoomapi";
-import { ConfigOptions }  from "@zoom/appssdk";
-import { fetchNametagFromDB, updateNameTagInDB } from '@/lib/nametag_db';
-import Divider from '@mui/material/Divider';
+import { ConfigOptions } from "@zoom/appssdk";
+import { fetchNametagFromDB, updateNameTagInDB } from "@/lib/nametag_db";
+import Divider from "@mui/material/Divider";
+import { Action, log } from "@/lib/log";
 
 const zoomConfigOptions: ConfigOptions = {
-  capabilities: [
-    'setVirtualForeground',
-    'onMyMediaChange',
-  ]
+  capabilities: ["setVirtualForeground", "onMyMediaChange"],
 };
 const zoomApi: ZoomApiWrapper = createFromConfig(zoomConfigOptions);
 const foregroundDrawer: DrawBadgeApi = new DrawBadgeApi(zoomApi);
 
 const defaultWaveHandButtons = [
-    '',
-    'I\'m not done',
-    'Question',
-    'Agree',
-    'Different Opinion',
-    'Support',
+  "",
+  "I'm not done",
+  "Question",
+  "Agree",
+  "Different Opinion",
+  "Support",
 ];
 
 const defaultAffirmations = [
-    {id: 0, text: 'Say what I want to say, whatever happens will help me grow' },
-    {id: 1, text: 'I can take up space'},
-    {id: 2, text: 'I have an important voice'},
-    {id: 3, text: 'Feel the tension and proceed'},
-    {id: 4, text: 'I have the right to stutter'},
+  { id: 0, text: "Say what I want to say, whatever happens will help me grow" },
+  { id: 1, text: "I can take up space" },
+  { id: 2, text: "I have an important voice" },
+  { id: 3, text: "Feel the tension and proceed" },
+  { id: 4, text: "I have the right to stutter" },
 ];
 
+const defaultNameTag: NameTagContent = {
+  visible: false,
+  preferredName: "",
+  pronouns: "",
+  disclosure: "I have a stutter",
+};
+
 function App() {
-  const [nameTagContent, setNameTagContent] = useState<NameTagContent>({
-    visible:false,
-    preferredName:"",
-    pronouns:"",
-    disclosure:"",
-  });
+  const [nameTagContent, setNameTagContent] =
+    useState<NameTagContent>(defaultNameTag);
 
   const [nameTagIsLoaded, setNameTagIsLoaded] = useState(false);
 
   const updateNameTagContent: SubmitHandler<NameTagContent> = (data) => {
+    if (nameTagContent.visible !== data.visible) {
+      log(data.visible ? Action.NAME_BADGE_ON : Action.NAME_BADGE_OFF);
+    }
     setNameTagContent(data);
     foregroundDrawer.drawNameTag(data);
-
-    // Update nametag in DB
-    updateNameTagInDB(data);
   };
 
   const updateHandWaveBadge = (badge: HandWaveBadge) => {
     foregroundDrawer.drawHandWave(badge);
   };
 
-  //TODO: query and load user saved buttons;
-  const savedWaveHandButtons = defaultWaveHandButtons;
-  
   useEffect(() => {
-    fetchNametagFromDB().then((newNameTag) => {
-      if (newNameTag !== undefined) {
-        setNameTagContent(newNameTag);
-      }
-      setNameTagIsLoaded(true);
-    });
+    fetchNametagFromDB()
+      .then((newNameTag) => {
+        if (newNameTag !== undefined) {
+          setNameTagContent(newNameTag);
+        }
+        setNameTagIsLoaded(true);
+      })
+      .catch((err) => console.error(err));
   }, []);
 
   return (
     <div>
       <div className="header">
-        <AffirmationCarousel
-          initialAffirmations={defaultAffirmations}
-        />
+        <AffirmationCarousel initialAffirmations={defaultAffirmations} />
       </div>
 
       <WaveHandPicker
-        initialHands={savedWaveHandButtons}
+        initialHands={defaultWaveHandButtons}
         updateHandWaveBadge={updateHandWaveBadge}
       />
 
-
       <Divider />
-      
+
       <div>
         <Tabs>
           <div page-label="nametag">
-            {nameTagIsLoaded && <NameTagForm
-              content={nameTagContent}
-              onNameTagContentChange={updateNameTagContent}
-            />}
+            {nameTagIsLoaded && (
+              <NameTagForm
+                content={nameTagContent}
+                onNameTagContentChange={updateNameTagContent}
+                onSaveButtonClick={updateNameTagInDB}
+              />
+            )}
           </div>
 
           <div page-label="mindfulness">
             <Mindfulness />
           </div>
-
         </Tabs>
       </div>
     </div>

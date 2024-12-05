@@ -1,12 +1,12 @@
 // Session check point
-"use client"
-import {SessionProvider} from "next-auth/react";
+"use client";
+import { SessionProvider } from "next-auth/react";
 import React, { ReactNode } from "react";
 
 interface Props {
-    children: ReactNode;
+  children: ReactNode;
 }
 
 export default function AuthProvider({ children }: Props) {
-    return <SessionProvider>{children}</SessionProvider>;
+  return <SessionProvider>{children}</SessionProvider>;
 }

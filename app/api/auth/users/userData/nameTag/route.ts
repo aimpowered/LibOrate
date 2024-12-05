@@ -2,64 +2,69 @@ import { NameTagContent } from "@/components/NameTagForm";
 import startDB from "@/lib/db";
 import UserModel from "@/models/userModel";
 import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth/next";
 
 /**
  * GET request to fetch the user's nametag
  */
 
-type FetchUserNametagResponse = NextResponse<{
-  success?: boolean;
-  error?: string;
-  nameTag?: NameTagContent;
-}>;
+type FetchUserNametagResponse = NextResponse<
+  { nameTag: NameTagContent } | { error: string }
+>;
 
-export const GET = async (req: NextRequest): Promise<FetchUserNametagResponse> => {
-    const userEmail = req.nextUrl.searchParams.get("userEmail");
+export const GET = async (): Promise<FetchUserNametagResponse> => {
+  const { userEmail, error } = await loggedInUserEmail();
 
-    if (!userEmail) {
-      return NextResponse.json({
-        success: false,
-        error: "userEmail param not specified."
-      },
-      { status: 400 });
-    }
-    
-    await startDB();
+  if (error) return NextResponse.json({ error }, { status: 400 });
 
-    const user = await UserModel.findOne({ email: userEmail });
+  await startDB();
 
-    if (!user) {
-      return NextResponse.json({
-        success: false,
-        error: "User does not exist."
-      },
-      { status: 400 });
-    }
-    
-    return NextResponse.json({
-      success: true,
-      nameTag: user?.nameTag
-    },
-    { status: 200 });
+  const user = await UserModel.findOne({ email: userEmail });
+
+  if (!user) {
+    return NextResponse.json(
+      { error: "User does not exist." },
+      { status: 400 },
+    );
+  }
+
+  return NextResponse.json({ nameTag: user.nameTag }, { status: 200 });
 };
 
 /**
  * POST request to update the user's nametag
  */
+type UpdateUserNametagResponse = NextResponse<
+  { success: true } | { error: string }
+>;
 
-interface UpdateUserNametagRequest {
-    email: string;
-    nameTag: NameTagContent;
+export const POST = async (
+  req: NextRequest,
+): Promise<UpdateUserNametagResponse> => {
+  const body: object = await req.json();
+  const { userEmail, error } = await loggedInUserEmail();
+  if (error) return NextResponse.json({ error }, { status: 400 });
+
+  await startDB();
+
+  await UserModel.updateOne({ email: userEmail }, { nameTag: body });
+
+  return NextResponse.json({ success: true }, { status: 200 });
+};
+
+interface SessionResponse {
+  userEmail?: string;
+  error?: string;
 }
 
-type UpdateUserNametagResponse = NextResponse<{ success?: boolean; error?: string }>;
-
-export const POST = async (req: Request): Promise<UpdateUserNametagResponse> => {
-    const body = (await req.json()) as UpdateUserNametagRequest;
-
-    await startDB();
-
-    await UserModel.updateOne({ email: body.email }, { nameTag: body.nameTag });
-
-    return NextResponse.json({ success: true, }, { status: 200 });
-};
+async function loggedInUserEmail(): Promise<SessionResponse> {
+  const session = await getServerSession();
+  if (!session || !session.user) {
+    return { error: "Session does not exist." };
+  }
+  const user = session.user;
+  if (user.email == null) {
+    return { error: "User has no email." };
+  }
+  return { userEmail: user.email };
+}

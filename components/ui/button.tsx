@@ -1,8 +1,8 @@
 import { Button as BaseButton } from "@mui/base/Button";
 import { styled } from "@mui/system";
 
-const orange = '#d68071';
-const gray = '#f0f0f0';
+const orange = "#d68071";
+const gray = "#f0f0f0";
 
 const Button = styled(BaseButton)(
   ({ theme }) => `
@@ -28,4 +28,4 @@ const Button = styled(BaseButton)(
   `,
 );
 
-export { Button }
+export { Button };
