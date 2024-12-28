@@ -10,7 +10,6 @@ interface NewLogActionRequest {
 }
 
 interface NewLogActionResponse {
-  id: string;
   userEmail: string;
   action: string;
   timestamp: Date;
@@ -31,7 +30,6 @@ export const POST = async (req: Request): Promise<NewResponse> => {
 
   return NextResponse.json({
     log: {
-      id: log._id.toString(),
       userEmail: log.userEmail,
       action: log.action,
       timestamp: log.timestamp,
