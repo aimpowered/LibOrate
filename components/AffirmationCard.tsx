@@ -46,7 +46,7 @@ export function AffirmationCard({
   };
 
   return (
-    <Card className="self-affirm-card">
+    <Card className="self-affirm-card flex items-center">
       <CardActions
         disableSpacing
         sx={{
@@ -54,6 +54,10 @@ export function AffirmationCard({
           justifyContent: "flex-end",
           alignItems: "flex-start",
           p: 0,
+          position:'absolute',
+          top: 0,
+          left:0,
+          right:0
         }}
       >
         <IconButton
