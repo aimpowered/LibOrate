@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -24,9 +20,7 @@
       }
     ],
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@/*": ["./*"]
     }
   },
   "include": [
@@ -34,10 +28,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "app/backup_page.js"
-, "app/post-installation/page.js", "app/post-installation/page.js"  ],
-  "exclude": [
-    "cypress",
-    "node_modules"
-  ]
+    "**/*.js",
+    "**/*.jsx"
+  ],
+  "exclude": ["cypress", "node_modules"]
 }
