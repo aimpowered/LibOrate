@@ -19,6 +19,9 @@ https://github.com/aimpowered/LibOrate/issues/59
 - **Optimized Affirmations Storage**  
   ⮕ Migrated from redundant `{id: number, text: string}` objects to simplified `string[]` format, using array indices as identifiers.
   ⮕ add `affirmations: { type: [String], default: [] }` to UserModal to record affirmations.
+- **UserModal bug fix**
+  ⮕ Switch from bcrypt to bcryptjs。`import bcrypt from "bcryptjs"`,The bcrypt package can be quite strict regarding Node.js version compatibility - versions that are either too old or too new may impact its usability. To ensure broader compatibility, we're substituting it with the bcryptjs package instead
+
 
 #### API & State Management
 

@@ -79,7 +79,7 @@ const PrevArrow = styled(RoundButton)`
   left: 10px;
 `;
 
-export default () => {
+export default function Carousel() {
   const {
     data,
     currentIndex,
@@ -201,4 +201,4 @@ export default () => {
       </PrevArrow>
     </CarouselWrapper>
   );
-};
+}

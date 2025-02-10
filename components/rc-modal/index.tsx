@@ -66,7 +66,7 @@ const Modal: React.FC<ModalProps> = ({ children, onClose, width }) => {
 };
 
 let modalContainer: HTMLDivElement | null = null;
-let root: any | null = null;
+let root: ReturnType<typeof createRoot> | null = null;
 
 interface OpenProps {
   width?: number;
@@ -90,7 +90,7 @@ const open = (content: React.ReactNode, options: OpenProps = {}) => {
     }
   };
 
-  root.render(
+  root?.render(
     <Modal onClose={handleClose} width={width}>
       {content}
     </Modal>
@@ -174,4 +174,6 @@ const alert = (content: string, { width }: AlertProps) => {
   open(<Alert content={content} onClose={handleClose} />, { width });
 };
 
-export default { open, close, confirm, alert };
+const modalFunctions = { open, close, confirm, alert };
+
+export default modalFunctions;

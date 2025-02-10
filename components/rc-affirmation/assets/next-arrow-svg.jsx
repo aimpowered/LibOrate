@@ -1,4 +1,4 @@
-export default () => {
+export default function NextArrowSvg() {
   return (
     <svg
       width="1rem"
@@ -14,4 +14,5 @@ export default () => {
       <path d="m12 5 7 7-7 7"></path>
     </svg>
   );
-};
+}
+// Compare this snippet from components/rc-affirmation/assets/prev-arrow-svg.jsx:

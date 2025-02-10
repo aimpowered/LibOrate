@@ -83,4 +83,6 @@ const dele = (handle) => {
   });
 };
 
-export default { add, dele, update };
+const carouselOpt = { add, dele, update };
+
+export default carouselOpt;

@@ -92,7 +92,7 @@ const HoverButton: React.FC<HoverButtonProps> = ({
       popupRef.current.style.top = `${top}px`;
       popupRef.current.style.left = `${left}px`;
     }
-  }, [isPopuped, place]);
+  }, [isPopuped, place, offsetY]);
 
   const handleButtonClick = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();

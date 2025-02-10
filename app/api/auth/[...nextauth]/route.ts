@@ -38,7 +38,7 @@ const authOptions: NextAuthOptions = {
         return {
           email: user.email,
           role: user.role,
-          id: user._id,
+          id: user._id.toString(),
         };
       },
     }),
@@ -49,7 +49,6 @@ const authOptions: NextAuthOptions = {
         token.role = user.role;
         token.id = user.id;
       }
-      // reutrn final_token
       return token;
     },
     session({ session, token }) {

@@ -92,7 +92,7 @@ const ResizeBox = ({ children }) => {
   useEffect(() => {
     orignWidth = boxRef.current?.offsetWidth || 400;
     orignHeight = boxRef.current?.offsetHeight || 128;
-  }, [boxRef.current]);
+  }, []);
 
   const handleMouseDown = (e, direction) => {
     e.preventDefault();

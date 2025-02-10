@@ -7,7 +7,7 @@ import Tabs from "./Tabs";
 import Mindfulness from "./Mindfulness";
 import { NameTagContent, NameTagForm } from "@/components/NameTagForm";
 import { WaveHandPicker } from "@/components/WaveHandPicker";
-import { AffirmationCarousel } from "@/components/AffirmationCarousel";
+// import { AffirmationCarousel } from "@/components/AffirmationCarousel";
 import RcAffirmation from "@/components/rc-affirmation";
 import { HandWaveBadge, DrawBadgeApi } from "@/lib/draw_badge_api";
 import { createFromConfig, ZoomApiWrapper } from "@/lib/zoomapi";
