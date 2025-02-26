@@ -50,11 +50,10 @@ export function AffirmationCard({
       <CardActions
         disableSpacing
         sx={{
-          position: "absolute", // Keep button in the top-right corner
-          top: 0,
-          right: 0,
-          zIndex: 1, // Make sure it's above content so that CardContent doesn't cover it
-          p: 1,
+          display: "flex",
+          justifyContent: "flex-end",
+          alignItems: "flex-start",
+          p: 0,
         }}
       >
         <IconButton
