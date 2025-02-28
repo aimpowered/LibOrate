@@ -1,6 +1,8 @@
 /* Affirmation.css */
 .self-affirm-carousel {
   display: flex;
+  flex-grow: 1;
+  height: 100px;
 }
 
 .self-affirm-card {
@@ -10,23 +12,23 @@
   width: 100%;
   height: 100%;
   background: linear-gradient(#98b8cd, #cbb3e5); /* Example gradient colors */
-  align-items: center;
+  display: flex;
+  /* flex-direction: column; Stack children vertically */
+  align-items: center; /* Center horizontally */
+  justify-content: center; /* Center content */
+  overflow: hidden;
+  container-type: size;
 }
 
 .self-affirm-text {
   color: #ffffff; /* White text, change if needed */
-  font-size: 32px;
+  font-size: min(32px, 18cqh);
   text-align: center;
-  padding: 1.5rem;
-  justify-content: center;
-  align-items: center;
-  display: flex;
+  width: 75%;
 }
 
 .self-affirm-new-card-button {
   position: relative;
-  top: 45%;
-  left: 45%;
   width: 10%;
   height: 10%;
 }
@@ -102,4 +104,30 @@
 
 .-right-12 {
   margin-right: 60px !important;
+}
+
+.resize-handle {
+  height: 8px;
+  width: 100%;
+  cursor: row-resize;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  transition-delay: 0.1s;
+  opacity: 0;
+  background: linear-gradient(to bottom, #ddd, #bbb);
+  transition:
+    opacity 0.2s ease-in-out,
+    transform 0.1s ease-out,
+    background 0.2s;
+  position: absolute;
+  border-radius: 10px;
+}
+
+.relative:hover .resize-handle,
+.relative.clicked .resize-handle {
+  opacity: 1;
+  background: linear-gradient(to bottom, #ccc, #999);
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  transform: scaleY(1.1);
 }
