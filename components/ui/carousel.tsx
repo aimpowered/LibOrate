@@ -8,6 +8,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { useResizable } from "../hooks/UseResizable";
 
 type CarouselApi = UseEmblaCarouselType[1];
 type UseCarouselParameters = Parameters<typeof useEmblaCarousel>;
@@ -155,17 +156,40 @@ const CarouselContent = React.forwardRef<
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => {
   const { carouselRef, orientation } = useCarousel();
+  const { height, containerRef, handleDragStart } = useResizable({
+    defaultHeight: "auto", 
+    minHeight: 100,  // we can set min height by ui design here;
+  });
 
   return (
-    <div ref={carouselRef} className="overflow-hidden">
+    <div
+      ref={(node) => {
+        containerRef.current = node;
+        
+        if (carouselRef && typeof carouselRef === 'function') {
+          carouselRef(node);
+        } else if (carouselRef && 'current' in carouselRef) {
+          (carouselRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+        }
+      }}
+      className={cn(
+        "overflow-hidden relative flex-1",
+        height === "auto" ? "h-full" : ""
+      )}
+      style={height !== "auto" ? { height } : undefined}
+    >
       <div
         ref={ref}
         className={cn(
-          "flex",
+          "flex h-full",
           orientation === "horizontal" ? "-ml-4" : "-mt-4 flex-col",
           className,
         )}
         {...props}
+      />
+      <div
+        className="absolute bottom-0 left-0 right-0 h-2 cursor-row-resize hover:bg-gray-200 transition-colors"
+        onMouseDown={handleDragStart}
       />
     </div>
   );
