@@ -1,7 +1,7 @@
 // Creating Schema to save user data in mongoDB
 // Compare passwords, hash and store
 import { Document, Schema, models, model } from "mongoose";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 interface NameTagContent {
   visible: boolean;
@@ -9,11 +9,13 @@ interface NameTagContent {
   pronouns: string;
   disclosure: string;
 }
+
 interface UserDocument extends Document {
   email: string;
   password: string;
   role: "admin" | "user";
   nameTag: NameTagContent;
+  affirmations: string[];
 }
 
 interface Methods {
@@ -31,6 +33,7 @@ const userSchema = new Schema<UserDocument, {}, Methods>({
     disclosure: { type: String },
     visible: { type: Boolean },
   },
+  affirmations: { type: [String], default: [] },
 });
 
 //Hash the password before saving
