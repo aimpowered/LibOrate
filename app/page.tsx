@@ -90,6 +90,17 @@ const Login = () => {
           </a>{" "}
           now!
         </p>
+        <p className="mt-8 text-center text-gray-500">
+          Forgot password,{" "}
+          <a
+            href="/recover-password"
+            className="text-blue-500 underline"
+            style={{ color: "#d68071" }}
+          >
+            recover here
+          </a>{" "}
+          now!
+        </p>
       </div>
     </div>
   );
