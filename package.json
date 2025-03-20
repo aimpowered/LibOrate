@@ -19,6 +19,7 @@
         "@mui/material": "^5.15.1",
         "@mui/system": "^6.1.5",
         "@zoom/appssdk": "^0.16.15",
+        "axios": "^1.8.4",
         "bcrypt": "^5.1.1",
         "clsx": "^2.1.1",
         "dotenv": "^16.3.1",

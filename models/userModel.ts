@@ -23,7 +23,7 @@ interface Methods {
 //DB Schema
 const userSchema = new Schema<UserDocument, {}, Methods>({
   email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
+  password: { type: String, required: false },
   role: { type: String, enum: ["admin", "user"], default: "user" },
   nameTag: {
     preferredName: { type: String },
