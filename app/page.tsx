@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { AuthorizeOptions } from "@zoom/appssdk";
 import { signIn, useSession } from "next-auth/react";
 import { SessionProvider } from "next-auth/react";
-import { zoomApi } from "@/lib/zoomapi";
+import { ZoomApiWrapper } from "@/lib/zoomapi";
 import { useRouter } from "next/navigation";
 import { log, Action } from "@/lib/log";
 import Alert from "@/components/Alert";
@@ -16,6 +16,19 @@ function App() {
   const effectRan = useRef(false);
 
   const router = useRouter();
+
+  async function getZoomApi(): Promise<ZoomApiWrapper> {
+    if (
+      typeof window !== "undefined" &&
+      (window as { zoomApi?: ZoomApiWrapper }).zoomApi
+    ) {
+      return (window as unknown as { zoomApi: ZoomApiWrapper }).zoomApi;
+    } else {
+      const zoomModule = await import("@/lib/zoomapi");
+      return zoomModule.zoomApi;
+    }
+  }
+
   useEffect(() => {
     if (effectRan.current) return;
 
@@ -23,6 +36,7 @@ function App() {
 
     async function handleAuth() {
       try {
+        const zoomApi = await getZoomApi();
         const options: AuthorizeOptions = {
           state: "state",
           codeChallenge: "codeChallenge",
@@ -45,7 +59,7 @@ function App() {
           }
         });
       } catch (error) {
-        console.error("7. Failed to authorize zoom API:", error);
+        console.error("Failed to authorize zoom API:", error);
         setError((error as Error).message);
       }
     }

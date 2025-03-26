@@ -28,7 +28,6 @@ const authOptions: NextAuthOptions = {
         if (!code) {
           throw new Error("Missing code");
         }
-
         try {
           const tokenResponse = await getZoomAccessToken(code);
           const userProfile = await getZoomUser(
@@ -36,7 +35,6 @@ const authOptions: NextAuthOptions = {
             tokenResponse.api_url,
           );
           await startDB();
-
           let user = await UserModel.findOne({ email: userProfile.email });
           if (!user) {
             user = await UserModel.create({ email: userProfile.email });
