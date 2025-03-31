@@ -46,7 +46,7 @@ const authOptions: NextAuthOptions = {
           };
         } catch (error) {
           console.error(error);
-          throw new Error("Fail to get user profile");
+          throw new Error("Fail to get user profile: ${error.message}");
         }
       },
     }),
