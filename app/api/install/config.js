@@ -1,8 +1,3 @@
-if (process.env.NODE_ENV !== "production") {
-  const dotenv = await import("dotenv");
-  dotenv.config();
-}
-
 const config = process.env;
 const deps = [
   "ZM_CLIENT_ID",
