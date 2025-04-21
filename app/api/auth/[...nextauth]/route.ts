@@ -45,7 +45,6 @@ const authOptions: NextAuthOptions = {
             role: user.role,
           };
         } catch (error) {
-          console.error(error);
           throw new Error("Fail to get user profile: ${error.message}");
         }
       },

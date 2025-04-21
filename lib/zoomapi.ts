@@ -1,8 +1,6 @@
 import zoomSdk, {
-  AuthorizeOptions,
   ConfigOptions,
   ConfigResponse,
-  GeneralMessageResponse,
   VideoMedia,
 } from "@zoom/appssdk";
 
@@ -21,6 +19,15 @@ export interface AuthorizeEvent {
 
 export interface AuthorizeCallback {
   (event: AuthorizeEvent): void;
+}
+
+export interface AuthorizeOptions {
+  codeChallenge: string;
+  state: string;
+}
+
+export interface GeneralMessageResponse {
+  message: string;
 }
 
 export interface ZoomApiWrapper {

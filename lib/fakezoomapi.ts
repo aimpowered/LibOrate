@@ -2,8 +2,9 @@ import {
   DrawImageCallback,
   ZoomApiWrapper,
   AuthorizeCallback,
+  AuthorizeOptions,
+  GeneralMessageResponse,
 } from "./zoomapi";
-import { AuthorizeOptions, GeneralMessageResponse } from "@zoom/appssdk";
 
 class FakeZoomApi implements ZoomApiWrapper {
   private authorizeCallback: AuthorizeCallback | null = null;
