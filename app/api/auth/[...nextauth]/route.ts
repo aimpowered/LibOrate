@@ -28,25 +28,21 @@ const authOptions: NextAuthOptions = {
         if (!code) {
           throw new Error("Missing code");
         }
-        try {
-          const tokenResponse = await getZoomAccessToken(code);
-          const userProfile = await getZoomUser(
-            tokenResponse.access_token,
-            tokenResponse.api_url,
-          );
-          await startDB();
-          let user = await UserModel.findOne({ email: userProfile.email });
-          if (!user) {
-            user = await UserModel.create({ email: userProfile.email });
-          }
-          return {
-            id: user.id,
-            email: user.email,
-            role: user.role,
-          };
-        } catch (error) {
-          throw new Error("Fail to get user profile: ${error.message}");
+        const tokenResponse = await getZoomAccessToken(code);
+        const userProfile = await getZoomUser(
+          tokenResponse.access_token,
+          tokenResponse.api_url,
+        );
+        await startDB();
+        let user = await UserModel.findOne({ email: userProfile.email });
+        if (!user) {
+          user = await UserModel.create({ email: userProfile.email });
         }
+        return {
+          id: user.id,
+          email: user.email,
+          role: user.role,
+        };
       },
     }),
   ],

@@ -36,6 +36,7 @@ function App() {
 
     async function handleAuth() {
       try {
+        console.log("handleAuth called");
         const zoomApi = await getZoomApi();
         const options: AuthorizeOptions = {
           state: "state",
