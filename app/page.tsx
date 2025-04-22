@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { AuthorizeOptions } from "@zoom/appssdk";
+import { AuthorizeOptions } from "@/lib/zoomapi";
 import { signIn, useSession } from "next-auth/react";
 import { SessionProvider } from "next-auth/react";
 import { ZoomApiWrapper } from "@/lib/zoomapi";
