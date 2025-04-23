@@ -10,20 +10,13 @@ import { WaveHandPicker } from "@/components/WaveHandPicker";
 import { AffirmationCarousel } from "@/components/AffirmationCarousel";
 import { HandWaveBadge, DrawBadgeApi } from "@/lib/draw_badge_api";
 import { zoomApi } from "@/lib/zoomapi";
-import { fetchNametagFromDB, updateNameTagInDB } from "@/lib/nametag_db";
+import { updateNameTagInDB } from "@/lib/nametag_db";
 import Divider from "@mui/material/Divider";
 import { Action, log } from "@/lib/log";
+import { fetchUserFromDB } from "@/lib/user_db";
+import { addWaveHandToDB, deleteWaveHandFromDB } from "@/lib/wavehand_db";
 
 const foregroundDrawer: DrawBadgeApi = new DrawBadgeApi(zoomApi);
-
-const defaultWaveHandButtons = [
-  "",
-  "I'm not done",
-  "Question",
-  "Agree",
-  "Different Opinion",
-  "Support",
-];
 
 const defaultAffirmations = [
   { id: 0, text: "Say what I want to say, whatever happens will help me grow" },
@@ -44,7 +37,8 @@ function App() {
   const [nameTagContent, setNameTagContent] =
     useState<NameTagContent>(defaultNameTag);
 
-  const [nameTagIsLoaded, setNameTagIsLoaded] = useState(false);
+  const [waveHandButtons, setWaveHandButtons] = useState<string[]>([]);
+  const [hasError, setHasError] = useState(false);
 
   const updateNameTagContent: SubmitHandler<NameTagContent> = (data) => {
     if (nameTagContent.visible !== data.visible) {
@@ -58,15 +52,25 @@ function App() {
     foregroundDrawer.drawHandWave(badge);
   };
 
-  useEffect(() => {
-    fetchNametagFromDB()
-      .then((newNameTag) => {
-        if (newNameTag !== undefined) {
-          setNameTagContent(newNameTag);
+  const fetchUser = async () => {
+    fetchUserFromDB()
+      .then((user) => {
+        if (user.nameTag !== undefined) {
+          setNameTagContent(user.nameTag);
         }
-        setNameTagIsLoaded(true);
+        if (user.waveHands !== undefined) {
+          setWaveHandButtons(user.waveHands);
+        }
+        setHasError(false);
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        console.error(err);
+        setHasError(true);
+      });
+  };
+
+  useEffect(() => {
+    fetchUser();
   }, []);
 
   return (
@@ -76,8 +80,12 @@ function App() {
       </div>
 
       <WaveHandPicker
-        initialHands={defaultWaveHandButtons}
+        initialHands={waveHandButtons}
         updateHandWaveBadge={updateHandWaveBadge}
+        hasError={hasError}
+        onRetry={fetchUser}
+        onAdd={addWaveHandToDB}
+        onDelete={deleteWaveHandFromDB}
       />
 
       <Divider />
@@ -85,7 +93,7 @@ function App() {
       <div>
         <Tabs>
           <div page-label="nametag">
-            {nameTagIsLoaded && (
+            {!hasError && (
               <NameTagForm
                 content={nameTagContent}
                 onNameTagContentChange={updateNameTagContent}
