@@ -29,7 +29,7 @@ export const getZoomAccessToken = (
   const params: Record<string, string> = {
     grant_type: "authorization_code",
     code: zoomAuthorizationCode,
-    codeVerifier: "codeChallenge",
+    code_verifier: "codeChallenge",
   };
 
   const tokenRequestParamString = new URLSearchParams(params).toString();
