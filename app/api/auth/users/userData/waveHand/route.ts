@@ -17,7 +17,8 @@ export const POST = async (
   await startDB();
 
   const user = await UserModel.findOne({ email: userEmail });
-  if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
+  if (!user)
+    return NextResponse.json({ error: "User not found" }, { status: 404 });
 
   user.waveHands.push(body);
   await user.save();
@@ -32,14 +33,15 @@ type DeleteUserWaveHandResponse = NextResponse<
 export const DELETE = async (
   req: NextRequest,
 ): Promise<DeleteUserWaveHandResponse> => {
-  const { waveHand } = await req.json(); 
+  const { waveHand } = await req.json();
   const { userEmail, error } = await loggedInUserEmail();
   if (error) return NextResponse.json({ error }, { status: 400 });
 
   await startDB();
 
   const user = await UserModel.findOne({ email: userEmail });
-  if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
+  if (!user)
+    return NextResponse.json({ error: "User not found" }, { status: 404 });
 
   const originalLength = user.waveHands.length;
 
