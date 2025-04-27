@@ -39,6 +39,7 @@ function App() {
 
   const [waveHandButtons, setWaveHandButtons] = useState<string[]>([]);
   const [hasError, setHasError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const updateNameTagContent: SubmitHandler<NameTagContent> = (data) => {
     if (nameTagContent.visible !== data.visible) {
@@ -62,10 +63,12 @@ function App() {
           setWaveHandButtons(user.waveHands);
         }
         setHasError(false);
+        setIsLoading(false);
       })
       .catch((err) => {
         console.error(err);
         setHasError(true);
+        setIsLoading(false);
       });
   };
 
@@ -79,21 +82,25 @@ function App() {
         <AffirmationCarousel initialAffirmations={defaultAffirmations} />
       </div>
 
-      <WaveHandPicker
-        initialHands={waveHandButtons}
-        updateHandWaveBadge={updateHandWaveBadge}
-        hasError={hasError}
-        onRetry={fetchUser}
-        onAdd={addWaveHandToDB}
-        onDelete={deleteWaveHandFromDB}
-      />
+      <div>
+        {!isLoading && (
+          <WaveHandPicker
+            initialHands={waveHandButtons}
+            updateHandWaveBadge={updateHandWaveBadge}
+            hasError={hasError}
+            onRetry={fetchUser}
+            onAdd={addWaveHandToDB}
+            onDelete={deleteWaveHandFromDB}
+          />
+        )}
+      </div>
 
       <Divider />
 
       <div>
         <Tabs>
           <div page-label="nametag">
-            {!hasError && (
+            {!hasError && !isLoading && (
               <NameTagForm
                 content={nameTagContent}
                 onNameTagContentChange={updateNameTagContent}
