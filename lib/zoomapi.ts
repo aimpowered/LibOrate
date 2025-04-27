@@ -3,6 +3,7 @@ import zoomSdk, {
   ConfigResponse,
   VideoMedia,
 } from "@zoom/appssdk";
+import { createFakeZoomApi } from "./fakezoomapi";
 
 export interface VideoDimensions {
   width: number;
@@ -97,4 +98,18 @@ const zoomConfigOptions: ConfigOptions = {
   timeout: 10000,
 };
 
-export const zoomApi = createFromConfig(zoomConfigOptions);
+declare global {
+  interface Window {
+    Cypress?: unknown;
+  }
+}
+
+let zoomApi: ZoomApiWrapper;
+
+if (typeof window !== "undefined" && window.Cypress) {
+  zoomApi = createFakeZoomApi(true);
+} else {
+  zoomApi = createFromConfig(zoomConfigOptions);
+}
+
+export { zoomApi };

@@ -8,6 +8,7 @@ import {
 
 class FakeZoomApi implements ZoomApiWrapper {
   private authorizeCallback: AuthorizeCallback | null = null;
+  constructor(private inCypress: boolean) {}
 
   async setDrawImageCallback(cb: DrawImageCallback): Promise<void> {}
   async authorize(data: AuthorizeOptions): Promise<GeneralMessageResponse> {
@@ -15,6 +16,9 @@ class FakeZoomApi implements ZoomApiWrapper {
   }
   async setAuthorizeCallback(cb: AuthorizeCallback): Promise<void> {
     this.authorizeCallback = cb;
+    if (this.inCypress) {
+      setTimeout(() => cb({ code: "mocked_code" }), 100);
+    }
   }
 
   async triggerAuthorizeCallback(event: { code: string }) {
@@ -25,8 +29,8 @@ class FakeZoomApi implements ZoomApiWrapper {
 }
 export type { ZoomApiWrapper };
 
-function createFromConfig() {
-  return new FakeZoomApi();
+export function createFakeZoomApi(inCypress: boolean = false) {
+  return new FakeZoomApi(inCypress);
 }
 
-export const zoomApi = createFromConfig();
+export const zoomApi = createFakeZoomApi();

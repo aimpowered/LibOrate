@@ -18,15 +18,8 @@ function App() {
   const router = useRouter();
 
   async function getZoomApi(): Promise<ZoomApiWrapper> {
-    if (
-      typeof window !== "undefined" &&
-      (window as { zoomApi?: ZoomApiWrapper }).zoomApi
-    ) {
-      return (window as unknown as { zoomApi: ZoomApiWrapper }).zoomApi;
-    } else {
-      const zoomModule = await import("@/lib/zoomapi");
-      return zoomModule.zoomApi;
-    }
+    const zoomModule = await import("@/lib/zoomapi");
+    return zoomModule.zoomApi;
   }
 
   useEffect(() => {

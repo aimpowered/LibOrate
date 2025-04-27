@@ -26,7 +26,9 @@ const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         const code = credentials?.code;
         if (!code) {
-          throw new Error("Missing code");
+          throw new Error(
+            `Credentials missing required "code" property: ${credentials}`,
+          );
         }
         const tokenResponse = await getZoomAccessToken(code);
         const userProfile = await getZoomUser(
