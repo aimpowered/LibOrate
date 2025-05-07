@@ -8,11 +8,31 @@ import { RetryError } from "@/components/RetryError";
 import "@/app/css/Wavehand.css";
 
 interface WaveHandPickerProps {
+  /**
+   * The initial list of hand wave strings to display.
+   */
   initialHands: string[];
+  /**
+   * Callback to update the hand wave badge.
+   * @param badge - The new hand wave badge data.
+   */
   updateHandWaveBadge: (badge: HandWaveBadge) => void;
+  /**
+   * Indicates whether there's an error state.
+   * If there is an error, display the retry
+   * component and call the onRetry callback when clicked.
+   */
   hasError: boolean;
   onRetry: () => void;
+  /**
+   * Function to call when a new hand wave is added.
+   * @param text - The text of the hand wave to add.
+   */
   onAdd: (text: string) => void;
+  /**
+   * Function to call when a hand wave is deleted.
+   * @param text - The text of the hand wave to delete.
+   */
   onDelete: (text: string) => void;
 }
 
