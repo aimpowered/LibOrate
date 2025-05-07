@@ -29,8 +29,17 @@ class FakeZoomApi implements ZoomApiWrapper {
 }
 export type { ZoomApiWrapper };
 
-export function createFakeZoomApi(inCypress: boolean = false) {
+function createFakeZoomApi(inCypress: boolean = false) {
+  console.log("creating fake zoom api:", inCypress);
   return new FakeZoomApi(inCypress);
 }
 
-export const zoomApi = createFakeZoomApi();
+let zoomApi: ZoomApiWrapper;
+
+if (typeof window !== "undefined" && window.Cypress) {
+  zoomApi = createFakeZoomApi(true);
+} else {
+  zoomApi = createFakeZoomApi(false);
+}
+
+export { zoomApi };

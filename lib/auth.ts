@@ -13,9 +13,7 @@ interface ZoomTokenResponse {
 export const getZoomAccessToken = (
   zoomAuthorizationCode: string,
 ): Promise<ZoomTokenResponse> => {
-  console.log("NODE_ENV:", process.env.NODE_ENV);
-  console.log("MOCK_ZOOM_API:", process.env.MOCK_ZOOM_API);
-  if (process.env.MOCK_ZOOM_API === "true") {
+  if (process.env.NEXT_PUBLIC_MOCK_ZOOM_API === "true") {
     return Promise.resolve({
       access_token: "mock_access_token",
       token_type: "Bearer",
@@ -63,7 +61,7 @@ export const getZoomUser = (
   accessToken: string,
   api_url: string,
 ): Promise<ZoomUserProfile> => {
-  if (process.env.MOCK_ZOOM_API === "true") {
+  if (process.env.NEXT_PUBLIC_MOCK_ZOOM_API === "true") {
     return Promise.resolve({
       id: "mock_id",
       first_name: "mock_first_name",

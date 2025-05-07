@@ -3,7 +3,6 @@ import zoomSdk, {
   ConfigResponse,
   VideoMedia,
 } from "@zoom/appssdk";
-import { createFakeZoomApi } from "./fakezoomapi";
 
 export interface VideoDimensions {
   width: number;
@@ -104,12 +103,4 @@ declare global {
   }
 }
 
-let zoomApi: ZoomApiWrapper;
-
-if (typeof window !== "undefined" && window.Cypress) {
-  zoomApi = createFakeZoomApi(true);
-} else {
-  zoomApi = createFromConfig(zoomConfigOptions);
-}
-
-export { zoomApi };
+export const zoomApi = createFromConfig(zoomConfigOptions);
