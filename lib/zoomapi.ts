@@ -97,10 +97,4 @@ const zoomConfigOptions: ConfigOptions = {
   timeout: 10000,
 };
 
-declare global {
-  interface Window {
-    Cypress?: unknown;
-  }
-}
-
 export const zoomApi = createFromConfig(zoomConfigOptions);
