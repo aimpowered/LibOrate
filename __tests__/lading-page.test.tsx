@@ -1,9 +1,6 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import MyApp from "@/app/page";
-import { act } from "react-dom/test-utils";
 import "@testing-library/jest-dom";
-import { zoomApi } from "@/lib/fakezoomapi";
-import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import routerMock from "next-router-mock";
 
@@ -33,10 +30,9 @@ describe("landing page", () => {
   test("signin", async () => {
     routerMock.push("/");
     render(<MyApp />);
-    zoomApi.triggerAuthorizeCallback({ code: "123456" });
     await waitFor(() =>
       expect(signIn).toHaveBeenCalledWith("credentials", {
-        code: "123456",
+        code: "mocked_code",
         redirect: false,
       }),
     );
