@@ -12,7 +12,7 @@ class FakeZoomApi implements ZoomApiWrapper {
     return { message: "Success" };
   }
   async setAuthorizeCallback(cb: AuthorizeCallback): Promise<void> {
-    setTimeout(() => cb({ code: "mocked_code" }), 100);
+    cb({ code: "mocked_code" });
   }
 }
 export type { ZoomApiWrapper };
