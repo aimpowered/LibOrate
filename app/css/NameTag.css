@@ -1,7 +1,7 @@
 /* NameTag.css */
 .label-text {
   font-weight: bold;
-  font-size: 30px;
+  font-size: clamp(1.5rem, 3vw, 2rem);
 }
 
 .input-field {
@@ -11,13 +11,13 @@
 .text-input,
 .select-input {
   border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 8px;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
   width: 80%; /* Adjust the width as needed */
 }
 
 .block-style {
-  height: 20px; /* Adjust the height value to control the spacing */
+  height: 1.25rem; /* Adjust the height value to control the spacing */
 }
 
 .colored-switch .MuiSwitch-switchBase.Mui-checked {
@@ -41,15 +41,15 @@
   display: flex;
   align-items: center;
   padding: 0px;
-  margin-bottom: 10px;
+  margin-bottom: 0.625rem;
 }
 
 .submit-btn {
-  padding: 8px 16px;
+  padding: 0.5rem 1rem;
   background-color: #d68071;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 0.25rem;
   cursor: pointer;
 }
 
@@ -62,11 +62,8 @@
 }
 
 .controller-container {
-  margin-right: 10px;
-  margin-left: 0px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  padding: 0px 5px 0px 5px;
+  margin: 0.625rem 0.625rem 0.625rem 0;
+  padding: 0 0.3125rem;
 }
 
 .controller-container:hover {
@@ -74,8 +71,8 @@
 }
 
 .char-count {
-  margin-top: 5px;
-  font-size: 12px;
+  margin-top: 0.3125rem;
+  font-size: 0.75rem;
   color: #666;
 }
 
@@ -84,12 +81,12 @@
 }
 
 .char-limit-info {
-  margin-left: 5px;
+  margin-left: 0.3125rem;
   font-style: italic;
 }
 
 .warning-message {
   display: block;
-  margin-top: 5px;
+  margin-top: 0.3125rem;
   color: red;
 }

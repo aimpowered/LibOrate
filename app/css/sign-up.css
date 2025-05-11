@@ -1,7 +1,7 @@
 .success-alert {
   padding: 1rem; /* p-4 */
   margin-bottom: 1rem; /* mb-4 */
-  font-size: 1rem; /* text-sm */
+  font-size: clamp(0.875rem, 1.5vw, 1rem); /* text-sm */
   color: #1f9d55; /* text-green-800 */
   border-radius: 0.375rem; /* rounded-lg */
   background-color: #d1fae5; /* bg-green-50 */

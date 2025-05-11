@@ -22,7 +22,7 @@
 
 .self-affirm-text {
   color: #ffffff; /* White text, change if needed */
-  font-size: min(32px, 18cqh);
+  font-size: clamp(1rem, 4cqh, 2rem);
   text-align: center;
   width: 75%;
 }
@@ -39,38 +39,39 @@
   left: 50%; /* Center the modal horizontally */
   transform: translate(-50%, -50%); /* Center the modal precisely */
   background-color: #fff;
-  padding: 20px;
-  border-radius: 5px;
+  padding: 1.25rem;
+  border-radius: 0.3125rem;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
-  max-width: 400px; /* Adjust the maximum width as needed */
+  max-width: 25rem; /* Adjust the maximum width as needed */
   width: 100%;
   z-index: 1000; /* Ensure the modal is above other content */
 }
 
 .card-modal-body {
-  padding: 10px; /* Adjust the padding as needed */
+  padding: 0.625rem; /* Adjust the padding as needed */
 }
 
 .large-input {
   width: 100%;
-  padding: 10px;
-  font-size: 16px;
+  padding: 0.625rem;
+  font-size: 1rem;
   border: 1px solid #ccc;
-  border-radius: 4px;
-  height: 100px;
+  border-radius: 0.25rem;
+  height: 6.25rem;
 }
 
 /* Modal Buttons */
 .card-modal-button {
-  padding: 10px 20px;
+  padding: 0.625rem 1.25rem;
   background-color: #007bff;
   color: #fff;
   border: none;
-  border-radius: 4px;
+  border-radius: 0.25rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  margin-right: 5px;
-  margin-left: 10px;
+  margin-right: 0.3125rem;
+  margin-left: 0.625rem;
+  font-size: 1rem;
 }
 
 .card-modal button:hover {
@@ -99,11 +100,11 @@
 }
 
 .-left-12 {
-  margin-left: 60px !important;
+  margin-left: 3.75rem !important;
 }
 
 .-right-12 {
-  margin-right: 60px !important;
+  margin-right: 3.75rem !important;
 }
 
 .resize-handle {
