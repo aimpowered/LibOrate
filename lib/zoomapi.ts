@@ -13,11 +13,30 @@ export interface DrawImageCallback {
   (v: VideoDimensions): ImageData;
 }
 
-export interface ZoomApiWrapper {
-  setDrawImageCallback(cb: DrawImageCallback): Promise<void>;
+export interface AuthorizeEvent {
+  code: string;
 }
 
-export function createFromConfig(options: ConfigOptions) {
+export interface AuthorizeCallback {
+  (event: AuthorizeEvent): void;
+}
+
+export interface AuthorizeOptions {
+  codeChallenge: string;
+  state: string;
+}
+
+export interface GeneralMessageResponse {
+  message: string;
+}
+
+export interface ZoomApiWrapper {
+  setDrawImageCallback(cb: DrawImageCallback): Promise<void>;
+  authorize(data: AuthorizeOptions): Promise<GeneralMessageResponse>;
+  setAuthorizeCallback(cb: AuthorizeCallback): Promise<void>;
+}
+
+function createFromConfig(options: ConfigOptions) {
   return new ZoomApiImpl(options);
 }
 
@@ -44,6 +63,18 @@ class ZoomApiImpl implements ZoomApiWrapper {
     await this.drawForeground(configResponse.media);
   }
 
+  async authorize(options: AuthorizeOptions): Promise<GeneralMessageResponse> {
+    await this.initialize();
+    return zoomSdk.authorize(options);
+  }
+
+  async setAuthorizeCallback(cb: AuthorizeCallback): Promise<void> {
+    await this.initialize();
+    zoomSdk.onAuthorized((event) => {
+      cb({ code: event.code });
+    });
+  }
+
   private async drawForeground({
     video: { width, height } = {},
   }: VideoMedia = {}) {
@@ -53,3 +84,17 @@ class ZoomApiImpl implements ZoomApiWrapper {
     return zoomSdk.setVirtualForeground({ imageData });
   }
 }
+
+const zoomConfigOptions: ConfigOptions = {
+  capabilities: [
+    "setVirtualForeground",
+    "onMyMediaChange",
+    "authorize",
+    "onAuthorized",
+    "promptAuthorize",
+  ],
+  version: "0.16",
+  timeout: 10000,
+};
+
+export const zoomApi = createFromConfig(zoomConfigOptions);

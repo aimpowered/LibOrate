@@ -66,6 +66,7 @@ jobs:
           echo "SESSION_SECRET=ssecret" >> .env
           echo "NEXTAUTH_SECRET=nsecret" >> .env
           echo "DATABASE_URL=test" >> .env
+          echo "NEXT_PUBLIC_MOCK_ZOOM_API=true" >> .env
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:

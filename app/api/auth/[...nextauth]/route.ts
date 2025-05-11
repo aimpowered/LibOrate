@@ -5,6 +5,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 
 import { DefaultUser } from "next-auth";
 import startDB from "@/lib/db";
+import { getZoomAccessToken, getZoomUser } from "@/lib/auth";
 declare module "next-auth" {
   interface User extends DefaultUser {
     role: string;
@@ -20,25 +21,29 @@ const authOptions: NextAuthOptions = {
     CredentialsProvider({
       type: "credentials",
       credentials: {
-        email: {},
-        password: {},
+        code: {},
       },
-      async authorize(credentials, req) {
-        if (!credentials) throw new Error("No credentials found!");
-        const { email, password } = credentials;
-
+      async authorize(credentials) {
+        const code = credentials?.code;
+        if (!code) {
+          throw new Error(
+            `Credentials missing required "code" property: ${credentials}`,
+          );
+        }
+        const tokenResponse = await getZoomAccessToken(code);
+        const userProfile = await getZoomUser(
+          tokenResponse.access_token,
+          tokenResponse.api_url,
+        );
         await startDB();
-
-        const user = await UserModel.findOne({ email });
-        if (!user) throw Error("User not found!");
-
-        const passwordMatch = await user.comparePassword(password);
-        if (!passwordMatch) throw Error("Email/Password mismatch!");
-
+        let user = await UserModel.findOne({ email: userProfile.email });
+        if (!user) {
+          user = await UserModel.create({ email: userProfile.email });
+        }
         return {
+          id: user.id,
           email: user.email,
           role: user.role,
-          id: user._id,
         };
       },
     }),
