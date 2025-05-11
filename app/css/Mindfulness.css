@@ -21,7 +21,7 @@
 }
 
 .video-title {
-  font-size: 20px;
+  font-size: clamp(1.125rem, 2vw, 1.5rem);
   display: inline-block;
-  margin-top: 10px;
+  margin-top: 0.625rem;
 }

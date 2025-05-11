@@ -26,6 +26,22 @@ body {
     rgb(var(--background-start-rgb));
 } */
 
+html {
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
+}
+
+@media (max-width: 600px) {
+  body {
+    font-size: 0.9rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  body {
+    font-size: 1.2rem;
+  }
+}
+
 label,
 input {
   display: flex;
@@ -57,7 +73,7 @@ input {
   color: #000;
   font-weight: bold;
   text-align: center; /* Ensure the text is centered */
-  padding: 20px 20px; /* Add padding to the top and bottom if needed */
+  padding: 1.25rem 1.25rem; /* Add padding to the top and bottom if needed */
   box-sizing: border-box; /* Include padding and border in the element's total width and height */
   transition: color 0.1s;
 }
@@ -153,8 +169,8 @@ input {
 }
 
 .tab-title {
-  font-size: 30px;
+  font-size: 1.875rem;
   font-weight: bold;
   display: inline-block;
-  margin-bottom: 10px;
+  margin-bottom: 0.625rem;
 }
