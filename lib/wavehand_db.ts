@@ -17,13 +17,13 @@ export async function addWaveHandToDB(newWaveHand: string) {
 /**
  * Remove a wave hand from the user's profile
  */
-export async function deleteWaveHandFromDB(waveHand: string) {
+export async function deleteWaveHandFromDB(id: number) {
   const res = await fetch("/api/auth/users/userData/waveHand", {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ waveHand }),
+    body: JSON.stringify({ id }),
   });
 
   const json = await res.json();

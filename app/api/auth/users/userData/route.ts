@@ -21,8 +21,6 @@ export const GET = async (): Promise<FetchUserResponse> => {
 
   const user = await UserModel.findOne({ email: userEmail });
 
-  console.log(user);
-
   if (!user) {
     return NextResponse.json(
       { error: "User does not exist." },

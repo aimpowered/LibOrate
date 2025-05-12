@@ -33,7 +33,7 @@ type DeleteUserWaveHandResponse = NextResponse<
 export const DELETE = async (
   req: NextRequest,
 ): Promise<DeleteUserWaveHandResponse> => {
-  const { waveHand } = await req.json();
+  const { id } = await req.json();
   const { userEmail, error } = await loggedInUserEmail();
   if (error) return NextResponse.json({ error }, { status: 400 });
 
@@ -44,10 +44,12 @@ export const DELETE = async (
     return NextResponse.json({ error: "User not found" }, { status: 404 });
 
   const originalLength = user.waveHands.length;
+  if (id < 0 || id >= originalLength)
+    return NextResponse.json({ error: "Wave hand not found" }, { status: 404 });
 
-  // Remove all matching wave hands (or change to remove only first match if needed)
-  user.waveHands = user.waveHands.filter((hand: string) => hand !== waveHand);
-
+  user.waveHands = user.waveHands.filter(
+    (hand: string, index: number) => index !== id,
+  );
   if (user.waveHands.length === originalLength) {
     return NextResponse.json({ error: "Wave hand not found" }, { status: 404 });
   }

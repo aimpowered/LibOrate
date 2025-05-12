@@ -56,12 +56,17 @@ describe("WaveHandPicker", () => {
 
   it("calls onDelete when a hand is deleted", () => {
     const { container } = render(<WaveHandPicker {...defaultProps} />);
-    const handButton = screen.getByText("👋");
-    fireEvent.mouseOver(handButton);
-    const deleteBtn = container.querySelector(".wave-hand-delete-button");
+    const handButtons = container.querySelectorAll(".wave-hand-button");
+    expect(handButtons.length).toBeGreaterThan(0);
+
+    const firstButton = handButtons[0];
+    fireEvent.mouseOver(firstButton);
+
+    const deleteBtn = firstButton.querySelector(".wave-hand-delete-button");
     expect(deleteBtn).not.toBeNull();
-    fireEvent.click(deleteBtn);
-    expect(mockOnDelete).toHaveBeenCalledWith("👋");
+
+    fireEvent.click(deleteBtn!);
+    expect(mockOnDelete).toHaveBeenCalledWith(0);
   });
 
   it("renders RetryError if hasError is true", () => {

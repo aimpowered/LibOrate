@@ -5,7 +5,7 @@ import "@/app/css/Wavehand.css";
 interface HandButtonProps {
   selected: boolean;
   onClick: () => void;
-  onDelete: (text: string) => void;
+  onDelete: () => void;
   text: string;
 }
 export function WaveHandButton({
@@ -24,7 +24,7 @@ export function WaveHandButton({
         className="wave-hand-delete-button"
         onClick={(e) => {
           e.stopPropagation();
-          onDelete(text);
+          onDelete();
         }}
       >
         ✖
