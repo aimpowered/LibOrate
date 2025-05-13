@@ -25,8 +25,8 @@ export class DrawBadgeApi {
   constructor(private zoomApiWrapper: ZoomApiWrapper) {}
 
   private forceDrawing() {
-    return this.zoomApiWrapper.setDrawImageCallback((v) =>
-      drawEverythingToImage(v, this.nametag, this.handwave),
+    return this.zoomApiWrapper.setDrawImageCallback((v, mirror) =>
+      drawEverythingToImage(v, mirror, this.nametag, this.handwave),
     );
   }
 
@@ -155,6 +155,7 @@ function renderNameTagBadge(
 // TODO: make sure the handwave badge scale and resize correctly based on window size.
 function drawEverythingToImage(
   video: VideoDimensions,
+  mirror: boolean,
   nametag: NameTagBadge,
   handWave: HandWaveBadge,
 ): ImageData {
@@ -164,6 +165,12 @@ function drawEverythingToImage(
   canvas.height = video.height; // Height of the canvas
 
   context.clearRect(0, 0, canvas.width, canvas.height);
+
+  if (mirror) {
+    context.translate(canvas.width, 0);
+    context.scale(-1, 1);
+  }
+
   if (nametag.visible) {
     renderNameTagBadge(nametag, canvas.width, canvas.height, context);
   }
@@ -172,16 +179,42 @@ function drawEverythingToImage(
     context.font = "50px Arial"; // Font size and style
     context.fillStyle = "black"; // Text color
 
-    const textLength = handWave.waveText.length;
-    context.fillStyle = "#d68071"; // Set the background color to white
-    context.roundRect(60, 70, textLength * 15 + 80, 100, 30);
-    context.fill();
-    context.fillStyle = "white"; // White text color
+    const paddingX = canvas.width * 0.05;
+    const paddingY = canvas.height * 0.1;
 
-    context.font = "bold 80px Arial"; // Larger font size
-    context.fillText(handWave.waveText.substring(0, 3), 70, 150); // Draw the first character
-    context.font = "bold 30px Arial";
-    context.fillText(handWave.waveText.substring(3), 160, 130);
+    const fontScale = canvas.width / 1920;
+    const rectHeight = canvas.height * 0.15;
+    const rectRadius = rectHeight * 0.3;
+    const mainFontSize = fontScale * 100;
+    const subFontSize = fontScale * 40;
+    const mainText = handWave.waveText.substring(0, 3);
+    const subText = handWave.waveText.substring(3);
+    context.font = `bold ${mainFontSize}px Arial`;
+    const mainTextWidth = context.measureText(mainText).width;
+    context.font = `bold ${subFontSize}px Arial`;
+    const subTextWidth = context.measureText(subText).width;
+    const totalTextWidth =
+      mainTextWidth + (subText ? subTextWidth + fontScale * 4 : 0);
+    const textPadding = canvas.width * 0.01;
+    const rectWidth = totalTextWidth + textPadding * 2;
+
+    context.fillStyle = "#d68071";
+    context.roundRect(paddingX, paddingY, rectWidth, rectHeight, rectRadius);
+    context.fill();
+
+    context.fillStyle = "white";
+    const textStartX = paddingX + (rectWidth - totalTextWidth) / 2;
+    context.font = `bold ${mainFontSize}px Arial`;
+    context.fillText(mainText, textStartX, paddingY + rectHeight * 0.7);
+
+    if (subText) {
+      context.font = `bold ${subFontSize}px Arial`;
+      context.fillText(
+        subText,
+        textStartX + mainTextWidth + fontScale * 4,
+        paddingY + rectHeight * 0.55,
+      );
+    }
   }
 
   const newImageData = context.getImageData(0, 0, canvas.width, canvas.height);
