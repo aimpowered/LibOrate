@@ -2,6 +2,7 @@ import zoomSdk, {
   ConfigOptions,
   ConfigResponse,
   VideoMedia,
+  GetVideoSettingsResponse,
 } from "@zoom/appssdk";
 
 export interface VideoDimensions {
@@ -10,7 +11,7 @@ export interface VideoDimensions {
 }
 
 export interface DrawImageCallback {
-  (v: VideoDimensions): ImageData;
+  (v: VideoDimensions, mirror: boolean): ImageData;
 }
 
 export interface AuthorizeEvent {
@@ -75,12 +76,19 @@ class ZoomApiImpl implements ZoomApiWrapper {
     });
   }
 
-  private async drawForeground({
-    video: { width, height } = {},
-  }: VideoMedia = {}) {
+  private async drawForeground(input?: VideoMedia) {
+    const video = input?.video ?? {};
+    const { width, height, state } = video;
+
     if (this.drawImageCallback == null) return;
     if (width == null || height == null) return;
-    const imageData = this.drawImageCallback({ width, height });
+    if (state !== undefined && !state) return;
+    const videoSettings: GetVideoSettingsResponse =
+      await zoomSdk.getVideoSettings();
+    const imageData = this.drawImageCallback(
+      { width, height },
+      videoSettings.mirrorMyVideo,
+    );
     return zoomSdk.setVirtualForeground({ imageData });
   }
 }
@@ -92,6 +100,7 @@ const zoomConfigOptions: ConfigOptions = {
     "authorize",
     "onAuthorized",
     "promptAuthorize",
+    "getVideoSettings",
   ],
   version: "0.16",
   timeout: 10000,
