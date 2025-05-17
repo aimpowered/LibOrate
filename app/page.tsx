@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { AuthorizeOptions } from "@/lib/zoomapi";
 import { signIn, useSession } from "next-auth/react";
 import { SessionProvider } from "next-auth/react";
-import { getZoomApi } from "@/lib/utils";
+import { getZoomApi } from "@/lib/zoomapi_loader";
 import { useRouter } from "next/navigation";
 import { log, Action } from "@/lib/log";
 import Alert from "@/components/Alert";

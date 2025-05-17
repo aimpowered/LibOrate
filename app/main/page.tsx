@@ -14,7 +14,7 @@ import Divider from "@mui/material/Divider";
 import { Action, log } from "@/lib/log";
 import { fetchUserFromDB } from "@/lib/user_db";
 import { addWaveHandToDB, deleteWaveHandFromDB } from "@/lib/wavehand_db";
-import { getZoomApi } from "@/lib/utils";
+import { getZoomApi } from "@/lib/zoomapi_loader";
 import { ZoomApiWrapper } from "@/lib/zoomapi";
 
 const defaultAffirmations = [
@@ -63,22 +63,21 @@ function App() {
   };
 
   const fetchUser = async () => {
-    fetchUserFromDB()
-      .then((user) => {
-        if (user.nameTag !== undefined) {
-          setNameTagContent(user.nameTag);
-        }
-        if (user.waveHands !== undefined) {
-          setWaveHandButtons(user.waveHands);
-        }
-        setHasError(false);
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        setHasError(true);
-        setIsLoading(false);
-      });
+    try {
+      const user = await fetchUserFromDB();
+      if (user.nameTag !== undefined) {
+        setNameTagContent(user.nameTag);
+      }
+      if (user.waveHands !== undefined) {
+        setWaveHandButtons(user.waveHands);
+      }
+      setHasError(false);
+      setIsLoading(false);
+    } catch (err) {
+      console.error(err);
+      setHasError(true);
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {

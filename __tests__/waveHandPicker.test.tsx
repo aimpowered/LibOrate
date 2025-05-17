@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, within } from "@testing-library/react";
 import { WaveHandPicker } from "@/components/WaveHandPicker";
 import "@testing-library/jest-dom";
 
@@ -44,10 +44,10 @@ describe("WaveHandPicker", () => {
   });
 
   it("calls onAdd when new hand is added", () => {
-    const { container } = render(<WaveHandPicker {...defaultProps} />);
+    render(<WaveHandPicker {...defaultProps} />);
     const addButton = screen.getByText("➕ Add");
     fireEvent.click(addButton);
-    const input = container.querySelector(".wave-hand-input");
+    const input = screen.getByPlaceholderText("Enter text");
     fireEvent.change(input, { target: { value: "👋 NewHand" } });
     fireEvent.keyDown(input, { key: "Enter", code: "Enter" });
 
@@ -55,14 +55,14 @@ describe("WaveHandPicker", () => {
   });
 
   it("calls onDelete when a hand is deleted", () => {
-    const { container } = render(<WaveHandPicker {...defaultProps} />);
-    const handButtons = container.querySelectorAll(".wave-hand-button");
+    render(<WaveHandPicker {...defaultProps} />);
+    const handButtons = screen.getAllByRole("button");
     expect(handButtons.length).toBeGreaterThan(0);
 
     const firstButton = handButtons[0];
     fireEvent.mouseOver(firstButton);
 
-    const deleteBtn = firstButton.querySelector(".wave-hand-delete-button");
+    const deleteBtn = within(firstButton).getByText("✖");
     expect(deleteBtn).not.toBeNull();
 
     fireEvent.click(deleteBtn!);

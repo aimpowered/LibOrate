@@ -5,14 +5,15 @@ describe("WaveHandPicker in spec", () => {
 
   it("should allow selecting, adding, and deleting wave hand buttons", () => {
     // select the first button
-    cy.get(".wave-hand-button").first().as("button");
+
+    cy.contains("👋").first().as("button");
     cy.get("@button").should("not.have.class", "selected");
     cy.get("@button").click();
     cy.get("@button").should("have.class", "selected");
 
     // add a new button
     cy.contains("➕ Add").click();
-    cy.get("input.wave-hand-input")
+    cy.get("input[placeholder='Enter text']")
       .should("exist")
       .and("be.focused")
       .type("Hello, LibOrate{enter}");
@@ -22,7 +23,7 @@ describe("WaveHandPicker in spec", () => {
     cy.contains("Hello, LibOrate").should("exist");
 
     // delete the first button
-    cy.get(".wave-hand-button")
+    cy.contains("👋")
       .should("have.length.greaterThan", 0)
       .then((buttonsBefore) => {
         const initialCount = buttonsBefore.length;
@@ -30,12 +31,10 @@ describe("WaveHandPicker in spec", () => {
         cy.wrap(buttonsBefore).each(($button) => {
           console.log(`Button text: ${$button.text()}`);
         });
-        cy.get(".wave-hand-button").first().as("button");
-        cy.get("@button")
-          .find(".wave-hand-delete-button")
-          .click({ force: true });
+        cy.contains("👋").first().as("button");
+        cy.get("@button").contains("✖").click({ force: true });
         cy.reload();
-        cy.get(".wave-hand-button").should("have.length", initialCount - 1);
+        cy.contains("👋").should("have.length", initialCount - 1);
       });
   });
 });
