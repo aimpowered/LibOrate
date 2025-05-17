@@ -14,6 +14,7 @@ interface UserDocument extends Document {
   password: string;
   role: "admin" | "user";
   nameTag: NameTagContent;
+  waveHands: string[];
 }
 
 interface Methods {
@@ -30,6 +31,17 @@ const userSchema = new Schema<UserDocument, {}, Methods>({
     pronouns: { type: String },
     disclosure: { type: String },
     visible: { type: Boolean },
+  },
+  waveHands: {
+    type: [String],
+    default: [
+      "👋",
+      "👋 I'm not done",
+      "👋 Question",
+      "👋 Agree",
+      "👋 Different Opinion",
+      "👋 Support",
+    ],
   },
 });
 

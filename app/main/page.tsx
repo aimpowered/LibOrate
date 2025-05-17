@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { SubmitHandler } from "react-hook-form";
 import Tabs from "./Tabs";
 import Mindfulness from "./Mindfulness";
@@ -9,21 +9,13 @@ import { NameTagContent, NameTagForm } from "@/components/NameTagForm";
 import { WaveHandPicker } from "@/components/WaveHandPicker";
 import { AffirmationCarousel } from "@/components/AffirmationCarousel";
 import { HandWaveBadge, DrawBadgeApi } from "@/lib/draw_badge_api";
-import { zoomApi } from "@/lib/zoomapi";
-import { fetchNametagFromDB, updateNameTagInDB } from "@/lib/nametag_db";
+import { updateNameTagInDB } from "@/lib/nametag_db";
 import Divider from "@mui/material/Divider";
 import { Action, log } from "@/lib/log";
-
-const foregroundDrawer: DrawBadgeApi = new DrawBadgeApi(zoomApi);
-
-const defaultWaveHandButtons = [
-  "",
-  "I'm not done",
-  "Question",
-  "Agree",
-  "Different Opinion",
-  "Support",
-];
+import { fetchUserFromDB } from "@/lib/user_db";
+import { addWaveHandToDB, deleteWaveHandFromDB } from "@/lib/wavehand_db";
+import { getZoomApi } from "@/lib/zoomapi_loader";
+import { ZoomApiWrapper } from "@/lib/zoomapi";
 
 const defaultAffirmations = [
   { id: 0, text: "Say what I want to say, whatever happens will help me grow" },
@@ -44,29 +36,52 @@ function App() {
   const [nameTagContent, setNameTagContent] =
     useState<NameTagContent>(defaultNameTag);
 
-  const [nameTagIsLoaded, setNameTagIsLoaded] = useState(false);
+  const [waveHandButtons, setWaveHandButtons] = useState<string[]>([]);
+  const [hasError, setHasError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const foregroundDrawerRef = useRef<DrawBadgeApi | null>(null);
+
+  useEffect(() => {
+    const init = async () => {
+      const zoomApi: ZoomApiWrapper = await getZoomApi();
+      foregroundDrawerRef.current = new DrawBadgeApi(zoomApi);
+    };
+    init();
+  }, []);
 
   const updateNameTagContent: SubmitHandler<NameTagContent> = (data) => {
     if (nameTagContent.visible !== data.visible) {
       log(data.visible ? Action.NAME_BADGE_ON : Action.NAME_BADGE_OFF);
     }
     setNameTagContent(data);
-    foregroundDrawer.drawNameTag(data);
+    foregroundDrawerRef.current?.drawNameTag(data);
   };
 
   const updateHandWaveBadge = (badge: HandWaveBadge) => {
-    foregroundDrawer.drawHandWave(badge);
+    foregroundDrawerRef.current?.drawHandWave(badge);
+  };
+
+  const fetchUser = async () => {
+    try {
+      const user = await fetchUserFromDB();
+      if (user.nameTag !== undefined) {
+        setNameTagContent(user.nameTag);
+      }
+      if (user.waveHands !== undefined) {
+        setWaveHandButtons(user.waveHands);
+      }
+      setHasError(false);
+      setIsLoading(false);
+    } catch (err) {
+      console.error(err);
+      setHasError(true);
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
-    fetchNametagFromDB()
-      .then((newNameTag) => {
-        if (newNameTag !== undefined) {
-          setNameTagContent(newNameTag);
-        }
-        setNameTagIsLoaded(true);
-      })
-      .catch((err) => console.error(err));
+    fetchUser();
   }, []);
 
   return (
@@ -75,17 +90,25 @@ function App() {
         <AffirmationCarousel initialAffirmations={defaultAffirmations} />
       </div>
 
-      <WaveHandPicker
-        initialHands={defaultWaveHandButtons}
-        updateHandWaveBadge={updateHandWaveBadge}
-      />
+      <div>
+        {!isLoading && (
+          <WaveHandPicker
+            initialHands={waveHandButtons}
+            updateHandWaveBadge={updateHandWaveBadge}
+            hasError={hasError}
+            onRetry={fetchUser}
+            onAdd={addWaveHandToDB}
+            onDelete={deleteWaveHandFromDB}
+          />
+        )}
+      </div>
 
       <Divider />
 
       <div>
         <Tabs>
           <div page-label="nametag">
-            {nameTagIsLoaded && (
+            {!hasError && !isLoading && (
               <NameTagForm
                 content={nameTagContent}
                 onNameTagContentChange={updateNameTagContent}

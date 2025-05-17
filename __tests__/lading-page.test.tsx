@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, act } from "@testing-library/react";
 import MyApp from "@/app/page";
 import "@testing-library/jest-dom";
 import { signIn } from "next-auth/react";
@@ -22,9 +22,10 @@ global.fetch = jest.fn(() =>
 
 describe("landing page", () => {
   test("loading", async () => {
-    console.log("Starting test..."); // Debugging log
     render(<MyApp />);
-    expect(screen.getByText("Loading...")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText("Loading...")).toBeInTheDocument();
+    });
   });
 
   test("signin", async () => {
