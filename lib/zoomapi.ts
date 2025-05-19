@@ -43,6 +43,7 @@ function createFromConfig(options: ConfigOptions) {
 
 class ZoomApiImpl implements ZoomApiWrapper {
   private configResponse: null | Promise<ConfigResponse> = null;
+  private videoMedia: null | VideoMedia = null;
   private drawImageCallback: null | DrawImageCallback = null;
   constructor(private configOptions: ConfigOptions) {}
 
@@ -51,6 +52,7 @@ class ZoomApiImpl implements ZoomApiWrapper {
       this.configResponse = zoomSdk.config(this.configOptions);
       zoomSdk.onMyMediaChange((event) => {
         if (event.media && "video" in event.media) {
+          this.videoMedia = event.media ?? null;
           this.drawForeground(event.media);
         }
       });
@@ -61,7 +63,8 @@ class ZoomApiImpl implements ZoomApiWrapper {
   async setDrawImageCallback(cb: DrawImageCallback): Promise<void> {
     this.drawImageCallback = cb;
     const configResponse = await this.initialize();
-    await this.drawForeground(configResponse.media);
+    const media = this.videoMedia ?? configResponse.media;
+    await this.drawForeground(media);
   }
 
   async authorize(options: AuthorizeOptions): Promise<GeneralMessageResponse> {
@@ -79,7 +82,6 @@ class ZoomApiImpl implements ZoomApiWrapper {
   private async drawForeground(input?: VideoMedia) {
     const video = input?.video ?? {};
     const { width, height, state } = video;
-
     if (this.drawImageCallback == null) return;
     if (width == null || height == null) return;
     if (state !== undefined && !state) return;
