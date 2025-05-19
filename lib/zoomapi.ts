@@ -2,6 +2,7 @@ import zoomSdk, {
   ConfigOptions,
   ConfigResponse,
   VideoMedia,
+  GetVideoSettingsResponse,
 } from "@zoom/appssdk";
 
 export interface VideoDimensions {
@@ -10,7 +11,7 @@ export interface VideoDimensions {
 }
 
 export interface DrawImageCallback {
-  (v: VideoDimensions): ImageData;
+  (v: VideoDimensions, mirror: boolean): ImageData;
 }
 
 export interface AuthorizeEvent {
@@ -42,6 +43,7 @@ function createFromConfig(options: ConfigOptions) {
 
 class ZoomApiImpl implements ZoomApiWrapper {
   private configResponse: null | Promise<ConfigResponse> = null;
+  private videoMedia: null | VideoMedia = null;
   private drawImageCallback: null | DrawImageCallback = null;
   constructor(private configOptions: ConfigOptions) {}
 
@@ -50,6 +52,7 @@ class ZoomApiImpl implements ZoomApiWrapper {
       this.configResponse = zoomSdk.config(this.configOptions);
       zoomSdk.onMyMediaChange((event) => {
         if (event.media && "video" in event.media) {
+          this.videoMedia = event.media ?? null;
           this.drawForeground(event.media);
         }
       });
@@ -60,7 +63,8 @@ class ZoomApiImpl implements ZoomApiWrapper {
   async setDrawImageCallback(cb: DrawImageCallback): Promise<void> {
     this.drawImageCallback = cb;
     const configResponse = await this.initialize();
-    await this.drawForeground(configResponse.media);
+    const media = this.videoMedia ?? configResponse.media;
+    await this.drawForeground(media);
   }
 
   async authorize(options: AuthorizeOptions): Promise<GeneralMessageResponse> {
@@ -75,12 +79,18 @@ class ZoomApiImpl implements ZoomApiWrapper {
     });
   }
 
-  private async drawForeground({
-    video: { width, height } = {},
-  }: VideoMedia = {}) {
+  private async drawForeground(input?: VideoMedia) {
+    const video = input?.video ?? {};
+    const { width, height, state } = video;
     if (this.drawImageCallback == null) return;
     if (width == null || height == null) return;
-    const imageData = this.drawImageCallback({ width, height });
+    if (state !== undefined && !state) return;
+    const videoSettings: GetVideoSettingsResponse =
+      await zoomSdk.getVideoSettings();
+    const imageData = this.drawImageCallback(
+      { width, height },
+      videoSettings.mirrorMyVideo,
+    );
     return zoomSdk.setVirtualForeground({ imageData });
   }
 }
@@ -92,6 +102,7 @@ const zoomConfigOptions: ConfigOptions = {
     "authorize",
     "onAuthorized",
     "promptAuthorize",
+    "getVideoSettings",
   ],
   version: "0.16",
   timeout: 10000,
