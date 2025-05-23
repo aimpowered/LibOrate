@@ -8,6 +8,7 @@ type FetchUserResponse = NextResponse<
   | {
       nameTag: NameTagContent;
       waveHands: string[];
+      affirmations: string[];
     }
   | { error: string }
 >;
@@ -29,7 +30,11 @@ export const GET = async (): Promise<FetchUserResponse> => {
   }
 
   return NextResponse.json(
-    { nameTag: user.nameTag, waveHands: user.waveHands },
+    {
+      nameTag: user.nameTag,
+      waveHands: user.waveHands,
+      affirmations: user.affirmations,
+    },
     { status: 200 },
   );
 };

@@ -3,6 +3,7 @@ import { NameTagContent } from "@/components/NameTagForm";
 export interface UserModel {
   nameTag: NameTagContent;
   waveHands: string[];
+  affirmations: string[];
 }
 
 export async function fetchUserFromDB(): Promise<UserModel> {
@@ -14,6 +15,7 @@ export async function fetchUserFromDB(): Promise<UserModel> {
     return {
       nameTag: json.nameTag,
       waveHands: json.waveHands,
+      affirmations: json.affirmations,
     };
   }
   throw new Error("No user data found in DB.");
