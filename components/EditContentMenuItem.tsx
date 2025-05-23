@@ -4,13 +4,11 @@ import { WriteAffirmationCardModal } from "@/components/WriteAffirmationCardModa
 import "@/app/css/Affirmation.css";
 
 interface EditContentMenuItemProps {
-  id: number;
   initialText: string;
   onCardEdit: (updatedText: string) => void;
 }
 
 export function EditContentMenuItem({
-  id,
   initialText,
   onCardEdit,
 }: EditContentMenuItemProps) {

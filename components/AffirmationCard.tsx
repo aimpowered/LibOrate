@@ -12,15 +12,10 @@ import { DeleteContentMenuItem } from "@/components/DeleteContentMenuItem";
 
 import "@/app/css/Affirmation.css";
 
-export interface AffirmationCardContent {
-  id: number;
-  text: string;
-}
-
 interface AffirmationCardProps {
-  initialContent: AffirmationCardContent;
-  onAffirmationCardUpdate: (id: number, updatedText: string) => void;
-  onAffirmationCardDeletion: (id: number) => void;
+  initialContent: string;
+  onAffirmationCardUpdate: (updatedText: string) => void;
+  onAffirmationCardDeletion: () => void;
 }
 
 export function AffirmationCard({
@@ -28,9 +23,8 @@ export function AffirmationCard({
   onAffirmationCardUpdate,
   onAffirmationCardDeletion,
 }: AffirmationCardProps) {
-  const [text, setText] = useState(initialContent.text);
+  const [text, setText] = useState(initialContent);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const currentId = initialContent.id;
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -42,7 +36,7 @@ export function AffirmationCard({
   // Update card text and propogate upwards for DB save
   const updateCardContent = (updatedText: string) => {
     setText(updatedText);
-    onAffirmationCardUpdate(currentId, updatedText);
+    onAffirmationCardUpdate(updatedText);
   };
 
   return (
@@ -77,14 +71,10 @@ export function AffirmationCard({
           onClose={handleClose}
         >
           <EditContentMenuItem
-            id={currentId}
             initialText={text}
             onCardEdit={updateCardContent}
           />
-          <DeleteContentMenuItem
-            id={currentId}
-            onCardDeletion={onAffirmationCardDeletion}
-          />
+          <DeleteContentMenuItem onCardDeletion={onAffirmationCardDeletion} />
         </Menu>
       </CardActions>
       <CardContent className="self-affirm-text">{text}</CardContent>
