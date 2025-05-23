@@ -14,16 +14,13 @@ import Divider from "@mui/material/Divider";
 import { Action, log } from "@/lib/log";
 import { fetchUserFromDB } from "@/lib/user_db";
 import { addWaveHandToDB, deleteWaveHandFromDB } from "@/lib/wavehand_db";
+import {
+  addAffirmationToDB,
+  deleteAffirmationFromDB,
+  updateAffirmationFromDB,
+} from "@/lib/affirmation_db";
 import { getZoomApi } from "@/lib/zoomapi_loader";
 import { ZoomApiWrapper } from "@/lib/zoomapi";
-
-const defaultAffirmations = [
-  { id: 0, text: "Say what I want to say, whatever happens will help me grow" },
-  { id: 1, text: "I can take up space" },
-  { id: 2, text: "I have an important voice" },
-  { id: 3, text: "Feel the tension and proceed" },
-  { id: 4, text: "I have the right to stutter" },
-];
 
 const defaultNameTag: NameTagContent = {
   visible: false,
@@ -37,6 +34,7 @@ function App() {
     useState<NameTagContent>(defaultNameTag);
 
   const [waveHandButtons, setWaveHandButtons] = useState<string[]>([]);
+  const [affirmations, setAffirmations] = useState<string[]>([]);
   const [hasError, setHasError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -71,6 +69,9 @@ function App() {
       if (user.waveHands !== undefined) {
         setWaveHandButtons(user.waveHands);
       }
+      if (user.affirmations !== undefined) {
+        setAffirmations(user.affirmations);
+      }
       setHasError(false);
       setIsLoading(false);
     } catch (err) {
@@ -87,7 +88,14 @@ function App() {
   return (
     <div>
       <div className="header">
-        <AffirmationCarousel initialAffirmations={defaultAffirmations} />
+        {!isLoading && (
+          <AffirmationCarousel
+            initialAffirmations={affirmations}
+            onAdd={addAffirmationToDB}
+            onDelete={deleteAffirmationFromDB}
+            onUpdate={updateAffirmationFromDB}
+          />
+        )}
       </div>
 
       <div>

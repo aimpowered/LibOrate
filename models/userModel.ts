@@ -15,6 +15,7 @@ interface UserDocument extends Document {
   role: "admin" | "user";
   nameTag: NameTagContent;
   waveHands: string[];
+  affirmations: string[];
 }
 
 interface Methods {
@@ -41,6 +42,16 @@ const userSchema = new Schema<UserDocument, {}, Methods>({
       "👋 Agree",
       "👋 Different Opinion",
       "👋 Support",
+    ],
+  },
+  affirmations: {
+    type: [String],
+    default: [
+      "Say what I want to say, whatever happens will help me grow",
+      "I can take up space",
+      "I have an important voice",
+      "Feel the tension and proceed",
+      "I have the right to stutter",
     ],
   },
 });

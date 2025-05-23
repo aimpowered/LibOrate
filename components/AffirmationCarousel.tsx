@@ -1,8 +1,5 @@
 import React, { useState, useRef } from "react";
-import {
-  AffirmationCardContent,
-  AffirmationCard,
-} from "@/components/AffirmationCard";
+import { AffirmationCard } from "@/components/AffirmationCard";
 import { AddNewAffirmationCard } from "@/components/AddNewAffirmationCard";
 import {
   Carousel,
@@ -14,44 +11,52 @@ import {
 
 import "@/app/css/Affirmation.css";
 
-interface AffirmationCarouselProps {
-  initialAffirmations: AffirmationCardContent[];
+export interface AffirmationCarouselProps {
+  initialAffirmations: string[];
+  /**
+   * Callback function to update the text of an affirmation card
+   * @param id - The id of the affirmation card to be updated
+   * @param updatedText - The new text for the affirmation card
+   */
+  onUpdate: (id: number, updatedText: string) => void;
+  /**
+   * Callback function to delete an affirmation card
+   * @param id - The id of the affirmation card to be deleted
+   */
+  onDelete: (id: number) => void;
+  /**
+   * Callback function to add a new affirmation card
+   * @param text - The text for the new affirmation card
+   */
+  onAdd: (text: string) => void;
 }
 
 export function AffirmationCarousel({
   initialAffirmations,
+  onUpdate,
+  onDelete,
+  onAdd,
 }: AffirmationCarouselProps) {
   const [affirmationList, setAffirmationList] = useState(initialAffirmations);
   const carouselRef = useRef<HTMLDivElement>(null);
   let isResizing = false;
 
   const updateAffirmationCard = (id: number, updatedText: string) => {
-    // TODO: log updated AffirmationList in DB
-    const updatedAffirmationList = affirmationList.map((affirmation) => {
-      if (affirmation.id == id) {
-        return { id: id, text: updatedText };
-      } else {
-        return affirmation;
-      }
-    });
+    if (id < 0 || id >= affirmationList.length) return;
+    const updatedAffirmationList = [...affirmationList];
+    updatedAffirmationList[id] = updatedText;
     setAffirmationList(updatedAffirmationList);
+    onUpdate(id, updatedText);
   };
 
-  // TODO: propogate the change to root to delete card in DB
   const deleteAffirmationCard = (id: number) => {
-    setAffirmationList(affirmationList.filter((a) => a.id != id));
+    setAffirmationList((prev) => prev.filter((_, i) => i !== id));
+    onDelete(id);
   };
 
-  // TODO: propogate the change to root to add new card to DB
   const addAffirmationCard = (cardText: string) => {
-    let maxId = -1;
-    affirmationList.forEach((card) => {
-      if (card.id > maxId) {
-        maxId = card.id;
-      }
-    });
-    const newCard = { id: maxId + 1, text: cardText };
-    setAffirmationList([...affirmationList, newCard]);
+    setAffirmationList([...affirmationList, cardText]);
+    onAdd(cardText);
   };
 
   function resizeCarousel(e: MouseEvent) {
@@ -80,13 +85,19 @@ export function AffirmationCarousel({
 
   return (
     <Carousel>
-      <CarouselContent className="self-affirm-carousel" ref={carouselRef}>
-        {affirmationList.map((affirmation) => (
-          <CarouselItem key={affirmation.text}>
+      <CarouselContent
+        className="self-affirm-carousel"
+        data-testid="self-affirm-carousel"
+        ref={carouselRef}
+      >
+        {affirmationList.map((affirmation, index) => (
+          <CarouselItem key={affirmation}>
             <AffirmationCard
               initialContent={affirmation}
-              onAffirmationCardUpdate={updateAffirmationCard}
-              onAffirmationCardDeletion={deleteAffirmationCard}
+              onAffirmationCardUpdate={(updatedText) =>
+                updateAffirmationCard(index, updatedText)
+              }
+              onAffirmationCardDeletion={() => deleteAffirmationCard(index)}
             />
           </CarouselItem>
         ))}
@@ -94,7 +105,11 @@ export function AffirmationCarousel({
           <AddNewAffirmationCard onCardAdd={addAffirmationCard} />
         </CarouselItem>
       </CarouselContent>
-      <div className="resize-handle" onMouseDown={handleMouseDown} />
+      <div
+        className="resize-handle"
+        data-testid="resize-handle"
+        onMouseDown={handleMouseDown}
+      />
       <CarouselPrevious />
       <CarouselNext />
     </Carousel>

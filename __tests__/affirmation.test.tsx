@@ -1,6 +1,9 @@
 import React from "react";
-import { render, fireEvent, act } from "@testing-library/react";
-import { AffirmationCarousel } from "../components/AffirmationCarousel";
+import { render, fireEvent, act, screen } from "@testing-library/react";
+import {
+  AffirmationCarousel,
+  AffirmationCarouselProps,
+} from "../components/AffirmationCarousel";
 import "@testing-library/jest-dom"; // Extra matchers for assertions
 
 // 🛠 Mock embla-carousel-react to prevent errors in Jest. The error details are as follows:
@@ -32,22 +35,31 @@ jest.mock("embla-carousel-react", () => ({
   ]),
 }));
 
-const defaultAffirmations = [
-  { id: 0, text: "Say what I want to say, whatever happens will help me grow" },
-  { id: 1, text: "I can take up space" },
-  { id: 2, text: "I have an important voice" },
-  { id: 3, text: "Feel the tension and proceed" },
-  { id: 4, text: "I have the right to stutter" },
+const defaultAffirmations: string[] = [
+  "Say what I want to say, whatever happens will help me grow",
+  "I can take up space",
+  "I have an important voice",
+  "Feel the tension and proceed",
+  "I have the right to stutter",
 ];
 
 describe("AffirmationCarousel Component", () => {
-  test("resizes when the resize handle is dragged", () => {
-    const { container } = render(
-      <AffirmationCarousel initialAffirmations={[]} />,
-    );
+  const mockUpdate = jest.fn();
+  const mockDelete = jest.fn();
+  const mockAdd = jest.fn();
 
-    const resizeHandle = container.querySelector(".resize-handle"); // Ensure resize handle is present
-    const carouselContent = container.querySelector(".self-affirm-carousel"); // Ensure content is present
+  const defaultProps: AffirmationCarouselProps = {
+    initialAffirmations: defaultAffirmations,
+    onAdd: mockAdd,
+    onDelete: mockDelete,
+    onUpdate: mockUpdate,
+  };
+
+  test("resizes when the resize handle is dragged", () => {
+    render(<AffirmationCarousel {...defaultProps} />);
+
+    const resizeHandle = screen.getByTestId("resize-handle");
+    const carouselContent = screen.getByTestId("self-affirm-carousel");
 
     act(() => {
       fireEvent.mouseDown(resizeHandle); // Start resizing
@@ -59,12 +71,10 @@ describe("AffirmationCarousel Component", () => {
   });
 
   test("ensures font size updates correctly on resize", () => {
-    const { container } = render(
-      <AffirmationCarousel initialAffirmations={defaultAffirmations} />,
-    );
+    render(<AffirmationCarousel {...defaultProps} />);
 
-    const resizeHandle = container.querySelector(".resize-handle"); // Ensure resize handle is present
-    const firstAffirmationCard = container.querySelector(".self-affirm-text"); // Ensure content is present
+    const resizeHandle = screen.getByTestId("resize-handle");
+    const firstAffirmationCard = screen.getByTestId("self-affirm-carousel");
 
     act(() => {
       fireEvent.mouseDown(resizeHandle);
@@ -75,5 +85,47 @@ describe("AffirmationCarousel Component", () => {
     if (firstAffirmationCard.style.fontSize) {
       expect(firstAffirmationCard.style.fontSize).toBe("20px");
     }
+  });
+
+  it("calls onUpdate when affirmation is added", () => {
+    render(<AffirmationCarousel {...defaultProps} />);
+
+    const actionButtons = screen.getAllByLabelText("more actions");
+    expect(actionButtons.length).toBeGreaterThan(0);
+    const actionButton = actionButtons[0];
+    fireEvent.click(actionButton);
+    const editItem = screen.getByText("Edit");
+    fireEvent.click(editItem);
+    const textArea = screen.getByPlaceholderText("Write your message");
+    fireEvent.change(textArea, { target: { value: "Hello, world!" } });
+    const saveButton = screen.getByText("Save");
+    fireEvent.click(saveButton);
+    expect(mockUpdate).toHaveBeenCalledWith(0, "Hello, world!");
+  });
+
+  it("calls onDelete when affirmation is deleted", () => {
+    render(<AffirmationCarousel {...defaultProps} />);
+
+    const actionButtons = screen.getAllByLabelText("more actions");
+    expect(actionButtons.length).toBeGreaterThan(0);
+    const actionButton = actionButtons[0];
+    fireEvent.click(actionButton);
+    const deleteItem = screen.getByText("Delete");
+    fireEvent.click(deleteItem);
+    const confirmButton = screen.getByText("Confirm");
+    fireEvent.click(confirmButton);
+    expect(mockDelete).toHaveBeenCalledWith(0);
+  });
+
+  it("calls onAdd when affirmation is updated", () => {
+    render(<AffirmationCarousel {...defaultProps} />);
+
+    const addButton = screen.getByLabelText("Add new affirmation button");
+    fireEvent.click(addButton);
+    const textArea = screen.getByPlaceholderText("Write your message");
+    fireEvent.change(textArea, { target: { value: "New Affirmation" } });
+    const saveButton = screen.getByText("Save");
+    fireEvent.click(saveButton);
+    expect(mockAdd).toHaveBeenCalledWith("New Affirmation");
   });
 });
