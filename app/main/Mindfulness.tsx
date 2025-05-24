@@ -21,7 +21,7 @@ const generateVideoPlayer = ({
       className="video"
       title={name}
       aria-label={alt}
-      src={`https://www.youtube.com/embed/${videoId}`}
+      src={`https://www.youtube.com/embed/${videoId}?mute=1`}
     ></iframe>
   </div>
 );
