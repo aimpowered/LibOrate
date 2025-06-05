@@ -35,18 +35,3 @@ export const zoomApp = {
   sessionSecret: config.SESSION_SECRET,
 };
 
-// Zoom App Info
-export const appName = config.APP_NAME || "zoom-app";
-export const redirectUri = zoomApp.redirectUrl;
-
-// HTTP
-export const port = config.PORT || "3000";
-
-// require secrets are explicitly imported
-const defaultConfig = {
-  appName,
-  redirectUri,
-  port,
-};
-
-export default defaultConfig;
