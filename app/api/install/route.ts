@@ -1,6 +1,6 @@
 import { URL } from "url";
 import crypto from "crypto";
-import { zoomApp } from "./config";
+import { zoomApp } from "@/lib/env_vars";
 import { redirect } from "next/navigation";
 
 export const GET = async (req: unknown, res: unknown) => {

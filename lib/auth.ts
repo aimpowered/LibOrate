@@ -1,5 +1,5 @@
 import axios from "axios";
-import { zoomApp } from "@/app/api/install/config";
+import { zoomApp } from "@/lib/env_vars";
 
 interface ZoomTokenResponse {
   access_token: string;
