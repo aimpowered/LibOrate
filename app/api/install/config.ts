@@ -21,8 +21,9 @@ for (const dep in deps) {
 if (hasMissing) throw new Error("Missing required .env values...exiting");
 
 try {
-  new URL(config.ZM_REDIRECT_URL);
-} catch (e) {
+  new URL(config.ZM_REDIRECT_URL!);
+} catch (err) {
+  const e = err as Error;
   throw new Error(`Invalid ZM_REDIRECT_URL: ${e.message}`);
 }
 
