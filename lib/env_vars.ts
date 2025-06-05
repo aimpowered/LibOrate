@@ -34,4 +34,3 @@ export const zoomApp = {
   redirectUrl: config.ZM_REDIRECT_URL,
   sessionSecret: config.SESSION_SECRET,
 };
-
