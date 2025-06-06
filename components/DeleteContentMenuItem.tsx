@@ -4,19 +4,17 @@ import Modal from "@mui/material/Modal";
 import "@/app/css/Affirmation.css";
 
 interface DeleteContentMenuItemProps {
-  id: number;
-  onCardDeletion: (id: number) => void;
+  onCardDeletion: () => void;
 }
 
 export function DeleteContentMenuItem({
-  id,
   onCardDeletion,
 }: DeleteContentMenuItemProps) {
   const [open, setOpen] = useState(false);
   const handleModalOpen = () => setOpen(true);
   const handleModalClose = () => setOpen(false);
-  const handleDelete = (id: number) => {
-    onCardDeletion(id);
+  const handleDelete = () => {
+    onCardDeletion();
     setOpen(false);
   };
 
@@ -28,10 +26,7 @@ export function DeleteContentMenuItem({
           <div className="card-modal-body">
             <p>Ready to delete the message?</p>
           </div>
-          <button
-            className="card-modal-button"
-            onClick={() => handleDelete(id)}
-          >
+          <button className="card-modal-button" onClick={() => handleDelete()}>
             Confirm
           </button>
           <button className="card-modal-button" onClick={handleModalClose}>
