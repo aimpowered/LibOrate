@@ -58,8 +58,13 @@ describe("AffirmationCarousel Component", () => {
   test("resizes when the resize handle is dragged", () => {
     render(<AffirmationCarousel {...defaultProps} />);
 
-    const resizeHandle = screen.getByTestId("resize-handle");
-    const carouselContent = screen.getByTestId("self-affirm-carousel");
+    const carouselContent = screen.getByRole("region", {
+      name: /self affirmation carousel/i,
+    });
+
+    const resizeHandle = screen.getByRole("slider", {
+      name: /resize handle/i,
+    });
 
     act(() => {
       fireEvent.mouseDown(resizeHandle); // Start resizing
@@ -73,8 +78,13 @@ describe("AffirmationCarousel Component", () => {
   test("ensures font size updates correctly on resize", () => {
     render(<AffirmationCarousel {...defaultProps} />);
 
-    const resizeHandle = screen.getByTestId("resize-handle");
-    const firstAffirmationCard = screen.getByTestId("self-affirm-carousel");
+    const firstAffirmationCard = screen.getByRole("region", {
+      name: /self affirmation carousel/i,
+    });
+
+    const resizeHandle = screen.getByRole("slider", {
+      name: /resize handle/i,
+    });
 
     act(() => {
       fireEvent.mouseDown(resizeHandle);

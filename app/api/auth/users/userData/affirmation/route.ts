@@ -50,9 +50,7 @@ export const DELETE = async (
       { status: 404 },
     );
 
-  user.affirmations = user.affirmations.filter(
-    (text: string, index: number) => index !== id,
-  );
+  user.affirmations.splice(id, 1);
   if (user.affirmations.length === originalLength) {
     return NextResponse.json(
       { error: "Affirmation not found" },
