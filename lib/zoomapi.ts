@@ -90,7 +90,7 @@ class ZoomApiImpl implements ZoomApiWrapper {
 
   async sendMessageToChat(message: string): Promise<SendMessageToChatResponse> {
     await this.initialize();
-    return zoomSdk.sendMessageToChat({message});
+    return zoomSdk.sendMessageToChat({ message });
   }
 
   private async drawForeground(input?: VideoMedia) {

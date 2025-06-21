@@ -148,7 +148,10 @@ export function NameTagForm({
                       <div>
                         Send Disclosure Message
                         <Tooltip title="This will send a message to everyone in the meeting">
-                          <InfoOutlinedIcon fontSize="small" style={{ cursor: "pointer", color: "#888" }} />
+                          <InfoOutlinedIcon
+                            fontSize="small"
+                            style={{ cursor: "pointer", color: "#888" }}
+                          />
                         </Tooltip>
                       </div>
                     }
@@ -171,7 +174,6 @@ export function NameTagForm({
           />
         </div>
 
-        
         <div>
           {/* Add the Button here to manually trigger DB update */}
           <Button

@@ -18,9 +18,9 @@ class FakeZoomApi implements ZoomApiWrapper {
   async sendMessageToChat(message: string): Promise<SendMessageToChatResponse> {
     return {
       result: [
-        { channelId: "mocked_channel_id", messageId: "mocked_message_id" }
-      ]
-    }
+        { channelId: "mocked_channel_id", messageId: "mocked_message_id" },
+      ],
+    };
   }
 }
 export type { ZoomApiWrapper };
