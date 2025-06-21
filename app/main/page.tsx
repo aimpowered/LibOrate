@@ -58,7 +58,11 @@ function App() {
     if (nameTagContent.visible !== data.visible) {
       log(data.visible ? Action.NAME_BADGE_ON : Action.NAME_BADGE_OFF);
     }
-    if (data.sendToMeeting && data.fullMessage !== nameTagContent.fullMessage) {
+    if (
+      data.sendToMeeting &&
+      (!nameTagContent.sendToMeeting ||
+        data.fullMessage !== nameTagContent.fullMessage)
+    ) {
       zoomApiRef.current?.sendMessageToChat(data.fullMessage);
     }
     setNameTagContent(data);
