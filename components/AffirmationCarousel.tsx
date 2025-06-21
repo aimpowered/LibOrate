@@ -87,7 +87,8 @@ export function AffirmationCarousel({
     <Carousel>
       <CarouselContent
         className="self-affirm-carousel"
-        data-testid="self-affirm-carousel"
+        role="region"
+        aria-label="Self Affirmation Carousel"
         ref={carouselRef}
       >
         {affirmationList.map((affirmation, index) => (
@@ -107,7 +108,8 @@ export function AffirmationCarousel({
       </CarouselContent>
       <div
         className="resize-handle"
-        data-testid="resize-handle"
+        role="slider"
+        aria-label="Resize Handle"
         onMouseDown={handleMouseDown}
       />
       <CarouselPrevious />
