@@ -4,6 +4,7 @@ import {
   AuthorizeCallback,
   AuthorizeOptions,
   GeneralMessageResponse,
+  SendMessageToChatResponse,
 } from "./zoomapi";
 
 class FakeZoomApi implements ZoomApiWrapper {
@@ -13,6 +14,13 @@ class FakeZoomApi implements ZoomApiWrapper {
   }
   async setAuthorizeCallback(cb: AuthorizeCallback): Promise<void> {
     cb({ code: "mocked_code" });
+  }
+  async sendMessageToChat(message: string): Promise<SendMessageToChatResponse> {
+    return {
+      result: [
+        { channelId: "mocked_channel_id", messageId: "mocked_message_id" }
+      ]
+    }
   }
 }
 export type { ZoomApiWrapper };
