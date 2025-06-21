@@ -30,10 +30,20 @@ export interface GeneralMessageResponse {
   message: string;
 }
 
+export interface SendMessageToChatResult {
+  channelId: string;
+  messageId: string;
+}
+
+export interface SendMessageToChatResponse {
+  result: SendMessageToChatResult[];
+}
+
 export interface ZoomApiWrapper {
   setDrawImageCallback(cb: DrawImageCallback): Promise<void>;
   authorize(data: AuthorizeOptions): Promise<GeneralMessageResponse>;
   setAuthorizeCallback(cb: AuthorizeCallback): Promise<void>;
+  sendMessageToChat(message: string): Promise<SendMessageToChatResponse>;
 }
 
 function createFromConfig(options: ConfigOptions) {
@@ -78,6 +88,11 @@ class ZoomApiImpl implements ZoomApiWrapper {
     });
   }
 
+  async sendMessageToChat(message: string): Promise<SendMessageToChatResponse> {
+    await this.initialize();
+    return zoomSdk.sendMessageToChat({message});
+  }
+
   private async drawForeground(input?: VideoMedia) {
     const video = input?.video ?? {};
     const { width, height, state } = video;
@@ -96,6 +111,7 @@ const zoomConfigOptions: ConfigOptions = {
     "authorize",
     "onAuthorized",
     "promptAuthorize",
+    "sendMessageToChat",
   ],
   version: "0.16",
   timeout: 10000,
