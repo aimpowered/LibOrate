@@ -63,7 +63,7 @@ export function AffirmationCarousel({
     if (!isResizing || !carouselRef.current) return;
     document.body.style.cursor = "row-resize";
     let newHeight = e.clientY - carouselRef.current.getBoundingClientRect().top;
-    newHeight = Math.max(80, Math.min(newHeight, 150));
+    newHeight = Math.max(80, Math.min(newHeight, window.innerHeight * 0.5));
     carouselRef.current.style.height = `${newHeight}px`;
   }
 

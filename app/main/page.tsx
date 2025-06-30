@@ -39,6 +39,8 @@ function App() {
   const [affirmations, setAffirmations] = useState<string[]>([]);
   const [hasError, setHasError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const [headerHeight, setHeaderHeight] = useState(0);
 
   const foregroundDrawerRef = useRef<DrawBadgeApi | null>(null);
   const zoomApiRef = useRef<ZoomApiWrapper | null>(null);
@@ -50,6 +52,23 @@ function App() {
       zoomApiRef.current = zoomApi;
     };
     init();
+  }, []);
+
+  useEffect(() => {
+    if (!headerRef.current) return;
+
+    const updateHeight = () => {
+      if (headerRef.current) {
+        setHeaderHeight(headerRef.current.clientHeight);
+      }
+    };
+
+    updateHeight();
+
+    const observer = new ResizeObserver(updateHeight);
+    observer.observe(headerRef.current);
+
+    return () => observer.disconnect();
   }, []);
 
   const updateNameTagContent: SubmitHandler<NameTagContent> = (data) => {
@@ -98,7 +117,7 @@ function App() {
 
   return (
     <div>
-      <div className="header">
+      <div className="header" ref={headerRef}>
         {!isLoading && (
           <AffirmationCarousel
             initialAffirmations={affirmations}
@@ -109,37 +128,42 @@ function App() {
         )}
       </div>
 
-      <div>
-        {!isLoading && (
-          <WaveHandPicker
-            initialHands={waveHandButtons}
-            updateHandWaveBadge={updateHandWaveBadge}
-            hasError={hasError}
-            onRetry={fetchUser}
-            onAdd={addWaveHandToDB}
-            onDelete={deleteWaveHandFromDB}
-          />
-        )}
-      </div>
+      <div
+        className="scrollable-content"
+        style={{ marginTop: `${headerHeight}px` }}
+      >
+        <div>
+          {!isLoading && (
+            <WaveHandPicker
+              initialHands={waveHandButtons}
+              updateHandWaveBadge={updateHandWaveBadge}
+              hasError={hasError}
+              onRetry={fetchUser}
+              onAdd={addWaveHandToDB}
+              onDelete={deleteWaveHandFromDB}
+            />
+          )}
+        </div>
 
-      <Divider />
+        <Divider />
 
-      <div>
-        <Tabs>
-          <div page-label="nametag">
-            {!hasError && !isLoading && (
-              <NameTagForm
-                content={nameTagContent}
-                onNameTagContentChange={updateNameTagContent}
-                onSaveButtonClick={updateNameTagInDB}
-              />
-            )}
-          </div>
+        <div>
+          <Tabs>
+            <div page-label="nametag">
+              {!hasError && !isLoading && (
+                <NameTagForm
+                  content={nameTagContent}
+                  onNameTagContentChange={updateNameTagContent}
+                  onSaveButtonClick={updateNameTagInDB}
+                />
+              )}
+            </div>
 
-          <div page-label="mindfulness">
-            <Mindfulness />
-          </div>
-        </Tabs>
+            <div page-label="mindfulness">
+              <Mindfulness />
+            </div>
+          </Tabs>
+        </div>
       </div>
     </div>
   );
