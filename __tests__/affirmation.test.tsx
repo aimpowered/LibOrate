@@ -44,15 +44,11 @@ const defaultAffirmations: string[] = [
 ];
 
 describe("AffirmationCarousel Component", () => {
-  const mockUpdate = jest.fn();
-  const mockDelete = jest.fn();
-  const mockAdd = jest.fn();
-
   const defaultProps: AffirmationCarouselProps = {
     initialAffirmations: defaultAffirmations,
-    onAdd: mockAdd,
-    onDelete: mockDelete,
-    onUpdate: mockUpdate,
+    onAdd: () => {},
+    onDelete: () => {},
+    onUpdate: () => {},
   };
 
   test("resizes when the resize handle is dragged", () => {
@@ -98,7 +94,8 @@ describe("AffirmationCarousel Component", () => {
   });
 
   it("calls onUpdate when affirmation is added", () => {
-    render(<AffirmationCarousel {...defaultProps} />);
+    const mockUpdate = jest.fn();
+    render(<AffirmationCarousel {...defaultProps} onUpdate={mockUpdate} />);
 
     const actionButtons = screen.getAllByLabelText("more actions");
     expect(actionButtons.length).toBeGreaterThan(0);
@@ -114,7 +111,8 @@ describe("AffirmationCarousel Component", () => {
   });
 
   it("calls onDelete when affirmation is deleted", () => {
-    render(<AffirmationCarousel {...defaultProps} />);
+    const mockDelete = jest.fn();
+    render(<AffirmationCarousel {...defaultProps} onDelete={mockDelete} />);
 
     const actionButtons = screen.getAllByLabelText("more actions");
     expect(actionButtons.length).toBeGreaterThan(0);
@@ -128,7 +126,8 @@ describe("AffirmationCarousel Component", () => {
   });
 
   it("calls onAdd when affirmation is updated", () => {
-    render(<AffirmationCarousel {...defaultProps} />);
+    const mockAdd = jest.fn();
+    render(<AffirmationCarousel {...defaultProps} onAdd={mockAdd} />);
 
     const addButton = screen.getByLabelText("Add new affirmation button");
     fireEvent.click(addButton);
