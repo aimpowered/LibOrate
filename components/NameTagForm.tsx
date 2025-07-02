@@ -2,6 +2,8 @@ import React from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 
 import FormControlLabel from "@mui/material/FormControlLabel";
+import Tooltip from "@mui/material/Tooltip";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 import "@/app/css/NameTag.css";
 import Switch from "@mui/material/Switch";
@@ -13,6 +15,8 @@ export interface NameTagContent {
   preferredName: string;
   pronouns: string;
   disclosure: string;
+  fullMessage: string;
+  sendToMeeting: boolean;
 }
 
 interface NameTagProps {
@@ -39,6 +43,8 @@ export function NameTagForm({
       pronouns: watch("pronouns", content.pronouns ?? ""),
       disclosure: disclosureValue,
       visible: watch("visible", content.visible ?? false),
+      fullMessage: watch("fullMessage", content.fullMessage ?? ""),
+      sendToMeeting: watch("sendToMeeting", content.sendToMeeting ?? false),
     };
     onSaveButtonClick(updatedData); // Update DB with current form data
   };
@@ -92,38 +98,89 @@ export function NameTagForm({
             )}
           </div>
         </div>
-        <div className="form-container">
-          <div className="controller-container">
-            <Controller
-              control={control}
-              name="visible"
-              defaultValue={false}
-              render={({ field: { onChange, value } }) => (
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={value}
-                      onChange={(e) => {
-                        onChange(e);
-                        handleSubmit(onNameTagContentChange)();
-                      }}
-                      type="checkbox"
-                    />
-                  }
-                  label="Display Name Tag"
-                  labelPlacement="start"
-                  className="label-styling"
-                />
-              )}
-            />
+        <div className="switch-group">
+          <div className="form-container">
+            <div className="controller-container">
+              <Controller
+                control={control}
+                name="visible"
+                defaultValue={false}
+                render={({ field: { onChange, value } }) => (
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={value}
+                        onChange={(e) => {
+                          onChange(e);
+                          handleSubmit(onNameTagContentChange)();
+                        }}
+                        type="checkbox"
+                      />
+                    }
+                    label="Display Name Tag"
+                    labelPlacement="start"
+                    className="label-styling"
+                  />
+                )}
+              />
+            </div>
+          </div>
+          <div className="form-container">
+            <div className="controller-container">
+              <Controller
+                control={control}
+                name="sendToMeeting"
+                defaultValue={false}
+                render={({ field: { onChange, value } }) => (
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={value}
+                        onChange={onChange}
+                        type="checkbox"
+                        onClick={(e) => {
+                          onChange(e);
+                          handleSubmit(onNameTagContentChange)();
+                        }}
+                      />
+                    }
+                    label={
+                      <div>
+                        Send Disclosure Message
+                        <Tooltip title="This will send a message to everyone in the meeting">
+                          <InfoOutlinedIcon
+                            fontSize="small"
+                            style={{ cursor: "pointer", color: "#888" }}
+                          />
+                        </Tooltip>
+                      </div>
+                    }
+                    labelPlacement="start"
+                    className="label-styling"
+                  />
+                )}
+              />
+            </div>
           </div>
         </div>
+        <div style={{ paddingBottom: bottom_padding }}>
+          <textarea
+            className="text-input"
+            id="fullMessage"
+            rows={3}
+            placeholder="Introduce yourself..."
+            defaultValue={content.fullMessage}
+            {...register("fullMessage")}
+          />
+        </div>
+
         <div>
           {/* Add the Button here to manually trigger DB update */}
           <Button
             variant="contained"
             color="primary"
             onClick={handleSaveButtonClick} // Handle click to update DB
+            type="submit"
           >
             Save Name Tag
           </Button>

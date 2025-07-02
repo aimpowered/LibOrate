@@ -23,7 +23,7 @@ describe("NameTagForm", () => {
     expect(screen.getByText("Preferred Name")).toBeInTheDocument();
     expect(screen.getAllByText("Pronouns")[0]).toBeInTheDocument();
     expect(screen.getByText("Something About Me")).toBeInTheDocument();
-    expect(screen.getByRole("checkbox")).toBeInTheDocument();
+    expect(screen.getAllByRole("checkbox")).toHaveLength(2);
     expect(screen.getByText("Save Name Tag")).toBeInTheDocument();
   });
 
@@ -40,8 +40,12 @@ describe("NameTagForm", () => {
     const displayNameTag = screen.getByLabelText("Display Name Tag");
     expect(displayNameTag).toBeInTheDocument();
 
-    const checkboxInput = screen.getByRole("checkbox");
-    expect(checkboxInput).toBe(displayNameTag);
+    const checkboxInputs = screen.getAllByRole("checkbox");
+    const isSameCheckboxFound = checkboxInputs.some(
+      (checkbox) => checkbox === displayNameTag,
+    );
+
+    expect(isSameCheckboxFound).toBe(true);
     expect(displayNameTag).not.toBeChecked();
 
     await userEvent.click(displayNameTag);
@@ -101,5 +105,49 @@ describe("NameTagForm", () => {
     await waitFor(() => {
       expect(saveButtonCallback).toHaveBeenCalled();
     });
+  });
+
+  it("should capture full message and send self disclosure flag", async () => {
+    const onSaveButtonClick = jest.fn();
+    const onNameTagContentChange = jest.fn();
+
+    const content = {
+      preferredName: "Test User",
+      pronouns: "They/Them",
+      disclosure: "I love coding.",
+      visible: false,
+      fullMessage: "",
+      sendToMeeting: false,
+    };
+
+    render(
+      <NameTagForm
+        content={content}
+        onSaveButtonClick={onSaveButtonClick}
+        onNameTagContentChange={onNameTagContentChange}
+      />,
+    );
+
+    const fullMessageTextarea = screen.getByPlaceholderText(
+      "Introduce yourself...",
+    );
+    await userEvent.type(fullMessageTextarea, "Hello from test!");
+
+    const sendDisclosureToggle = screen.getByLabelText(
+      "Send Disclosure Message",
+    );
+    await userEvent.click(sendDisclosureToggle);
+
+    expect(onNameTagContentChange).toHaveBeenCalledTimes(1);
+
+    const saveButton = screen.getByRole("button", { name: /save name tag/i });
+    await userEvent.click(saveButton);
+
+    expect(onSaveButtonClick).toHaveBeenCalledWith(
+      expect.objectContaining({
+        fullMessage: "Hello from test!",
+        sendToMeeting: true,
+      }),
+    );
   });
 });

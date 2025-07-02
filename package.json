@@ -18,7 +18,7 @@
         "@mui/icons-material": "^5.15.17",
         "@mui/material": "^5.15.1",
         "@mui/system": "^6.1.5",
-        "@zoom/appssdk": "^0.16.15",
+        "@zoom/appssdk": "^0.16.30",
         "axios": "^1.8.4",
         "bcrypt": "^5.1.1",
         "clsx": "^2.1.1",
