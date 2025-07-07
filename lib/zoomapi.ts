@@ -84,9 +84,7 @@ class ZoomApiImpl implements ZoomApiWrapper {
     if (this.drawImageCallback == null) return;
     if (width == null || height == null) return;
     if (state !== undefined && !state) return;
-    const imageData = this.drawImageCallback(
-      { width, height },
-    );
+    const imageData = this.drawImageCallback({ width, height });
     return zoomSdk.setVirtualForeground({ imageData });
   }
 }
