@@ -25,8 +25,8 @@ export class DrawBadgeApi {
   constructor(private zoomApiWrapper: ZoomApiWrapper) {}
 
   private forceDrawing() {
-    return this.zoomApiWrapper.setDrawImageCallback((v, mirror) =>
-      drawEverythingToImage(v, mirror, this.nametag, this.handwave),
+    return this.zoomApiWrapper.setDrawImageCallback((v) =>
+      drawEverythingToImage(v, this.nametag, this.handwave),
     );
   }
 
@@ -155,7 +155,6 @@ function renderNameTagBadge(
 // TODO: make sure the handwave badge scale and resize correctly based on window size.
 function drawEverythingToImage(
   video: VideoDimensions,
-  mirror: boolean,
   nametag: NameTagBadge,
   handWave: HandWaveBadge,
 ): ImageData {
@@ -165,11 +164,6 @@ function drawEverythingToImage(
   canvas.height = video.height; // Height of the canvas
 
   context.clearRect(0, 0, canvas.width, canvas.height);
-
-  if (mirror) {
-    context.translate(canvas.width, 0);
-    context.scale(-1, 1);
-  }
 
   if (nametag.visible) {
     renderNameTagBadge(nametag, canvas.width, canvas.height, context);
