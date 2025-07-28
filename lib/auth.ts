@@ -15,10 +15,10 @@ export const getZoomAccessToken = (
 ): Promise<ZoomTokenResponse> => {
   if (process.env.NEXT_PUBLIC_MOCK_ZOOM_API === "true") {
     return Promise.resolve({
-      access_token: "mock_access_token",
+      access_token: process.env.MOCK_ZOOM_ACCESS_TOKEN || "",
       token_type: "Bearer",
       expires_in: 3600,
-      refresh_token: "mock_refresh_token",
+      refresh_token: process.env.MOCK_ZOOM_REFRESH_TOKEN || "",
       scope: "user:read",
       api_url: "https://api.zoom.us/v2",
     });
