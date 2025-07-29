@@ -3,6 +3,7 @@
 import React, { ChangeEventHandler, FormEventHandler, useState } from "react";
 import "../css/sign-up.css"; // Import CSS file
 import { Action, log } from "@/lib/log";
+import Link from "next/link";
 
 const SignUp = () => {
   const [busy, setBusy] = useState(false);
@@ -91,13 +92,13 @@ const SignUp = () => {
 
           <p className="mt-8 text-center text-gray-500">
             Already have an account,{" "}
-            <a
+            <Link
               href="/"
               className="text-blue-500 underline"
               style={{ color: "#d68071" }}
             >
               sign in.
-            </a>
+            </Link>
           </p>
         </form>
       </div>
