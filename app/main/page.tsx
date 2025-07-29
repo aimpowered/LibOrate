@@ -27,6 +27,8 @@ const defaultNameTag: NameTagContent = {
   preferredName: "",
   pronouns: "",
   disclosure: "I have a stutter",
+  fullMessage: "",
+  sendToMeeting: false,
 };
 
 function App() {
@@ -41,11 +43,13 @@ function App() {
   const [headerHeight, setHeaderHeight] = useState(0);
 
   const foregroundDrawerRef = useRef<DrawBadgeApi | null>(null);
+  const zoomApiRef = useRef<ZoomApiWrapper | null>(null);
 
   useEffect(() => {
     const init = async () => {
       const zoomApi: ZoomApiWrapper = await getZoomApi();
       foregroundDrawerRef.current = new DrawBadgeApi(zoomApi);
+      zoomApiRef.current = zoomApi;
     };
     init();
   }, []);
@@ -70,6 +74,13 @@ function App() {
   const updateNameTagContent: SubmitHandler<NameTagContent> = (data) => {
     if (nameTagContent.visible !== data.visible) {
       log(data.visible ? Action.NAME_BADGE_ON : Action.NAME_BADGE_OFF);
+    }
+    if (
+      data.sendToMeeting &&
+      (!nameTagContent.sendToMeeting ||
+        data.fullMessage !== nameTagContent.fullMessage)
+    ) {
+      zoomApiRef.current?.sendMessageToChat(data.fullMessage);
     }
     setNameTagContent(data);
     foregroundDrawerRef.current?.drawNameTag(data);

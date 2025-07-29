@@ -8,6 +8,8 @@ interface NameTagContent {
   preferredName: string;
   pronouns: string;
   disclosure: string;
+  fullMessage: string;
+  sendToMeeting: boolean;
 }
 interface UserDocument extends Document {
   email: string;
@@ -32,6 +34,8 @@ const userSchema = new Schema<UserDocument, {}, Methods>({
     pronouns: { type: String },
     disclosure: { type: String },
     visible: { type: Boolean },
+    fullMessage: { type: String },
+    sendToMeeting: { type: Boolean },
   },
   waveHands: {
     type: [String],
