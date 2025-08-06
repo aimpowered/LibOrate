@@ -24,22 +24,18 @@ function App() {
 
     async function handleAuth() {
       try {
-        console.log("handleAuth called");
         const zoomApi = await getZoomApi();
         const options: AuthorizeOptions = {
           state: "state",
           codeChallenge: "codeChallenge",
         };
-        const res = await zoomApi.authorize(options);
-        console.log("zoom sdk authorized:", res);
+        await zoomApi.authorize(options);
         zoomApi.setAuthorizeCallback(async (event) => {
-          console.log("zoom api authorize callback called:", event);
           const res = await signIn("credentials", {
             code: event.code,
             redirect: false,
           });
           if (res?.error) {
-            console.error("next auth sign in failed:", res.error);
             return setError(res.error);
           }
           router.replace("/main");
@@ -48,7 +44,6 @@ function App() {
           }
         });
       } catch (error) {
-        console.error("Failed to authorize zoom API:", error);
         setError((error as Error).message);
       }
     }
