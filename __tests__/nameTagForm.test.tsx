@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom";
-import { render, screen, waitFor } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 
 import { NameTagForm } from "@/components/NameTagForm";
@@ -29,13 +29,15 @@ describe("NameTagForm", () => {
 
   it("verifies that the nametag display checkbox can be checked", async () => {
     const updateNameTagContent = jest.fn();
-    render(
-      <NameTagForm
-        content={emptyNameTag}
-        onNameTagContentChange={updateNameTagContent}
-        onSaveButtonClick={() => {}}
-      />,
-    );
+    await act(async () => {
+      render(
+        <NameTagForm
+          content={emptyNameTag}
+          onNameTagContentChange={updateNameTagContent}
+          onSaveButtonClick={() => {}}
+        />,
+      );
+    });
 
     const displayNameTag = screen.getByLabelText("Display Name Tag");
     expect(displayNameTag).toBeInTheDocument();
@@ -48,7 +50,9 @@ describe("NameTagForm", () => {
     expect(isSameCheckboxFound).toBe(true);
     expect(displayNameTag).not.toBeChecked();
 
-    await userEvent.click(displayNameTag);
+    await act(async () => {
+      await userEvent.click(displayNameTag);
+    });
 
     expect(displayNameTag).toBeChecked();
     await waitFor(() => {
@@ -80,10 +84,12 @@ describe("NameTagForm", () => {
         content.includes("Exceeded length limit!"),
       ),
     ).toBeNull();
-    await userEvent.type(
-      disclosureField,
-      "message that is too long to fit in the disclosure field because the field has a 30 character limit",
-    );
+    await act(async () => {
+      await userEvent.type(
+        disclosureField,
+        "message that is too long to fit in the disclosure field because the field has a 30 character limit",
+      );
+    });
     expect(
       screen.getByText((content) => content.includes("Exceeded length limit!")),
     ).toBeInTheDocument();
@@ -91,17 +97,21 @@ describe("NameTagForm", () => {
 
   it("checks that the submit buton works", async () => {
     const saveButtonCallback = jest.fn();
-    render(
-      <NameTagForm
-        content={emptyNameTag}
-        onNameTagContentChange={() => {}}
-        onSaveButtonClick={saveButtonCallback}
-      />,
-    );
+    await act(async () => {
+      render(
+        <NameTagForm
+          content={emptyNameTag}
+          onNameTagContentChange={() => {}}
+          onSaveButtonClick={saveButtonCallback}
+        />,
+      );
+    });
 
     const submit = screen.getByText("Save Name Tag");
 
-    await userEvent.click(submit);
+    await act(async () => {
+      await userEvent.click(submit);
+    });
     await waitFor(() => {
       expect(saveButtonCallback).toHaveBeenCalled();
     });
@@ -120,28 +130,33 @@ describe("NameTagForm", () => {
       sendToMeeting: false,
     };
 
-    render(
-      <NameTagForm
-        content={content}
-        onSaveButtonClick={onSaveButtonClick}
-        onNameTagContentChange={onNameTagContentChange}
-      />,
-    );
+    await act(async () => {
+      render(
+        <NameTagForm
+          content={content}
+          onSaveButtonClick={onSaveButtonClick}
+          onNameTagContentChange={onNameTagContentChange}
+        />,
+      );
+    });
 
     const fullMessageTextarea = screen.getByPlaceholderText(
       "Introduce yourself...",
     );
-    await userEvent.type(fullMessageTextarea, "Hello from test!");
-
     const sendDisclosureToggle = screen.getByLabelText(
       "Send Disclosure Message",
     );
-    await userEvent.click(sendDisclosureToggle);
+    const saveButton = screen.getByRole("button", {
+      name: /save name tag/i,
+    });
 
-    expect(onNameTagContentChange).toHaveBeenCalledTimes(1);
+    await act(async () => {
+      await userEvent.type(fullMessageTextarea, "Hello from test!");
+      await userEvent.click(sendDisclosureToggle);
+      await userEvent.click(saveButton);
+    });
 
-    const saveButton = screen.getByRole("button", { name: /save name tag/i });
-    await userEvent.click(saveButton);
+    expect(onNameTagContentChange).toHaveBeenCalledTimes(2);
 
     expect(onSaveButtonClick).toHaveBeenCalledWith(
       expect.objectContaining({
