@@ -1,13 +1,15 @@
 import React from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 
-import FormControlLabel from "@mui/material/FormControlLabel";
+// import FormControlLabel from "@mui/material/FormControlLabel";
 import Tooltip from "@mui/material/Tooltip";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 import "@/app/css/NameTag.css";
 import Switch from "@mui/material/Switch";
 import Button from "@mui/material/Button";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
 
 // TODO: deduplicate this with EnabledNameTagBadge
 export interface NameTagContent {
@@ -106,21 +108,27 @@ export function NameTagForm({
                 name="visible"
                 defaultValue={false}
                 render={({ field: { onChange, value } }) => (
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={value}
-                        onChange={(e) => {
-                          onChange(e);
-                          handleSubmit(onNameTagContentChange)();
-                        }}
-                        type="checkbox"
-                      />
-                    }
-                    label="Display Name Tag"
-                    labelPlacement="start"
-                    className="label-styling"
-                  />
+                  <div className="toggle-card colored-switch">
+                    <div className="toggle-label">
+                      <span className="toggle-icon" aria-hidden>
+                        <VisibilityOutlinedIcon fontSize="small" />
+                      </span>
+                      <div className="toggle-text">
+                        <div className="toggle-title">Display Name Tag</div>
+                        <div className="toggle-subtitle">
+                          {/* Removed subtitle text */}
+                        </div>
+                      </div>
+                    </div>
+                    <Switch
+                      checked={value}
+                      onChange={(e) => {
+                        onChange(e);
+                        handleSubmit(onNameTagContentChange)();
+                      }}
+                      inputProps={{ "aria-label": "Display Name Tag" }}
+                    />
+                  </div>
                 )}
               />
             </div>
@@ -132,32 +140,32 @@ export function NameTagForm({
                 name="sendToMeeting"
                 defaultValue={false}
                 render={({ field: { onChange, value } }) => (
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={value}
-                        onChange={onChange}
-                        type="checkbox"
-                        onClick={(e) => {
-                          onChange(e);
-                          handleSubmit(onNameTagContentChange)();
-                        }}
-                      />
-                    }
-                    label={
-                      <div>
-                        Send Disclosure Message
-                        <Tooltip title="This will send a message to everyone in the meeting">
-                          <InfoOutlinedIcon
-                            fontSize="small"
-                            style={{ cursor: "pointer", color: "#888" }}
-                          />
-                        </Tooltip>
+                  <div className="toggle-card colored-switch">
+                    <div className="toggle-label">
+                      <span className="toggle-icon" aria-hidden>
+                        <ChatBubbleOutlineOutlinedIcon fontSize="small" />
+                      </span>
+                      <div className="toggle-text">
+                        <div className="toggle-title">Send Disclosure Message</div>
+                        <div className="toggle-subtitle">
+                          <Tooltip title="This will send a message to everyone in the meeting">
+                            <InfoOutlinedIcon
+                              fontSize="small"
+                              style={{ cursor: "pointer", color: "#888", marginLeft: 6 }}
+                            />
+                          </Tooltip>
+                        </div>
                       </div>
-                    }
-                    labelPlacement="start"
-                    className="label-styling"
-                  />
+                    </div>
+                    <Switch
+                      checked={value}
+                      onChange={(e) => {
+                        onChange(e);
+                        handleSubmit(onNameTagContentChange)();
+                      }}
+                      inputProps={{ "aria-label": "Send Disclosure Message" }}
+                    />
+                  </div>
                 )}
               />
             </div>
