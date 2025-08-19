@@ -48,7 +48,7 @@
 
 /* Optional: Add a wrapper for the group of switches */
 .switch-group {
-  margin: 1rem 0; /* This controls spacing from input above and textarea below */
+  margin: 0.5rem 0; /* This controls spacing from input above and textarea below */
 }
 
 .submit-btn {
@@ -96,4 +96,60 @@
   display: block;
   margin-top: 0.3125rem;
   color: red;
+}
+
+/* Toggle card styles for better looking switches */
+.toggle-card {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #e5e7eb; /* gray-200 */
+  border-radius: 0.5rem;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.toggle-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.toggle-icon {
+  display: inline-flex;
+  width: 1.5rem;
+  height: 1.5rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: #f3f4f6; /* gray-100 */
+  color: #6b7280; /* gray-500 */
+  flex-shrink: 0;
+}
+
+.toggle-text {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.toggle-title {
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.toggle-subtitle {
+  font-size: 0.75rem;
+  color: #6b7280; /* gray-500 */
+  line-height: 1.2;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
 }
