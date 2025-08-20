@@ -1,31 +1,31 @@
-import { Button as BaseButton } from "@mui/base/Button";
-import { styled } from "@mui/system";
+import { Button as HeadlessButton } from "@headlessui/react";
+import clsx from "clsx";
+import React from "react";
 
-const orange = "#d68071";
-const gray = "#f0f0f0";
+interface ButtonProps extends React.ComponentPropsWithoutRef<"button"> {
+  selected?: boolean;
+}
 
-const Button = styled(BaseButton)(
-  ({ theme }) => `
-  padding: 10px 20px;
-  background-color: transparent;
-  color: black;
-  border: 1px solid #ccc;
-  border-radius: 20px;
-  cursor: pointer;
-  margin: 5px;
-  font-size: 20px;
-  box-shadow: 0 2px 1px white;
-
-  &:hover {
-    background-color: ${gray};
-  }
-
-  &:selected {
-    background-color: ${orange};
-    color: white;
-    font-weight: bold;
-  }
-  `,
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ selected, className, children, ...props }, ref) => {
+    return (
+      <HeadlessButton
+        ref={ref}
+        className={clsx(
+          "bg-transparent text-black border border-gray-300 rounded-full cursor-pointer m-1 text-xl shadow-[0_2px_1px_white] hover:bg-muted",
+          {
+            "bg-destructive text-destructive-foreground font-bold": selected,
+          },
+          className,
+        )}
+        {...props}
+      >
+        {children}
+      </HeadlessButton>
+    );
+  },
 );
+
+Button.displayName = "Button";
 
 export { Button };
