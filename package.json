@@ -23,7 +23,7 @@
         "bcrypt": "^6.0.0",
         "clsx": "^2.1.1",
         "embla-carousel-react": "^8.0.2",
-        "lucide-react": "^0.534.0",
+        "lucide-react": "^0.535.0",
         "mongoose": "^8.0.3",
         "next": "^15.4.6",
         "next-auth": "^4.24.11",
