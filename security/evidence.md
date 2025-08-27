@@ -28,17 +28,14 @@ Description: A videoconferencing companion app that offers emotional and relatio
 ## 3. Implementation
 
 - Branch Strategy:
-
   - We follow GitHub Flow. main is protected.
     All features/fixes are implemented via pull requests (PRs).
 
 - Code Review:
-
   - Peer review is mandatory before merging.
   - Reviewers use GitHub's "Request Changes" or "Approve" features.
 
 - Evidence:
-
   - PR Review
 
     ![](images/pr_review.png)
@@ -50,12 +47,10 @@ Description: A videoconferencing companion app that offers emotional and relatio
 ## 4. Testing
 
 - Automated Tests:
-
   - We run unit tests and Cypress E2E tests on each PR and push.
   - Test results are validated in GitHub Actions.
 
 - Evidence:
-
   - UT and cypress E2E tests
 
     ![](images/testing.png)
@@ -79,7 +74,6 @@ Description: A videoconferencing companion app that offers emotional and relatio
 - Security Policy
   - SECURITY.md defines vulnerability reporting process.
 - Evidence:
-
   - Security policy
 
     ![](./images/security_policy.png)
