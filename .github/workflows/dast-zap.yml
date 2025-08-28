@@ -17,6 +17,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      
+      - name: Echo environment variables
+        run: |
+          echo "ZOOM_WEB_APP_URL: ${{ secrets.ZOOM_WEB_APP_URL }}"
 
       - name: Run ZAP Baseline Scan
         uses: zaproxy/action-baseline@v0.14.0
