@@ -5,8 +5,10 @@ updates:
     directory: "/"            # Location of your package.json
     schedule:
       interval: "daily"       # Check for updates daily
+    rebase-strategy: "auto"
 
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
+    rebase-strategy: "auto"
