@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardMedia";
+import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
 import IconButton from "@mui/material/IconButton";
 import MoreVertIcon from "@mui/icons-material/MoreVert";

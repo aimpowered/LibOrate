@@ -23,7 +23,7 @@ describe("NameTagForm", () => {
     expect(screen.getByText("Preferred Name")).toBeInTheDocument();
     expect(screen.getAllByText("Pronouns")[0]).toBeInTheDocument();
     expect(screen.getByText("Something About Me")).toBeInTheDocument();
-    expect(screen.getAllByRole("checkbox")).toHaveLength(2);
+    expect(screen.getAllByRole("switch")).toHaveLength(2);
     expect(screen.getByText("Save Name Tag")).toBeInTheDocument();
   });
 
@@ -42,7 +42,7 @@ describe("NameTagForm", () => {
     const displayNameTag = screen.getByLabelText("Display Name Tag");
     expect(displayNameTag).toBeInTheDocument();
 
-    const checkboxInputs = screen.getAllByRole("checkbox");
+    const checkboxInputs = screen.getAllByRole("switch");
     const isSameCheckboxFound = checkboxInputs.some(
       (checkbox) => checkbox === displayNameTag,
     );
