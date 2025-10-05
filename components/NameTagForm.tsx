@@ -41,7 +41,7 @@ export function NameTagForm({
       preferredName: watch("preferredName", content.preferredName ?? ""),
       pronouns: watch("pronouns", content.pronouns ?? ""),
       disclosure: disclosureValue,
-      visible: watch("visible", content.visible ?? false),
+      visible: watch("visible ", content.visible ?? false),
       fullMessage: watch("fullMessage", content.fullMessage ?? ""),
       sendToMeeting: watch("sendToMeeting", content.sendToMeeting ?? false),
     };
@@ -66,27 +66,9 @@ export function NameTagForm({
   };
 
   const styles = {
-    container: {
-      maxWidth: '600px',
-      margin: '0 auto',
-      padding: '20px',
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-    },
-    title: {
-      fontSize: '48px',
-      fontWeight: 'bold',
-      marginBottom: '30px',
-      marginTop: '20px',
-    },
-    label: {
-      display: 'block',
-      fontSize: '18px',
-      fontWeight: '500',
-      marginBottom: '8px',
-    },
     input: {
       width: '100%',
-      padding: '12px',
+      padding: '5px',
       fontSize: '16px',
       border: '1px solid #ccc',
       borderRadius: '4px',
@@ -113,7 +95,7 @@ export function NameTagForm({
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
-      marginTop: '20px',
+      marginTop: '10px',
       marginBottom: '20px',
       gap: '20px',
     },
@@ -143,7 +125,7 @@ export function NameTagForm({
     divider: {
       border: 'none',
       borderTop: '1px solid #e0e0e0',
-      margin: '30px 0',
+      margin: '10px 0',
     },
     disclosureHeader: {
       display: 'flex',
@@ -163,19 +145,6 @@ export function NameTagForm({
       fontFamily: 'inherit',
       resize: 'vertical' as const,
     },
-    messageButton: {
-      width: '100%',
-      padding: '14px',
-      fontSize: '16px',
-      fontWeight: '500',
-      color: 'white',
-      backgroundColor: '#1976d2',
-      border: 'none',
-      borderRadius: '4px',
-      cursor: 'pointer',
-      marginTop: '12px',
-      textTransform: 'uppercase' as const,
-    },
     switchLabel: {
       margin: 0,
       display: 'flex',
@@ -188,12 +157,12 @@ export function NameTagForm({
   };
 
   return (
-    <div style={styles.container}>
-      <h2 style={styles.title}>Name Tag</h2>
+    <div className="tab-container">
+      <h2 className="tab-title">Name Tag</h2>
 
       <div>
         <div style={{ paddingBottom: bottom_padding }}>
-          <label htmlFor="name" style={styles.label}>Preferred Name</label>
+          <label htmlFor="name">Preferred Name</label>
           <input
             style={styles.input}
             id="name"
@@ -201,10 +170,10 @@ export function NameTagForm({
             {...register("preferredName", { required: true })}
           />
         </div>
-        <div style={{ paddingBottom: bottom_padding + 5 }}>
-          <label htmlFor="pronouns" style={styles.label}>Pronouns</label>
+        <div style={{ paddingBottom: bottom_padding }}>
+          <label htmlFor="pronouns">Pronouns</label>
           <select
-            style={styles.select}
+            className="select-dinput"
             id="pronouns"
             defaultValue={content.pronouns}
             {...register("pronouns")}
@@ -217,7 +186,7 @@ export function NameTagForm({
           </select>
         </div>
         <div style={{ paddingBottom: bottom_padding }}>
-          <label htmlFor="disclosure" style={styles.label}>Something About Me</label>
+          <label htmlFor="disclosure">Something About Me</label>
           <input
             style={styles.input}
             id="disclosure"
@@ -272,7 +241,7 @@ export function NameTagForm({
 
         <hr style={styles.divider} />
 
-        <div style={{marginTop: '30px'}}>
+        <div style={{marginTop: '20px'}}>
           <div style={styles.disclosureHeader}>
             <span>Disclosure Message</span>
             <Tooltip title="This will send a message to everyone in the meeting">
@@ -312,12 +281,6 @@ export function NameTagForm({
             </Button>
           </div>
 
-          <button
-            onClick={handleSendToMeetingClick}
-            style={styles.messageButton}
-          >
-            MESSAGE EVERYONE
-          </button>
         </div>
 
         <Snackbar
