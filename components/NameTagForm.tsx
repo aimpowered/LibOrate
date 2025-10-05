@@ -41,7 +41,7 @@ export function NameTagForm({
       preferredName: watch("preferredName", content.preferredName ?? ""),
       pronouns: watch("pronouns", content.pronouns ?? ""),
       disclosure: disclosureValue,
-      visible: watch("visible ", content.visible ?? false),
+      visible: watch("visible", content.visible ?? false),
       fullMessage: watch("fullMessage", content.fullMessage ?? ""),
       sendToMeeting: watch("sendToMeeting", content.sendToMeeting ?? false),
     };
