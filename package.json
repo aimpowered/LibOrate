@@ -24,7 +24,7 @@
         "clsx": "^2.1.1",
         "embla-carousel-react": "^8.0.2",
         "lucide-react": "^0.544.0",
-        "mongoose": "^8.18.3",
+        "mongoose": "^8.19.0",
         "next": "^15.5.4",
         "next-auth": "^4.24.11",
         "react": "^18.2.0",
