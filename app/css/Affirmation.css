@@ -23,7 +23,7 @@
 
 .self-affirm-text {
   color: #ffffff; /* White text, change if needed */
-  font-size: clamp(1rem, 10cqh, 2.5rem);
+  /* font-size: clamp(1rem, 10cqh, 2.5rem); */
   text-align: center;
   width: 75%;
 }
