@@ -72,7 +72,8 @@ export function AffirmationCarousel({
     document.body.style.userSelect = "auto";
     document.body.style.cursor = "";
     document.body.style.webkitUserSelect = "auto"; // Reset Safari
-    (document.body.style as any).MozUserSelect = "auto"; // Reset Firefox
+    // Reset Firefox - use setProperty to avoid type issues
+    document.body.style.setProperty("-moz-user-select", "auto");
     document.removeEventListener("mousemove", resizeCarousel);
     document.removeEventListener("mouseup", stopResizing);
     document.removeEventListener("selectstart", preventDefault); // Remove selection prevention
@@ -85,7 +86,8 @@ export function AffirmationCarousel({
     document.body.style.cursor = "row-resize";
     // Also prevent selection on the document
     document.body.style.webkitUserSelect = "none"; // For Safari
-    (document.body.style as any).MozUserSelect = "none"; // For Firefox
+    // For Firefox - use setProperty to avoid type issues
+    document.body.style.setProperty("-moz-user-select", "none");
     document.addEventListener("mousemove", resizeCarousel);
     document.addEventListener("mouseup", stopResizing);
     document.addEventListener("selectstart", preventDefault); // Prevent selection start
