@@ -1,3 +1,5 @@
+/// <reference types="cypress" />
+
 describe("WaveHandPicker in spec", () => {
   beforeEach(() => {
     cy.visit("/");
@@ -26,11 +28,14 @@ describe("WaveHandPicker in spec", () => {
     cy.contains("👋")
       .should("have.length.greaterThan", 0)
       .then((buttonsBefore) => {
-        const initialCount = buttonsBefore.length;
+        const initialCount = (buttonsBefore as unknown as JQuery<HTMLElement>)
+          .length;
         console.log(`initial count: ${initialCount}`);
-        cy.wrap(buttonsBefore).each(($button) => {
-          console.log(`Button text: ${$button.text()}`);
-        });
+        cy.wrap(buttonsBefore as unknown as JQuery<HTMLElement>).each(
+          ($button) => {
+            console.log(`Button text: ${$button.text()}`);
+          },
+        );
         cy.contains("👋").first().as("button");
         cy.get("@button").contains("✖").click({ force: true });
         cy.reload();

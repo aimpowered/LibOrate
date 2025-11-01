@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { AffirmationCard } from "@/components/AffirmationCard";
 import { AddNewAffirmationCard } from "@/components/AddNewAffirmationCard";
 import {
@@ -38,8 +38,13 @@ export function AffirmationCarousel({
   onAdd,
 }: AffirmationCarouselProps) {
   const [affirmationList, setAffirmationList] = useState(initialAffirmations);
+  const [fontSizes, setFontSizes] = useState<string[]>(
+    initialAffirmations.map(() => "1rem"),
+  );
   const carouselRef = useRef<HTMLDivElement>(null);
   let isResizing = false;
+  const previousAffirmationListLength = useRef<number>(affirmationList.length);
+  const [shouldPrev, setShouldPrev] = useState(false);
 
   const updateAffirmationCard = (id: number, updatedText: string) => {
     if (id < 0 || id >= affirmationList.length) return;
@@ -65,26 +70,95 @@ export function AffirmationCarousel({
     let newHeight = e.clientY - carouselRef.current.getBoundingClientRect().top;
     newHeight = Math.max(80, Math.min(newHeight, window.innerHeight * 0.5));
     carouselRef.current.style.height = `${newHeight}px`;
+
+    computeAllFontSizes();
   }
 
   function stopResizing() {
     isResizing = false;
     document.body.style.userSelect = "auto";
     document.body.style.cursor = "";
+    document.body.style.webkitUserSelect = "auto"; // Reset Safari
+    // Reset Firefox - use setProperty to avoid type issues
+    document.body.style.setProperty("-moz-user-select", "auto");
     document.removeEventListener("mousemove", resizeCarousel);
     document.removeEventListener("mouseup", stopResizing);
+    document.removeEventListener("selectstart", preventDefault); // Remove selection prevention
   }
 
-  const handleMouseDown = () => {
+  const handleMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent default text selection behavior
     isResizing = true;
     document.body.style.userSelect = "none"; // Prevent text selection while dragging
     document.body.style.cursor = "row-resize";
+    // Also prevent selection on the document
+    document.body.style.webkitUserSelect = "none"; // For Safari
+    // For Firefox - use setProperty to avoid type issues
+    document.body.style.setProperty("-moz-user-select", "none");
     document.addEventListener("mousemove", resizeCarousel);
     document.addEventListener("mouseup", stopResizing);
+    document.addEventListener("selectstart", preventDefault); // Prevent selection start
   };
 
+  const preventDefault = (e: Event) => {
+    e.preventDefault();
+  };
+
+  // 计算所有卡片的字体大小
+  const computeAllFontSizes = () => {
+    if (!carouselRef.current) return;
+
+    const containerWidth = carouselRef.current.offsetWidth;
+    const containerHeight = carouselRef.current.offsetHeight;
+
+    const newFontSizes = affirmationList.map((text) => {
+      const charCount = Math.max(text.length, 1);
+
+      const availableHeight = containerHeight * 0.7;
+
+      const availableWidth = containerWidth * 0.9;
+
+      let minSize = 16;
+      let maxSize = containerHeight * 0.7;
+      let bestSize = minSize;
+      while (maxSize - minSize > 1) {
+        const midSize = (minSize + maxSize) / 2;
+        const avgCharWidth = midSize * 0.6;
+        const charsPerLine = Math.floor(availableWidth / avgCharWidth);
+        const estimatedLines = Math.ceil(charCount / charsPerLine);
+        const lineHeight = midSize * 1.5;
+        const estimatedTextHeight = estimatedLines * lineHeight;
+
+        if (estimatedTextHeight <= availableHeight) {
+          bestSize = midSize;
+          minSize = midSize;
+        } else {
+          maxSize = midSize;
+        }
+      }
+
+      return `${bestSize}px`;
+    });
+
+    setFontSizes(newFontSizes);
+  };
+  useEffect(() => {
+    computeAllFontSizes();
+  }, [affirmationList]);
+  useEffect(() => {
+    console.log(
+      "Affirmation list changed:",
+      affirmationList,
+      previousAffirmationListLength.current,
+    );
+    if (affirmationList.length > previousAffirmationListLength.current) {
+      setShouldPrev(true);
+    }
+    previousAffirmationListLength.current = affirmationList.length;
+  }, [affirmationList]);
+
   return (
-    <Carousel>
+    <Carousel shouldPrev={shouldPrev} setShouldPrev={setShouldPrev}>
       <CarouselContent
         className="self-affirm-carousel"
         role="region"
@@ -95,6 +169,7 @@ export function AffirmationCarousel({
           <CarouselItem key={affirmation}>
             <AffirmationCard
               initialContent={affirmation}
+              fontSize={fontSizes[index]}
               onAffirmationCardUpdate={(updatedText) =>
                 updateAffirmationCard(index, updatedText)
               }
