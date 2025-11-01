@@ -45,10 +45,6 @@ describe("Affirmation in spec", () => {
       .click()
       .type("Hello world");
     cy.contains("button", /^Save$/).click();
-    // cy.contains("span", "Previous slide")
-    //   .parent("button")
-    //   .should("not.be.disabled")
-    //   .click();
     cy.contains("Hello world").should("exist");
   });
 });

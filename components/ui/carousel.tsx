@@ -125,7 +125,6 @@ const Carousel = React.forwardRef<
     }, [api, onSelect]);
 
     React.useEffect(() => {
-      console.log("Carousel shouldPrev changed:", shouldPrev);
       if (shouldPrev && api) {
         api.scrollPrev();
         if (setShouldPrev) {

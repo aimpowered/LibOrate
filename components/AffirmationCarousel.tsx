@@ -86,11 +86,6 @@ export function AffirmationCarousel({
   };
 
   useEffect(() => {
-    console.log(
-      "Affirmation list changed:",
-      affirmationList,
-      previousAffirmationListLength.current,
-    );
     if (affirmationList.length > previousAffirmationListLength.current) {
       setShouldPrev(true);
     }
