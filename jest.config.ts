@@ -15,6 +15,7 @@ const customJestConfig = {
   coverageDirectory: "coverage",
   coverageProvider: "v8",
   testEnvironment: "jsdom",
+  setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
 };
 
 export default createJestConfig(customJestConfig);

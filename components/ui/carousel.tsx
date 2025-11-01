@@ -19,6 +19,8 @@ type CarouselProps = {
   plugins?: CarouselPlugin;
   orientation?: "horizontal" | "vertical";
   setApi?: (api: CarouselApi) => void;
+  shouldPrev?: boolean;
+  setShouldPrev?: (value: boolean) => void;
 };
 
 type CarouselContextProps = {
@@ -54,6 +56,8 @@ const Carousel = React.forwardRef<
       plugins,
       className,
       children,
+      shouldPrev,
+      setShouldPrev,
       ...props
     },
     ref,
@@ -119,6 +123,16 @@ const Carousel = React.forwardRef<
         api?.off("select", onSelect);
       };
     }, [api, onSelect]);
+
+    React.useEffect(() => {
+      console.log("Carousel shouldPrev changed:", shouldPrev);
+      if (shouldPrev && api) {
+        api.scrollPrev();
+        if (setShouldPrev) {
+          setShouldPrev(false);
+        }
+      }
+    }, [shouldPrev, setShouldPrev, api]);
 
     return (
       <CarouselContext.Provider

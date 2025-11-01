@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { AffirmationCard } from "@/components/AffirmationCard";
 import { AddNewAffirmationCard } from "@/components/AddNewAffirmationCard";
 import {
@@ -40,6 +40,8 @@ export function AffirmationCarousel({
   const [affirmationList, setAffirmationList] = useState(initialAffirmations);
   const carouselRef = useRef<HTMLDivElement>(null);
   let isResizing = false;
+  const previousAffirmationListLength = useRef<number>(affirmationList.length);
+  const [shouldPrev, setShouldPrev] = useState(false);
 
   const updateAffirmationCard = (id: number, updatedText: string) => {
     if (id < 0 || id >= affirmationList.length) return;
@@ -83,8 +85,20 @@ export function AffirmationCarousel({
     document.addEventListener("mouseup", stopResizing);
   };
 
+  useEffect(() => {
+    console.log(
+      "Affirmation list changed:",
+      affirmationList,
+      previousAffirmationListLength.current,
+    );
+    if (affirmationList.length > previousAffirmationListLength.current) {
+      setShouldPrev(true);
+    }
+    previousAffirmationListLength.current = affirmationList.length;
+  }, [affirmationList]);
+
   return (
-    <Carousel>
+    <Carousel shouldPrev={shouldPrev} setShouldPrev={setShouldPrev}>
       <CarouselContent
         className="self-affirm-carousel"
         role="region"

@@ -136,5 +136,6 @@ describe("AffirmationCarousel Component", () => {
     const saveButton = screen.getByText("Save");
     fireEvent.click(saveButton);
     expect(mockAdd).toHaveBeenCalledWith("New Affirmation");
+    expect(screen.getByText("New Affirmation")).toBeInTheDocument();
   });
 });
