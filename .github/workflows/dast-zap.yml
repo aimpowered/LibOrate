@@ -23,7 +23,7 @@ jobs:
           echo "ZOOM_WEB_APP_URL: ${{ secrets.ZOOM_WEB_APP_URL }}"
 
       - name: Run ZAP Baseline Scan
-        uses: zaproxy/action-baseline@v0.14.0
+        uses: zaproxy/action-baseline@v0.15.0
         with:
           target: ${{ secrets.ZOOM_WEB_APP_URL }}
           cmd_options: '-a'

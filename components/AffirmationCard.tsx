@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardMedia";
 import CardActions from "@mui/material/CardActions";
@@ -16,14 +16,17 @@ interface AffirmationCardProps {
   initialContent: string;
   onAffirmationCardUpdate: (updatedText: string) => void;
   onAffirmationCardDeletion: () => void;
+  fontSize?: string; // 可选的字体大小，由父组件计算并传入
 }
 
 export function AffirmationCard({
   initialContent,
   onAffirmationCardUpdate,
   onAffirmationCardDeletion,
+  fontSize = "1rem", // 默认值
 }: AffirmationCardProps) {
   const [text, setText] = useState(initialContent);
+  const textRef = useRef<HTMLDivElement>(null);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -77,7 +80,18 @@ export function AffirmationCard({
           <DeleteContentMenuItem onCardDeletion={onAffirmationCardDeletion} />
         </Menu>
       </CardActions>
-      <CardContent className="self-affirm-text">{text}</CardContent>
+      <CardContent
+        className="self-affirm-text"
+        ref={textRef}
+        style={{
+          fontSize,
+          lineHeight: "1.5",
+          wordWrap: "break-word",
+          overflowWrap: "break-word",
+        }}
+      >
+        {text}
+      </CardContent>
     </Card>
   );
 }

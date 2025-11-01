@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { AffirmationCard } from "@/components/AffirmationCard";
 import { AddNewAffirmationCard } from "@/components/AddNewAffirmationCard";
 import {
@@ -38,6 +38,9 @@ export function AffirmationCarousel({
   onAdd,
 }: AffirmationCarouselProps) {
   const [affirmationList, setAffirmationList] = useState(initialAffirmations);
+  const [fontSizes, setFontSizes] = useState<string[]>(
+    initialAffirmations.map(() => "1rem"),
+  );
   const carouselRef = useRef<HTMLDivElement>(null);
   let isResizing = false;
 
@@ -65,6 +68,8 @@ export function AffirmationCarousel({
     let newHeight = e.clientY - carouselRef.current.getBoundingClientRect().top;
     newHeight = Math.max(80, Math.min(newHeight, window.innerHeight * 0.5));
     carouselRef.current.style.height = `${newHeight}px`;
+
+    computeAllFontSizes();
   }
 
   function stopResizing() {
@@ -83,6 +88,48 @@ export function AffirmationCarousel({
     document.addEventListener("mouseup", stopResizing);
   };
 
+  // 计算所有卡片的字体大小
+  const computeAllFontSizes = () => {
+    if (!carouselRef.current) return;
+
+    const containerWidth = carouselRef.current.offsetWidth;
+    const containerHeight = carouselRef.current.offsetHeight;
+
+    const newFontSizes = affirmationList.map((text) => {
+      const charCount = Math.max(text.length, 1);
+
+      const availableHeight = containerHeight * 0.7;
+
+      const availableWidth = containerWidth * 0.9;
+
+      let minSize = 16;
+      let maxSize = containerHeight * 0.7;
+      let bestSize = minSize;
+      while (maxSize - minSize > 1) {
+        const midSize = (minSize + maxSize) / 2;
+        const avgCharWidth = midSize * 0.6;
+        const charsPerLine = Math.floor(availableWidth / avgCharWidth);
+        const estimatedLines = Math.ceil(charCount / charsPerLine);
+        const lineHeight = midSize * 1.5;
+        const estimatedTextHeight = estimatedLines * lineHeight;
+
+        if (estimatedTextHeight <= availableHeight) {
+          bestSize = midSize;
+          minSize = midSize;
+        } else {
+          maxSize = midSize;
+        }
+      }
+
+      return `${bestSize}px`;
+    });
+
+    setFontSizes(newFontSizes);
+  };
+  useEffect(() => {
+    computeAllFontSizes();
+  }, [affirmationList]);
+
   return (
     <Carousel>
       <CarouselContent
@@ -95,6 +142,7 @@ export function AffirmationCarousel({
           <CarouselItem key={affirmation}>
             <AffirmationCard
               initialContent={affirmation}
+              fontSize={fontSizes[index]}
               onAffirmationCardUpdate={(updatedText) =>
                 updateAffirmationCard(index, updatedText)
               }
