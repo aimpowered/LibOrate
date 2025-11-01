@@ -16,12 +16,14 @@ interface AffirmationCardProps {
   initialContent: string;
   onAffirmationCardUpdate: (updatedText: string) => void;
   onAffirmationCardDeletion: () => void;
+  fontSize?: string;
 }
 
 export function AffirmationCard({
   initialContent,
   onAffirmationCardUpdate,
   onAffirmationCardDeletion,
+  fontSize = "1rem",
 }: AffirmationCardProps) {
   const [text, setText] = useState(initialContent);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -77,7 +79,17 @@ export function AffirmationCard({
           <DeleteContentMenuItem onCardDeletion={onAffirmationCardDeletion} />
         </Menu>
       </CardActions>
-      <CardContent className="self-affirm-text">{text}</CardContent>
+      <CardContent
+        className="self-affirm-text"
+        style={{
+          fontSize,
+          lineHeight: "1.5",
+          wordWrap: "break-word",
+          overflowWrap: "break-word",
+        }}
+      >
+        {text}
+      </CardContent>
     </Card>
   );
 }
