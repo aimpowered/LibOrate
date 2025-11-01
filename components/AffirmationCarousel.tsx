@@ -88,7 +88,6 @@ export function AffirmationCarousel({
     document.addEventListener("mouseup", stopResizing);
   };
 
-  // 计算所有卡片的字体大小
   const computeAllFontSizes = () => {
     if (!carouselRef.current) return;
 
