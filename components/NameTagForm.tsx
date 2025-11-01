@@ -84,6 +84,7 @@ export function NameTagForm({
             className="text-input"
             id="disclosure"
             defaultValue={content.disclosure}
+            placeholder="Example: I have a stutter; at home with sick kids."
             {...register("disclosure", { maxLength: maxDisclosureLength })}
           />
           <div className={`char-count ${isOverLimit ? "warning" : ""}`}>
