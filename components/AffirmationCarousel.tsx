@@ -71,16 +71,28 @@ export function AffirmationCarousel({
     isResizing = false;
     document.body.style.userSelect = "auto";
     document.body.style.cursor = "";
+    document.body.style.webkitUserSelect = "auto"; // Reset Safari
+    (document.body.style as any).MozUserSelect = "auto"; // Reset Firefox
     document.removeEventListener("mousemove", resizeCarousel);
     document.removeEventListener("mouseup", stopResizing);
+    document.removeEventListener("selectstart", preventDefault); // Remove selection prevention
   }
 
-  const handleMouseDown = () => {
+  const handleMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent default text selection behavior
     isResizing = true;
     document.body.style.userSelect = "none"; // Prevent text selection while dragging
     document.body.style.cursor = "row-resize";
+    // Also prevent selection on the document
+    document.body.style.webkitUserSelect = "none"; // For Safari
+    (document.body.style as any).MozUserSelect = "none"; // For Firefox
     document.addEventListener("mousemove", resizeCarousel);
     document.addEventListener("mouseup", stopResizing);
+    document.addEventListener("selectstart", preventDefault); // Prevent selection start
+  };
+
+  const preventDefault = (e: Event) => {
+    e.preventDefault();
   };
 
   return (
