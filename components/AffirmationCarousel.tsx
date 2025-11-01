@@ -43,6 +43,8 @@ export function AffirmationCarousel({
   );
   const carouselRef = useRef<HTMLDivElement>(null);
   let isResizing = false;
+  const previousAffirmationListLength = useRef<number>(affirmationList.length);
+  const [shouldPrev, setShouldPrev] = useState(false);
 
   const updateAffirmationCard = (id: number, updatedText: string) => {
     if (id < 0 || id >= affirmationList.length) return;
@@ -129,9 +131,20 @@ export function AffirmationCarousel({
   useEffect(() => {
     computeAllFontSizes();
   }, [affirmationList]);
+  useEffect(() => {
+    console.log(
+      "Affirmation list changed:",
+      affirmationList,
+      previousAffirmationListLength.current,
+    );
+    if (affirmationList.length > previousAffirmationListLength.current) {
+      setShouldPrev(true);
+    }
+    previousAffirmationListLength.current = affirmationList.length;
+  }, [affirmationList]);
 
   return (
-    <Carousel>
+    <Carousel shouldPrev={shouldPrev} setShouldPrev={setShouldPrev}>
       <CarouselContent
         className="self-affirm-carousel"
         role="region"
