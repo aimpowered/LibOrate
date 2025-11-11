@@ -22,6 +22,7 @@
         "axios": "^1.12.2",
         "bcrypt": "^6.0.0",
         "clsx": "^2.1.1",
+        "embla-carousel": "^8.6.0",
         "embla-carousel-react": "^8.0.2",
         "lucide-react": "^0.545.0",
         "mongoose": "^8.19.0",
