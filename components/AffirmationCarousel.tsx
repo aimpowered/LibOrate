@@ -119,8 +119,8 @@ export function AffirmationCarousel({
   }, [slides]);
 
   return (
-    <div 
-      className="self-affirm-carousel" 
+    <div
+      className="self-affirm-carousel"
       ref={containerRef}
       data-testid="affirmation-carousel"
     >
@@ -149,8 +149,8 @@ export function AffirmationCarousel({
       >
         <ArrowRight />
       </Button>
-      <div 
-        className="resize-handle" 
+      <div
+        className="resize-handle"
         onMouseDown={handleMouseDown}
         data-testid="resize-handle"
       ></div>

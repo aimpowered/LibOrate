@@ -42,7 +42,7 @@ export function AffirmationCard({
           right: 0,
         }}
       >
-        <IconButton 
+        <IconButton
           onClick={handleClick}
           aria-label="more actions"
           data-testid="affirmation-card-menu"

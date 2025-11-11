@@ -44,7 +44,7 @@ describe("Affirmation in spec", () => {
       }
       clickUntilDisabled();
     });
-    
+
     cy.get('button[aria-label="Add new affirmation"]').click();
     cy.get('textarea[placeholder="Write your message"]')
       .should("be.visible")

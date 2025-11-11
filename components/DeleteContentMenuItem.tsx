@@ -16,7 +16,7 @@ export function DeleteConfirmMenuItem({
   const [open, setOpen] = useState(false);
 
   const handleModalOpen = () => setOpen(true);
-  
+
   const handleModalClose = () => {
     setOpen(false);
     onMenuClose();

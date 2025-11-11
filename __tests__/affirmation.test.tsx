@@ -1,5 +1,11 @@
 import React from "react";
-import { render, fireEvent, act, screen, waitFor } from "@testing-library/react";
+import {
+  render,
+  fireEvent,
+  act,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import {
   AffirmationCarousel,
   AffirmationCarouselProps,
@@ -94,8 +100,9 @@ describe("AffirmationCarousel Component", () => {
     const mockUpdate = jest.fn();
     render(<AffirmationCarousel {...defaultProps} onUpdate={mockUpdate} />);
 
-    const actionButtons = screen.getAllByTestId("MoreVertIcon")
-      .map(icon => icon.closest("button"))
+    const actionButtons = screen
+      .getAllByTestId("MoreVertIcon")
+      .map((icon) => icon.closest("button"))
       .filter((btn): btn is HTMLButtonElement => !!btn);
 
     expect(actionButtons.length).toBeGreaterThan(0);
@@ -114,8 +121,9 @@ describe("AffirmationCarousel Component", () => {
     const mockDelete = jest.fn();
     render(<AffirmationCarousel {...defaultProps} onDelete={mockDelete} />);
 
-    const actionButtons = screen.getAllByTestId("MoreVertIcon")
-      .map(icon => icon.closest("button"))
+    const actionButtons = screen
+      .getAllByTestId("MoreVertIcon")
+      .map((icon) => icon.closest("button"))
       .filter((btn): btn is HTMLButtonElement => !!btn);
     expect(actionButtons.length).toBeGreaterThan(0);
     const actionButton = actionButtons[0];
@@ -137,12 +145,12 @@ describe("AffirmationCarousel Component", () => {
     fireEvent.change(textArea, { target: { value: "New Affirmation" } });
     const saveButton = screen.getByText("Save");
     fireEvent.click(saveButton);
-    
+
     // Wait for the setTimeout to execute and the new affirmation to be added
     await waitFor(() => {
       expect(mockAdd).toHaveBeenCalledWith("New Affirmation");
     });
-    
+
     await waitFor(() => {
       expect(screen.getByText("New Affirmation")).toBeInTheDocument();
     });

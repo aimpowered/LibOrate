@@ -235,7 +235,9 @@
   height: clamp(100px, 20vh, 150px);
   box-sizing: border-box;
   resize: vertical;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 @media (max-width: 640px) {
@@ -316,4 +318,3 @@
   gap: 8px;
   margin-top: 20px;
 }
-
