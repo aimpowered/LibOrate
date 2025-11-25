@@ -9,6 +9,8 @@ const emptyNameTag = Object.freeze({
   preferredName: "Test User",
   pronouns: "",
   disclosure: "",
+  fullMessage: "",
+  sendToMeeting: false,
 });
 
 describe("NameTagForm", () => {
@@ -23,8 +25,9 @@ describe("NameTagForm", () => {
     expect(screen.getByText("Preferred Name")).toBeInTheDocument();
     expect(screen.getAllByText("Pronouns")[0]).toBeInTheDocument();
     expect(screen.getByText("Something About Me")).toBeInTheDocument();
-    expect(screen.getAllByRole("checkbox")).toHaveLength(2);
-    expect(screen.getByText("Save Name Tag")).toBeInTheDocument();
+    expect(screen.getAllByRole("checkbox")).toHaveLength(1);
+    const saveButtons = screen.getAllByText("Save");
+    expect(saveButtons).toHaveLength(2); // Two Save buttons now
   });
 
   it("verifies that the nametag display checkbox can be checked", async () => {
@@ -39,7 +42,7 @@ describe("NameTagForm", () => {
       );
     });
 
-    const displayNameTag = screen.getByLabelText("Display Name Tag");
+    const displayNameTag = screen.getByLabelText("Display");
     expect(displayNameTag).toBeInTheDocument();
 
     const checkboxInputs = screen.getAllByRole("checkbox");
@@ -107,7 +110,9 @@ describe("NameTagForm", () => {
       );
     });
 
-    const submit = screen.getByText("Save Name Tag");
+    // Get the first Save button (there are two)
+    const saveButtons = screen.getAllByText("Save");
+    const submit = saveButtons[0];
 
     await act(async () => {
       await userEvent.click(submit);
@@ -117,7 +122,7 @@ describe("NameTagForm", () => {
     });
   });
 
-  it("should capture full message and send self disclosure flag", async () => {
+  it("should capture full message and send to meeting", async () => {
     const onSaveButtonClick = jest.fn();
     const onNameTagContentChange = jest.fn();
 
@@ -143,22 +148,16 @@ describe("NameTagForm", () => {
     const fullMessageTextarea = screen.getByPlaceholderText(
       "Introduce yourself...",
     );
-    const sendDisclosureToggle = screen.getByLabelText(
-      "Send Disclosure Message",
-    );
-    const saveButton = screen.getByRole("button", {
-      name: /save name tag/i,
+    const sendToMeetingButton = screen.getByRole("button", {
+      name: /send to meeting/i,
     });
 
     await act(async () => {
       await userEvent.type(fullMessageTextarea, "Hello from test!");
-      await userEvent.click(sendDisclosureToggle);
-      await userEvent.click(saveButton);
+      await userEvent.click(sendToMeetingButton);
     });
 
-    expect(onNameTagContentChange).toHaveBeenCalledTimes(2);
-
-    expect(onSaveButtonClick).toHaveBeenCalledWith(
+    expect(onNameTagContentChange).toHaveBeenCalledWith(
       expect.objectContaining({
         fullMessage: "Hello from test!",
         sendToMeeting: true,
