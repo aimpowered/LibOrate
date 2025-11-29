@@ -31,11 +31,6 @@ describe("WaveHandPicker in spec", () => {
         const initialCount = (buttonsBefore as unknown as JQuery<HTMLElement>)
           .length;
         console.log(`initial count: ${initialCount}`);
-        cy.wrap(buttonsBefore as unknown as JQuery<HTMLElement>).each(
-          ($button) => {
-            console.log(`Button text: ${$button.text()}`);
-          },
-        );
         cy.contains("👋").first().as("button");
         cy.get("@button").contains("✖").click({ force: true });
         cy.reload();

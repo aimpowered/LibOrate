@@ -55,6 +55,15 @@ export function AffirmationCarousel({
   }, [emblaApi]);
 
   useEffect(() => {
+    console.log(
+      "canScrollPrev:",
+      canScrollPrev,
+      "canScrollNext:",
+      canScrollNext,
+    );
+  }, [canScrollNext, canScrollPrev]);
+
+  useEffect(() => {
     if (!emblaApi) return;
     emblaApi.on("select", onSelect);
     onSelect();
@@ -68,6 +77,8 @@ export function AffirmationCarousel({
     if (!emblaApi) return;
     emblaApi.reInit();
     emblaApi.scrollTo(0, false);
+    setCanScrollNext(emblaApi?.canScrollNext());
+    setCanScrollPrev(emblaApi?.canScrollPrev());
   }, [slides, emblaApi]);
 
   const addNewSlide = (text: string) => {
@@ -113,10 +124,6 @@ export function AffirmationCarousel({
     document.addEventListener("mousemove", resizeCarousel);
     document.addEventListener("mouseup", stopResizing);
   };
-
-  useEffect(() => {
-    console.log("Slides updated:", slides);
-  }, [slides]);
 
   return (
     <div

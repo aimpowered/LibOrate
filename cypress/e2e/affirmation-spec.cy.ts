@@ -34,7 +34,7 @@ describe("Affirmation in spec", () => {
       function clickUntilDisabled() {
         if (!$btn.is(":disabled")) {
           cy.wrap($btn).click();
-          cy.wait(100); // Small wait for animation
+          // cy.wait(100); // Small wait for animation
           cy.get('[data-testid="carousel-next-button"]').then(($nextBtn) => {
             if (!$nextBtn.is(":disabled")) {
               clickUntilDisabled();
