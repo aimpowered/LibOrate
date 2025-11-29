@@ -8,7 +8,6 @@ import { AddCardItem } from "@/components/AddNewAffirmationCard";
 import { Button } from "./ui/button";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import "@/app/css/Affirmation.css";
-import { set } from "mongoose";
 
 export interface AffirmationCarouselProps {
   initialAffirmations: string[];
