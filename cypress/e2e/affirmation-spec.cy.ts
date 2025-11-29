@@ -1,3 +1,5 @@
+/// <reference types="cypress" />
+
 describe("Affirmation in spec", () => {
   beforeEach(() => {
     cy.visit("/");
@@ -5,7 +7,7 @@ describe("Affirmation in spec", () => {
 
   it("should allow updating, adding, and deleting affirmations", () => {
     // Edit affirmation card
-    cy.get('button[aria-label="more actions"]').first().click();
+    cy.get('[data-testid="affirmation-card-menu"]').first().click();
     cy.contains("Edit").click();
     cy.get('textarea[placeholder="Write your message"]')
       .should("be.visible")
@@ -19,7 +21,7 @@ describe("Affirmation in spec", () => {
     cy.contains("Update affirmation").should("exist");
 
     // Delete affirmation card
-    cy.get('button[aria-label="more actions"]').first().click();
+    cy.get('[data-testid="affirmation-card-menu"]').first().click();
     cy.contains("Delete").click();
     cy.contains("button", "Confirm").click();
     cy.contains("Update affirmation").should("not.exist");
@@ -27,26 +29,28 @@ describe("Affirmation in spec", () => {
     cy.contains("Update affirmation").should("not.exist");
 
     // Add affirmation card
-    function clickNextUntilDisabled() {
-      cy.contains("span", "Next slide")
-        .parent("button")
-        .then(($btn) => {
-          if ($btn.is(":disabled")) return;
+    // Navigate to the end to find the add button
+    cy.get('[data-testid="carousel-next-button"]').then(($btn) => {
+      function clickUntilDisabled() {
+        if (!$btn.is(":disabled")) {
           cy.wrap($btn).click();
-          clickNextUntilDisabled();
-        });
-    }
-    clickNextUntilDisabled();
-    cy.get('button[aria-label="Add new affirmation button"]').click();
+          // cy.wait(100); // Small wait for animation
+          cy.get('[data-testid="carousel-next-button"]').then(($nextBtn) => {
+            if (!$nextBtn.is(":disabled")) {
+              clickUntilDisabled();
+            }
+          });
+        }
+      }
+      clickUntilDisabled();
+    });
+
+    cy.get('button[aria-label="Add new affirmation"]').click();
     cy.get('textarea[placeholder="Write your message"]')
       .should("be.visible")
       .click()
       .type("Hello world");
     cy.contains("button", /^Save$/).click();
-    cy.contains("span", "Previous slide")
-      .parent("button")
-      .should("not.be.disabled")
-      .click();
     cy.contains("Hello world").should("exist");
   });
 });

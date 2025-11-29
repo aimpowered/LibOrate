@@ -1,3 +1,5 @@
+/// <reference types="cypress" />
+
 describe("Save nametag button", () => {
   beforeEach(() => {
     cy.visit("/");

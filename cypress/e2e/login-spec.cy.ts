@@ -1,3 +1,5 @@
+/// <reference types="cypress" />
+
 describe("Logging in spec", () => {
   beforeEach(() => {
     cy.visit("/");
