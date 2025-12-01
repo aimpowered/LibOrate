@@ -1,21 +1,18 @@
+"use client";
+
 import React, { useState } from "react";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardMedia";
-import CardActions from "@mui/material/CardActions";
+import { Card, CardActions, CardContent } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-
 import Menu from "@mui/material/Menu";
-
-import { EditContentMenuItem } from "@/components/EditContentMenuItem";
-import { DeleteContentMenuItem } from "@/components/DeleteContentMenuItem";
-
+import { EditConfirmMenuItem } from "./EditContentMenuItem";
+import { DeleteConfirmMenuItem } from "./DeleteContentMenuItem";
 import "@/app/css/Affirmation.css";
 
 interface AffirmationCardProps {
   initialContent: string;
-  onAffirmationCardUpdate: (updatedText: string) => void;
-  onAffirmationCardDeletion: () => void;
+  onAffirmationCardUpdate?: (newSlide: string) => void;
+  onAffirmationCardDeletion?: () => void;
 }
 
 export function AffirmationCard({
@@ -23,61 +20,66 @@ export function AffirmationCard({
   onAffirmationCardUpdate,
   onAffirmationCardDeletion,
 }: AffirmationCardProps) {
-  const [text, setText] = useState(initialContent);
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
 
-  // Update card text and propogate upwards for DB save
-  const updateCardContent = (updatedText: string) => {
-    setText(updatedText);
-    onAffirmationCardUpdate(updatedText);
-  };
-
   return (
     <Card className="self-affirm-card">
+      <CardContent className="self-affirm-text">{initialContent}</CardContent>
+
       <CardActions
-        disableSpacing
-        sx={{
-          position: "absolute", // Keep button in the top-right corner
+        style={{
+          position: "absolute",
           top: 0,
           right: 0,
-          zIndex: 1, // Make sure it's above content so that CardContent doesn't cover it
-          p: 1,
         }}
       >
         <IconButton
-          aria-label="more actions"
-          id="card-action-button"
-          aria-controls={open ? "action-menu" : undefined}
-          aria-expanded={open ? "true" : undefined}
-          aria-haspopup="true"
           onClick={handleClick}
+          aria-label="more actions"
+          data-testid="affirmation-card-menu"
         >
           <MoreVertIcon />
         </IconButton>
+
         <Menu
-          id="action-menu"
-          MenuListProps={{
-            "aria-labelledby": "card-action-button",
-          }}
           anchorEl={anchorEl}
           open={open}
           onClose={handleClose}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "right",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
         >
-          <EditContentMenuItem
-            initialText={text}
-            onCardEdit={updateCardContent}
+          <EditConfirmMenuItem
+            initialText={initialContent}
+            onCardEdit={(newText) => {
+              handleClose();
+              onAffirmationCardUpdate?.(newText);
+            }}
+            onMenuClose={handleClose}
           />
-          <DeleteContentMenuItem onCardDeletion={onAffirmationCardDeletion} />
+          <DeleteConfirmMenuItem
+            onCardDeletion={() => {
+              handleClose();
+              onAffirmationCardDeletion?.();
+            }}
+            onMenuClose={handleClose}
+          />
         </Menu>
       </CardActions>
-      <CardContent className="self-affirm-text">{text}</CardContent>
     </Card>
   );
 }

@@ -35,10 +35,12 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "app/backup_page.js"
-, "app/post-installation/page.js", "app/post-installation/page.js"  ],
+    "app/backup_page.js",
+    "app/post-installation/page.js"
+  ],
   "exclude": [
     "cypress",
+    "cypress.config.ts",
     "node_modules"
   ]
 }
