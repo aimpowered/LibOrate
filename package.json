@@ -17,7 +17,7 @@
         "@headlessui/react": "^2.2.9",
         "@mui/icons-material": "^5.18.0",
         "@mui/material": "^5.15.1",
-        "@mui/system": "^7.3.3",
+        "@mui/system": "^7.3.5",
         "@zoom/appssdk": "^0.16.35",
         "axios": "^1.13.0",
         "bcrypt": "^6.0.0",
