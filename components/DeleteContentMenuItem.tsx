@@ -1,39 +1,53 @@
+"use client";
+
 import React, { useState } from "react";
-import MenuItem from "@mui/material/MenuItem";
-import Modal from "@mui/material/Modal";
+import { MenuItem, Modal } from "@mui/material";
 import "@/app/css/Affirmation.css";
 
-interface DeleteContentMenuItemProps {
+interface DeleteConfirmMenuItemProps {
   onCardDeletion: () => void;
+  onMenuClose: () => void;
 }
 
-export function DeleteContentMenuItem({
+export function DeleteConfirmMenuItem({
   onCardDeletion,
-}: DeleteContentMenuItemProps) {
+  onMenuClose,
+}: DeleteConfirmMenuItemProps) {
   const [open, setOpen] = useState(false);
+
   const handleModalOpen = () => setOpen(true);
-  const handleModalClose = () => setOpen(false);
+
+  const handleModalClose = () => {
+    setOpen(false);
+    onMenuClose();
+  };
+
   const handleDelete = () => {
     onCardDeletion();
     setOpen(false);
   };
 
   return (
-    <React.Fragment>
+    <>
       <MenuItem onClick={handleModalOpen}>Delete</MenuItem>
       <Modal open={open} onClose={handleModalClose}>
-        <div className="card-modal">
-          <div className="card-modal-body">
-            <p>Ready to delete the message?</p>
+        <div className="carousel-slide-modal">
+          <div className="carousel-slide-modal-body">
+            <p>Are you sure you want to delete this affirmation?</p>
           </div>
-          <button className="card-modal-button" onClick={() => handleDelete()}>
-            Confirm
-          </button>
-          <button className="card-modal-button" onClick={handleModalClose}>
-            Cancel
-          </button>
+          <div className="carousel-slide-modal-actions">
+            <button
+              onClick={handleModalClose}
+              className="carousel-slide-modal-btn"
+            >
+              Cancel
+            </button>
+            <button onClick={handleDelete} className="carousel-slide-modal-btn">
+              Confirm
+            </button>
+          </div>
         </div>
       </Modal>
-    </React.Fragment>
+    </>
   );
 }

@@ -1,40 +1,74 @@
-import React, { useState } from "react";
-import Card from "@mui/material/Card";
-import IconButton from "@mui/material/IconButton";
-import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
-import { WriteAffirmationCardModal } from "@/components/WriteAffirmationCardModal";
-import "@/app/css/Affirmation.css";
+"use client";
 
-interface AddNewAffirmationCardProps {
-  onCardAdd: (text: string) => void;
+import React, { useState } from "react";
+import Modal from "@mui/material/Modal";
+import "@/app/css/Affirmation.css";
+interface AddCardItemProps {
+  onAddSlide: (text: string) => void;
 }
 
-export function AddNewAffirmationCard({
-  onCardAdd,
-}: AddNewAffirmationCardProps) {
+export function AddCardItem({ onAddSlide }: AddCardItemProps) {
   const [open, setOpen] = useState(false);
-  const handleModalOpen = () => setOpen(true);
-  const handleModalClose = () => setOpen(false);
-  const handleAdd = (text: string) => {
-    onCardAdd(text);
+  const [text, setText] = useState("");
+
+  const handleModalOpen = () => {
+    setText("");
+    setOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setText("");
     setOpen(false);
   };
 
+  const handleAdd = () => {
+    if (text.trim()) {
+      // Close modal before adding to avoid conflict with embla re-initialization
+      setOpen(false);
+      setTimeout(() => {
+        onAddSlide(text);
+        setText("");
+      }, 0);
+    } else {
+      setOpen(false);
+    }
+  };
+
   return (
-    <Card className="self-affirm-card">
-      <IconButton
-        className="self-affirm-new-card-button"
-        aria-label="Add new affirmation button"
-        onClick={handleModalOpen}
-      >
-        <AddCircleOutlineOutlinedIcon />
-      </IconButton>
-      <WriteAffirmationCardModal
-        open={open}
-        onModalClose={handleModalClose}
-        initialText={""}
-        onCardSave={handleAdd}
-      />
-    </Card>
+    <>
+      <div className="self-affirm-card add-slide">
+        <button
+          className="add-slide-button"
+          onClick={handleModalOpen}
+          aria-label="Add new affirmation"
+        >
+          +
+        </button>
+      </div>
+
+      <Modal open={open} onClose={handleModalClose}>
+        <div className="carousel-slide-modal">
+          <div className="carousel-slide-modal-body">
+            <textarea
+              placeholder="Write your message"
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              className="carousel-slide-modal-textarea"
+            />
+          </div>
+          <div className="carousel-slide-modal-actions">
+            <button
+              onClick={handleModalClose}
+              className="carousel-slide-modal-btn"
+            >
+              Cancel
+            </button>
+            <button onClick={handleAdd} className="carousel-slide-modal-btn">
+              Save
+            </button>
+          </div>
+        </div>
+      </Modal>
+    </>
   );
 }

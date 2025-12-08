@@ -1,14 +1,12 @@
-import React, { useState, useRef, useEffect } from "react";
-import { AffirmationCard } from "@/components/AffirmationCard";
-import { AddNewAffirmationCard } from "@/components/AddNewAffirmationCard";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
+"use client";
 
+import React, { useCallback, useEffect, useState, useRef } from "react";
+import useEmblaCarousel from "embla-carousel-react";
+import { EmblaOptionsType } from "embla-carousel";
+import { AffirmationCard } from "@/components/AffirmationCard";
+import { AddCardItem } from "@/components/AddNewAffirmationCard";
+import { Button } from "./ui/button";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import "@/app/css/Affirmation.css";
 
 export interface AffirmationCarouselProps {
@@ -37,38 +35,80 @@ export function AffirmationCarousel({
   onDelete,
   onAdd,
 }: AffirmationCarouselProps) {
-  const [affirmationList, setAffirmationList] = useState(initialAffirmations);
+  const [slides, setSlides] = useState(initialAffirmations);
   const [fontSizes, setFontSizes] = useState<string[]>(
     initialAffirmations.map(() => "1rem"),
   );
-  const carouselRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const emblaOptions: EmblaOptionsType = {
+    loop: false,
+  };
+  const [emblaRef, emblaApi] = useEmblaCarousel(emblaOptions);
   let isResizing = false;
+  const [canScrollPrev, setCanScrollPrev] = useState(true);
+  const [canScrollNext, setCanScrollNext] = useState(true);
 
-  const updateAffirmationCard = (id: number, updatedText: string) => {
-    if (id < 0 || id >= affirmationList.length) return;
-    const updatedAffirmationList = [...affirmationList];
-    updatedAffirmationList[id] = updatedText;
-    setAffirmationList(updatedAffirmationList);
-    onUpdate(id, updatedText);
+  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
+  const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setCanScrollNext(emblaApi?.canScrollNext());
+    setCanScrollPrev(emblaApi?.canScrollPrev());
+  }, [emblaApi]);
+
+  useEffect(() => {
+    console.log(
+      "canScrollPrev:",
+      canScrollPrev,
+      "canScrollNext:",
+      canScrollNext,
+    );
+  }, [canScrollNext, canScrollPrev]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    emblaApi.on("select", onSelect);
+    onSelect();
+    return () => {
+      emblaApi.off("select", onSelect);
+    };
+  }, [emblaApi, onSelect]);
+
+  // Re-initialize carousel when slides change
+  useEffect(() => {
+    if (!emblaApi) return;
+    emblaApi.reInit();
+    emblaApi.scrollTo(0, false);
+    setCanScrollNext(emblaApi?.canScrollNext());
+    setCanScrollPrev(emblaApi?.canScrollPrev());
+  }, [slides, emblaApi]);
+
+  const addNewSlide = (text: string) => {
+    setSlides((prev) => [text, ...prev]);
+    onAdd(text);
   };
 
-  const deleteAffirmationCard = (id: number) => {
-    setAffirmationList((prev) => prev.filter((_, i) => i !== id));
-    onDelete(id);
+  const deleteSlide = (index: number) => {
+    if (index < 0 || index >= slides.length) return;
+    setSlides((prev) => prev.filter((_, i) => i !== index));
+    onDelete(index);
   };
 
-  const addAffirmationCard = (cardText: string) => {
-    setAffirmationList([...affirmationList, cardText]);
-    onAdd(cardText);
+  const editSlide = (index: number, text: string) => {
+    if (index < 0 || index >= slides.length) return;
+    const newSlides = [...slides];
+    newSlides[index] = text;
+    setSlides(newSlides);
+    onUpdate(index, text);
   };
 
   function resizeCarousel(e: MouseEvent) {
-    if (!isResizing || !carouselRef.current) return;
+    if (!isResizing || !containerRef.current) return;
     document.body.style.cursor = "row-resize";
-    let newHeight = e.clientY - carouselRef.current.getBoundingClientRect().top;
-    newHeight = Math.max(80, Math.min(newHeight, window.innerHeight * 0.5));
-    carouselRef.current.style.height = `${newHeight}px`;
-
+    let newHeight =
+      e.clientY - containerRef.current.getBoundingClientRect().top;
+    newHeight = Math.max(120, Math.min(newHeight, window.innerHeight * 0.5));
+    containerRef.current.style.height = `${newHeight}px`;
     computeAllFontSizes();
   }
 
@@ -76,25 +116,39 @@ export function AffirmationCarousel({
     isResizing = false;
     document.body.style.userSelect = "auto";
     document.body.style.cursor = "";
+    document.body.style.webkitUserSelect = "auto"; // Reset Safari
+    // Reset Firefox - use setProperty to avoid type issues
+    document.body.style.setProperty("-moz-user-select", "auto");
     document.removeEventListener("mousemove", resizeCarousel);
     document.removeEventListener("mouseup", stopResizing);
+    document.removeEventListener("selectstart", preventDefault); // Remove selection prevention
   }
 
-  const handleMouseDown = () => {
+  const handleMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent default text selection behavior
     isResizing = true;
     document.body.style.userSelect = "none"; // Prevent text selection while dragging
     document.body.style.cursor = "row-resize";
+    // Also prevent selection on the document
+    document.body.style.webkitUserSelect = "none"; // For Safari
+    // For Firefox - use setProperty to avoid type issues
+    document.body.style.setProperty("-moz-user-select", "none");
     document.addEventListener("mousemove", resizeCarousel);
     document.addEventListener("mouseup", stopResizing);
+    document.addEventListener("selectstart", preventDefault); // Prevent selection start
+  };
+
+  const preventDefault = (e: Event) => {
+    e.preventDefault();
   };
 
   const computeAllFontSizes = () => {
-    if (!carouselRef.current) return;
+    if (!containerRef.current) return;
 
-    const containerWidth = carouselRef.current.offsetWidth;
-    const containerHeight = carouselRef.current.offsetHeight;
+    const containerWidth = containerRef.current.offsetWidth;
+    const containerHeight = containerRef.current.offsetHeight;
 
-    const newFontSizes = affirmationList.map((text) => {
+    const newFontSizes = slides.map((text) => {
       const charCount = Math.max(text.length, 1);
 
       const availableHeight = containerHeight * 0.7;
@@ -127,40 +181,109 @@ export function AffirmationCarousel({
   };
   useEffect(() => {
     computeAllFontSizes();
-  }, [affirmationList]);
+  }, [slides, containerRef]);
 
   return (
-    <Carousel>
-      <CarouselContent
-        className="self-affirm-carousel"
-        role="region"
-        aria-label="Self Affirmation Carousel"
-        ref={carouselRef}
+    <div
+      className="self-affirm-carousel"
+      ref={containerRef}
+      data-testid="affirmation-carousel"
+    >
+      <div className="self-affirm-viewport" ref={emblaRef}>
+        <CarouselContent
+          slides={slides}
+          onAddSlide={addNewSlide}
+          onDeleteSlide={deleteSlide}
+          onEditSlide={editSlide}
+          fontSizes={fontSizes}
+        />
+      </div>
+
+      <Button
+        className={`carousel-button left ${!canScrollPrev ? "carousel-button-disabled" : ""}`}
+        onClick={scrollPrev}
+        disabled={!canScrollPrev}
+        data-testid="carousel-prev-button"
       >
-        {affirmationList.map((affirmation, index) => (
-          <CarouselItem key={affirmation}>
-            <AffirmationCard
-              initialContent={affirmation}
-              fontSize={fontSizes[index]}
-              onAffirmationCardUpdate={(updatedText) =>
-                updateAffirmationCard(index, updatedText)
-              }
-              onAffirmationCardDeletion={() => deleteAffirmationCard(index)}
-            />
-          </CarouselItem>
-        ))}
-        <CarouselItem key="add-new-card">
-          <AddNewAffirmationCard onCardAdd={addAffirmationCard} />
-        </CarouselItem>
-      </CarouselContent>
+        <ArrowLeft />
+      </Button>
+      <Button
+        className={`carousel-button right ${!canScrollNext ? "carousel-button-disabled" : ""}`}
+        onClick={scrollNext}
+        disabled={!canScrollNext}
+        data-testid="carousel-next-button"
+      >
+        <ArrowRight />
+      </Button>
       <div
         className="resize-handle"
-        role="slider"
-        aria-label="Resize Handle"
         onMouseDown={handleMouseDown}
-      />
-      <CarouselPrevious />
-      <CarouselNext />
-    </Carousel>
+        data-testid="resize-handle"
+      ></div>
+    </div>
+  );
+}
+
+interface CarouselContentProps {
+  slides: string[];
+  fontSizes?: string[];
+  onAddSlide: (text: string) => void;
+  onDeleteSlide?: (index: number) => void;
+  onEditSlide?: (index: number, text: string) => void;
+}
+
+function CarouselContent({
+  slides,
+  fontSizes,
+  onAddSlide,
+  onDeleteSlide,
+  onEditSlide,
+}: CarouselContentProps) {
+  const handleEdit = (index: number, slide: string) => {
+    if (index < 0 || index >= slides.length) return;
+    onEditSlide?.(index, slide);
+  };
+
+  const handleDelete = (index: number) => {
+    if (index < 0 || index >= slides.length) return;
+    onDeleteSlide?.(index);
+  };
+
+  return (
+    <div className="self-affirm-container">
+      {slides.map((slide, index) => (
+        <CarouselItem
+          key={index}
+          slide={slide}
+          onEdit={(newSlide) => handleEdit(index, newSlide)}
+          onDelete={() => handleDelete(index)}
+          fontSize={fontSizes ? fontSizes[index] : undefined}
+        />
+      ))}
+      <AddCardItem onAddSlide={onAddSlide} />
+    </div>
+  );
+}
+
+interface CarouselItemProps {
+  slide: string;
+  onEdit?: (newSlide: string) => void;
+  onDelete?: () => void;
+  fontSize?: string;
+}
+
+export function CarouselItem({
+  slide,
+  onEdit,
+  onDelete,
+  fontSize,
+}: CarouselItemProps) {
+  return (
+    <AffirmationCard
+      initialContent={slide}
+      onAffirmationCardUpdate={onEdit}
+      onAffirmationCardDeletion={onDelete}
+      fontSize={fontSize}
+    />
   );
 }
