@@ -38,6 +38,44 @@
   transition: background 0.3s;
   background: linear-gradient(#98b8cd, #cbb3e5);
   container-type: size;
+  line-height: 1.5;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.self-affirm-card.add-slide {
+  color: #555;
+  cursor: default;
+  container-type: size;
+}
+
+.add-slide-button {
+  background: rgba(255, 255, 255, 0.9);
+  color: #555;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  width: clamp(50px, 18cqh, 140px);
+  height: clamp(50px, 18cqh, 140px);
+  font-size: clamp(1.5rem, 10cqh, 5rem);
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.add-slide-button:hover {
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  transform: scale(1.05);
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+.add-slide-button:active {
+  transform: scale(0.95);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 }
 
 .self-affirm-card.add-slide {
@@ -77,7 +115,6 @@
 
 .self-affirm-text {
   color: #ffffff; /* White text, change if needed */
-  font-size: clamp(1rem, 10cqh, 2.5rem);
   text-align: center;
   width: 75%;
 }
