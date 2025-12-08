@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -8,6 +8,8 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import "@/app/css/NameTag.css";
 import Switch from "@mui/material/Switch";
 import Button from "@mui/material/Button";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 
 // TODO: deduplicate this with EnabledNameTagBadge
 export interface NameTagContent {
@@ -30,11 +32,12 @@ export function NameTagForm({
   onNameTagContentChange,
   onSaveButtonClick,
 }: NameTagProps) {
-  const { register, handleSubmit, control, watch } = useForm<NameTagContent>();
+  const { register, handleSubmit, control, watch, setValue } =
+    useForm<NameTagContent>();
   const maxDisclosureLength = 30;
   const disclosureValue = watch("disclosure", content.disclosure ?? "");
   const isOverLimit = disclosureValue.length > maxDisclosureLength;
-  const bottom_padding = 12;
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   // Button click handler to manually update database with specific fields
   const handleSaveButtonClick = () => {
@@ -49,13 +52,42 @@ export function NameTagForm({
     onSaveButtonClick(updatedData); // Update DB with current form data
   };
 
+  const handleSendToMeeting = async () => {
+    // Set sendToMeeting to true
+    setValue("sendToMeeting", true);
+
+    const updatedData: NameTagContent = {
+      preferredName: watch("preferredName", content.preferredName ?? ""),
+      pronouns: watch("pronouns", content.pronouns ?? ""),
+      disclosure: disclosureValue,
+      visible: watch("visible", content.visible ?? false),
+      fullMessage: watch("fullMessage", content.fullMessage ?? ""),
+      sendToMeeting: true,
+    };
+
+    // Execute the submit
+    await onNameTagContentChange(updatedData);
+
+    // Reset sendToMeeting to false
+    setValue("sendToMeeting", false);
+
+    // Show success toast
+    setOpenSnackbar(true);
+  };
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
+
   return (
     <div className="tab-container">
       <h2 className="tab-title">Name Tag</h2>
 
       <form onSubmit={handleSubmit(onNameTagContentChange)}>
-        <div style={{ paddingBottom: bottom_padding }}>
-          <label htmlFor="name">Preferred Name</label>
+        <div className="form-field-container">
+          <label htmlFor="name" className="form-field-label">
+            Preferred Name
+          </label>
           <input
             className="text-input"
             id="name"
@@ -63,8 +95,10 @@ export function NameTagForm({
             {...register("preferredName", { required: true })}
           />
         </div>
-        <div style={{ paddingBottom: bottom_padding + 5 }}>
-          <label htmlFor="pronouns">Pronouns</label>
+        <div className="form-field-container">
+          <label htmlFor="pronouns" className="form-field-label">
+            Pronouns
+          </label>
           <select
             className="select-input"
             id="pronouns"
@@ -78,13 +112,16 @@ export function NameTagForm({
             <option value="other">Other</option>
           </select>
         </div>
-        <div style={{ paddingBottom: bottom_padding }}>
-          <label htmlFor="disclosure">Something About Me</label>
+        <div className="form-field-container">
+          <label htmlFor="disclosure" className="form-field-label">
+            Something About Me
+          </label>
           <input
             className="text-input"
             id="disclosure"
+            data-testid="disclosure-input"
             defaultValue={content.disclosure}
-            placeholder="Example: I have a stutter; at home with sick kids."
+            placeholder="e.g. I have a stutter; sick at home"
             {...register("disclosure", { maxLength: maxDisclosureLength })}
           />
           <div className={`char-count ${isOverLimit ? "warning" : ""}`}>
@@ -102,6 +139,16 @@ export function NameTagForm({
         <div className="switch-group">
           <div className="form-container">
             <div className="controller-container">
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={handleSaveButtonClick}
+                type="submit"
+                size="medium"
+                sx={{ textTransform: "none" }}
+              >
+                Save
+              </Button>
               <Controller
                 control={control}
                 name="visible"
@@ -118,7 +165,7 @@ export function NameTagForm({
                         type="checkbox"
                       />
                     }
-                    label="Display Name Tag"
+                    label="Display"
                     labelPlacement="start"
                     className="label-styling"
                   />
@@ -126,68 +173,78 @@ export function NameTagForm({
               />
             </div>
           </div>
-          <div className="form-container">
-            <div className="controller-container">
-              <Controller
-                control={control}
-                name="sendToMeeting"
-                defaultValue={false}
-                render={({ field: { onChange, value } }) => (
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={value}
-                        onChange={onChange}
-                        type="checkbox"
-                        onClick={(e) => {
-                          onChange(e);
-                          handleSubmit(onNameTagContentChange)();
-                        }}
-                      />
-                    }
-                    label={
-                      <div>
-                        Send Disclosure Message
-                        <Tooltip title="This will send a message to everyone in the meeting">
-                          <InfoOutlinedIcon
-                            fontSize="small"
-                            style={{ cursor: "pointer", color: "#888" }}
-                          />
-                        </Tooltip>
-                      </div>
-                    }
-                    labelPlacement="start"
-                    className="label-styling"
+          <hr className="hr-divider-line" />
+          <div className="form-field-container">
+            <label htmlFor="fullMessage" className="form-field-label">
+              <div>
+                Disclosure Message
+                <Tooltip title="A longer message to educate others about what you have disclosed">
+                  <InfoOutlinedIcon
+                    fontSize="small"
+                    style={{
+                      cursor: "pointer",
+                      color: "#888",
+                      marginLeft: "0.25rem",
+                    }}
                   />
-                )}
+                </Tooltip>
+              </div>
+            </label>
+            <div>
+              <textarea
+                className="text-input"
+                id="fullMessage"
+                rows={3}
+                placeholder="Example: Stuttering is a neurodiversity and is incurable. As a person who stutters, I sometimes need extra time for responses and appreciate your patience and respect."
+                defaultValue={content.fullMessage}
+                {...register("fullMessage")}
+                data-testid="full-message-textarea"
               />
+            </div>
+            <div className="switch-group">
+              <div className="form-container">
+                <div className="controller-container">
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={handleSaveButtonClick}
+                    type="submit"
+                    size="medium"
+                    sx={{ textTransform: "none" }}
+                  >
+                    Save
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleSendToMeeting}
+                    type="button"
+                    size="medium"
+                    sx={{ textTransform: "none" }}
+                    data-testid="send-to-meeting-button"
+                  >
+                    Send to Chat
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        <div style={{ paddingBottom: bottom_padding }}>
-          <textarea
-            className="text-input"
-            id="fullMessage"
-            rows={3}
-            placeholder="Introduce yourself..."
-            defaultValue={content.fullMessage}
-            {...register("fullMessage")}
-          />
-        </div>
-
-        <div>
-          {/* Add the Button here to manually trigger DB update */}
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleSaveButtonClick} // Handle click to update DB
-            type="submit"
-          >
-            Save Name Tag
-          </Button>
-        </div>
-        <div></div>
       </form>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={2000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          Message sent to the meeting chat
+        </Alert>
+      </Snackbar>
     </div>
   );
 }
