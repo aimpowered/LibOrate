@@ -11,6 +11,7 @@ import "@/app/css/Affirmation.css";
 
 interface AffirmationCardProps {
   initialContent: string;
+  fontSize?: string;
   onAffirmationCardUpdate?: (newSlide: string) => void;
   onAffirmationCardDeletion?: () => void;
 }
@@ -19,6 +20,7 @@ export function AffirmationCard({
   initialContent,
   onAffirmationCardUpdate,
   onAffirmationCardDeletion,
+  fontSize = "1rem",
 }: AffirmationCardProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -33,7 +35,14 @@ export function AffirmationCard({
 
   return (
     <Card className="self-affirm-card">
-      <CardContent className="self-affirm-text">{initialContent}</CardContent>
+      <CardContent
+        className="self-affirm-text"
+        style={{
+          fontSize,
+        }}
+      >
+        {initialContent}
+      </CardContent>
 
       <CardActions
         style={{

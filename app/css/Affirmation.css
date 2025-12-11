@@ -38,6 +38,9 @@
   transition: background 0.3s;
   background: linear-gradient(#98b8cd, #cbb3e5);
   container-type: size;
+  line-height: 1.5;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .self-affirm-card.add-slide {
@@ -77,7 +80,6 @@
 
 .self-affirm-text {
   color: #ffffff; /* White text, change if needed */
-  font-size: clamp(1rem, 10cqh, 2.5rem);
   text-align: center;
   width: 75%;
 }

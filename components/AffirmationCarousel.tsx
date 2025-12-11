@@ -36,7 +36,9 @@ export function AffirmationCarousel({
   onAdd,
 }: AffirmationCarouselProps) {
   const [slides, setSlides] = useState(initialAffirmations);
-
+  const [fontSizes, setFontSizes] = useState<string[]>(
+    initialAffirmations.map(() => "1rem"),
+  );
   const containerRef = useRef<HTMLDivElement>(null);
   const emblaOptions: EmblaOptionsType = {
     loop: false,
@@ -107,6 +109,7 @@ export function AffirmationCarousel({
       e.clientY - containerRef.current.getBoundingClientRect().top;
     newHeight = Math.max(120, Math.min(newHeight, window.innerHeight * 0.5));
     containerRef.current.style.height = `${newHeight}px`;
+    computeAllFontSizes();
   }
 
   function stopResizing() {
@@ -139,6 +142,47 @@ export function AffirmationCarousel({
     e.preventDefault();
   };
 
+  const computeAllFontSizes = () => {
+    if (!containerRef.current) return;
+
+    const containerWidth = containerRef.current.offsetWidth;
+    const containerHeight = containerRef.current.offsetHeight;
+
+    const newFontSizes = slides.map((text) => {
+      const charCount = Math.max(text.length, 1);
+
+      const availableHeight = containerHeight * 0.7;
+
+      const availableWidth = containerWidth * 0.9;
+
+      let minSize = 16;
+      let maxSize = containerHeight * 0.7;
+      let bestSize = minSize;
+      while (maxSize - minSize > 1) {
+        const midSize = (minSize + maxSize) / 2;
+        const avgCharWidth = midSize * 0.6;
+        const charsPerLine = Math.floor(availableWidth / avgCharWidth);
+        const estimatedLines = Math.ceil(charCount / charsPerLine);
+        const lineHeight = midSize * 1.5;
+        const estimatedTextHeight = estimatedLines * lineHeight;
+
+        if (estimatedTextHeight <= availableHeight) {
+          bestSize = midSize;
+          minSize = midSize;
+        } else {
+          maxSize = midSize;
+        }
+      }
+
+      return `${bestSize}px`;
+    });
+
+    setFontSizes(newFontSizes);
+  };
+  useEffect(() => {
+    computeAllFontSizes();
+  }, [slides, containerRef]);
+
   return (
     <div
       className="self-affirm-carousel"
@@ -151,6 +195,7 @@ export function AffirmationCarousel({
           onAddSlide={addNewSlide}
           onDeleteSlide={deleteSlide}
           onEditSlide={editSlide}
+          fontSizes={fontSizes}
         />
       </div>
 
@@ -181,6 +226,7 @@ export function AffirmationCarousel({
 
 interface CarouselContentProps {
   slides: string[];
+  fontSizes?: string[];
   onAddSlide: (text: string) => void;
   onDeleteSlide?: (index: number) => void;
   onEditSlide?: (index: number, text: string) => void;
@@ -188,6 +234,7 @@ interface CarouselContentProps {
 
 function CarouselContent({
   slides,
+  fontSizes,
   onAddSlide,
   onDeleteSlide,
   onEditSlide,
@@ -210,6 +257,7 @@ function CarouselContent({
           slide={slide}
           onEdit={(newSlide) => handleEdit(index, newSlide)}
           onDelete={() => handleDelete(index)}
+          fontSize={fontSizes ? fontSizes[index] : undefined}
         />
       ))}
       <AddCardItem onAddSlide={onAddSlide} />
@@ -221,14 +269,21 @@ interface CarouselItemProps {
   slide: string;
   onEdit?: (newSlide: string) => void;
   onDelete?: () => void;
+  fontSize?: string;
 }
 
-export function CarouselItem({ slide, onEdit, onDelete }: CarouselItemProps) {
+export function CarouselItem({
+  slide,
+  onEdit,
+  onDelete,
+  fontSize,
+}: CarouselItemProps) {
   return (
     <AffirmationCard
       initialContent={slide}
       onAffirmationCardUpdate={onEdit}
       onAffirmationCardDeletion={onDelete}
+      fontSize={fontSize}
     />
   );
 }
