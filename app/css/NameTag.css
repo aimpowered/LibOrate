@@ -40,7 +40,7 @@
 .form-container {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: flex-between;
   padding: 0;
   margin-bottom: 0.25rem;
   width: 80%;
@@ -71,10 +71,10 @@
 .controller-container {
   margin: 0.25rem 0;
   padding: 0 0.3125rem;
-}
-
-.controller-container:hover {
-  background-color: #f0f0f0; /* Change background color on hover */
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
 }
 
 .char-count {
@@ -96,4 +96,22 @@
   display: block;
   margin-top: 0.3125rem;
   color: red;
+}
+
+.hr-divider-line {
+  width: 80%;
+  margin: 1rem 0;
+  border: 0;
+  border-top: 1px solid #ccc;
+}
+
+.form-field-label {
+  font-weight: 500;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.form-field-container {
+  padding-bottom: 0.75rem;
 }

@@ -14,7 +14,11 @@ describe("Affirmation in spec", () => {
       .click()
       .type("{selectall}{backspace}Update affirmation");
 
-    cy.contains("button", /^Save$/).click();
+    cy.get('textarea[placeholder="Write your message"]')
+      .parents(".carousel-slide-modal")
+      .find("button")
+      .contains(/^Save$/)
+      .click();
 
     cy.contains("Update affirmation").should("exist");
     cy.reload();
@@ -50,7 +54,11 @@ describe("Affirmation in spec", () => {
       .should("be.visible")
       .click()
       .type("Hello world");
-    cy.contains("button", /^Save$/).click();
+    cy.get('textarea[placeholder="Write your message"]')
+      .parents(".carousel-slide-modal")
+      .find("button")
+      .contains(/^Save$/)
+      .click();
     cy.contains("Hello world").should("exist");
   });
 });
