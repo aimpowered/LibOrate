@@ -52,7 +52,7 @@ jobs:
         sarif html ../results/javascript.sarif 
 
     - name: Upload CodeQL HTML Report
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: codeql-html-report
         path: javascript.html
