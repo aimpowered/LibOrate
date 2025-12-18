@@ -1,31 +1,83 @@
 /* NameTag.css */
-.label-text {
-  font-weight: bold;
-  font-size: clamp(1.5rem, 3vw, 2rem);
-}
 
-.input-field {
-  margin-top: 0px;
-}
-
-.text-input,
-.select-input {
-  border: 2px solid var(--border-color);
-  border-radius: var(--radius-md);
-  padding: var(--spacing-sm);
+/* MUI TextField and Select styling */
+.mui-text-input,
+.mui-select-input {
   width: 100%;
-  font-size: var(--text-sm);
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
-  box-sizing: border-box;
+  background-color: white;
 }
 
-.text-input:focus,
-.select-input:focus {
-  outline: none;
-  border-color: var(--primary-color);
+.mui-text-input .MuiOutlinedInput-root,
+.mui-select-input .MuiOutlinedInput-root {
+  border-radius: var(--radius-md);
+  background-color: white;
+}
+
+.mui-text-input .MuiOutlinedInput-input,
+.mui-select-input .MuiSelect-select {
+  padding: var(--spacing-sm);
+  font-size: var(--text-sm);
+}
+
+.mui-text-input .MuiOutlinedInput-notchedOutline,
+.mui-select-input .MuiOutlinedInput-notchedOutline {
+  border-color: var(--border-color) !important;
+  border-width: 2px;
+  border-radius: var(--radius-md);
+}
+
+.mui-text-input:hover .MuiOutlinedInput-notchedOutline,
+.mui-select-input:hover .MuiOutlinedInput-notchedOutline {
+  border-color: var(--primary-color) !important;
+}
+
+.mui-text-input
+  .MuiOutlinedInput-root.Mui-focused
+  .MuiOutlinedInput-notchedOutline,
+.mui-select-input
+  .MuiOutlinedInput-root.Mui-focused
+  .MuiOutlinedInput-notchedOutline {
+  border-color: var(--primary-color) !important;
+  border-width: 2px;
   box-shadow: 0 0 0 3px rgba(214, 128, 113, 0.1);
+}
+
+/* Keep MUI Select label styling minimal since we use external labels */
+
+/* Helper text styling */
+.mui-text-input .MuiFormHelperText-root {
+  margin-top: var(--spacing-xs);
+  font-size: var(--text-xs);
+}
+
+/* Info icon styling */
+.info-icon {
+  cursor: pointer;
+  color: #888;
+  margin-left: 0.25rem;
+}
+
+/* MUI Select dropdown menu */
+.mui-select-menu {
+  background-color: white;
+  margin-top: 0.25rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.mui-select-menu .MuiMenuItem-root {
+  font-size: var(--text-sm);
+}
+
+.mui-select-menu .MuiMenuItem-root:hover {
+  background-color: #f3f4f6;
+}
+
+.mui-select-menu .MuiMenuItem-root.Mui-selected {
+  background-color: #e5e7eb;
+}
+
+.mui-select-menu .MuiMenuItem-root.Mui-selected:hover {
+  background-color: #d1d5db;
 }
 
 .block-style {
