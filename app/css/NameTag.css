@@ -10,10 +10,22 @@
 
 .text-input,
 .select-input {
-  border: 1px solid #ccc;
-  border-radius: 0.25rem;
-  padding: 0.5rem;
-  width: 80%; /* Adjust the width as needed */
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-sm);
+  width: 100%;
+  font-size: var(--text-sm);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+  box-sizing: border-box;
+}
+
+.text-input:focus,
+.select-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(214, 128, 113, 0.1);
 }
 
 .block-style {
@@ -42,13 +54,13 @@
   align-items: center;
   justify-content: flex-between;
   padding: 0;
-  margin-bottom: 0.25rem;
-  width: 80%;
+  margin-bottom: var(--spacing-xs);
+  width: 100%;
 }
 
 /* Optional: Add a wrapper for the group of switches */
 .switch-group {
-  margin: 1rem 0; /* This controls spacing from input above and textarea below */
+  margin: var(--spacing-md) 0;
 }
 
 .submit-btn {
@@ -69,22 +81,23 @@
 }
 
 .controller-container {
-  margin: 0.25rem 0;
-  padding: 0 0.3125rem;
+  margin: var(--spacing-xs) 0;
+  padding: 0 var(--spacing-xs);
   display: flex;
   align-items: center;
   width: 100%;
   justify-content: space-between;
+  gap: var(--spacing-sm);
 }
 
 .char-count {
-  margin-top: 0.3125rem;
-  font-size: 0.75rem;
-  color: #666;
+  margin-top: var(--spacing-xs);
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
 }
 
 .char-count.warning {
-  color: red;
+  color: var(--error-color);
 }
 
 .char-limit-info {
@@ -94,24 +107,25 @@
 
 .warning-message {
   display: block;
-  margin-top: 0.3125rem;
-  color: red;
+  margin-top: var(--spacing-xs);
+  color: var(--error-color);
 }
 
 .hr-divider-line {
-  width: 80%;
-  margin: 1rem 0;
+  width: 100%;
+  margin: var(--spacing-md) 0;
   border: 0;
-  border-top: 1px solid #ccc;
+  border-top: 1px solid var(--border-color);
 }
 
 .form-field-label {
   font-weight: 500;
-  font-size: 1rem;
-  margin-bottom: 0.5rem;
+  font-size: var(--text-sm);
+  margin-bottom: var(--spacing-xs);
   display: block;
+  color: var(--text-primary);
 }
 
 .form-field-container {
-  padding-bottom: 0.75rem;
+  padding-bottom: var(--spacing-sm);
 }
