@@ -1,33 +1,68 @@
 /* Wavehand.css */
 .button-rows {
   display: inline-block;
-  width: 95%;
-  margin-left: 30px;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  width: 100%;
+  padding: 0 var(--spacing-lg);
+  margin-top: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+  box-sizing: border-box;
 }
 
 .wave-hand-button {
-  padding: 10px 20px;
-  background-color: transparent;
-  color: black;
-  border: 1px solid #ccc;
-  border-radius: 20px;
+  padding: 0.625rem 1.5rem;
+  background: linear-gradient(to bottom, #ffffff, #f8f9fa);
+  color: var(--text-primary);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
   cursor: pointer;
-  margin: 5px;
-  font-size: 20px;
+  margin: var(--spacing-xs);
+  font-size: var(--text-base);
   position: relative;
-  padding-right: 1.5em;
+  padding-right: 2.5rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.08),
+    0 1px 2px rgba(0, 0, 0, 0.06);
 }
 
 .wave-hand-button:hover {
-  background-color: #f0f0f0;
+  background: linear-gradient(to bottom, #ffffff, #e9ecef);
+  border-color: var(--primary-color);
+  transform: translateY(-2px);
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.12),
+    0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.wave-hand-button:active {
+  transform: translateY(0);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.08),
+    inset 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .wave-hand-button.selected {
-  background-color: #d68071;
+  background: linear-gradient(
+    to bottom,
+    var(--primary-color),
+    var(--primary-hover)
+  );
+  border-color: var(--primary-color);
   color: white;
-  font-weight: bold;
+  font-weight: 600;
+  box-shadow:
+    0 3px 10px rgba(214, 128, 113, 0.4),
+    0 2px 4px rgba(214, 128, 113, 0.3);
+}
+
+.wave-hand-button.selected:hover {
+  background: linear-gradient(to bottom, #e0766a, #d6624a);
+  transform: translateY(-2px);
+  box-shadow:
+    0 6px 16px rgba(214, 128, 113, 0.5),
+    0 3px 8px rgba(214, 128, 113, 0.4);
 }
 
 .wave-hand-input {
@@ -36,7 +71,12 @@
 }
 
 .wave-hand-input::placeholder {
-  color: #aaa;
+  color: var(--text-secondary);
+}
+
+.wave-hand-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(214, 128, 113, 0.1);
 }
 
 .wavehand-fetch-error {
@@ -44,24 +84,33 @@
 }
 
 .wavehand-retry-button {
-  margin-top: 10px;
-  padding: 10px 20px;
-  border-radius: 20px;
-  font-size: 16px;
-  border: 1px solid #ccc;
+  margin-top: var(--spacing-sm);
+  padding: 0.625rem 1.5rem;
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  border: 2px solid var(--border-color);
   background-color: transparent;
   cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.wavehand-retry-button:hover {
+  background-color: var(--bg-hover);
+  border-color: var(--primary-color);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .wave-hand-delete-button {
   position: absolute;
   top: -6px;
   right: -6px;
-  font-size: 12px;
-  background: white;
-  border: 1px solid #ccc;
-  border-radius: 50%;
-  color: #888;
+  font-size: var(--text-xs);
+  background: var(--bg-white);
+  border: 1px solid var(--border-color-dark);
+  border-radius: var(--radius-full);
+  color: var(--text-light);
   cursor: pointer;
   display: none;
   z-index: 2;
@@ -70,6 +119,7 @@
   line-height: 17px;
   text-align: center;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
 }
 
 .wave-hand-button:hover:not(.selected) .wave-hand-delete-button {
@@ -77,6 +127,7 @@
 }
 
 .wave-hand-delete-button:hover {
-  color: red;
-  border-color: red;
+  color: var(--error-color);
+  border-color: var(--error-color);
+  transform: scale(1.1);
 }
