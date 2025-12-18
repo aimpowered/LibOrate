@@ -1,7 +1,5 @@
 # .github/dependabot.yml
 version: 2
-cooldown:
-  default-days: 21
 updates:
   - package-ecosystem: "npm"
     directory: "/"            # Location of your package.json
