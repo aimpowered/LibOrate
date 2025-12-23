@@ -153,10 +153,10 @@ export function AffirmationCarousel({
 
       const availableHeight = containerHeight * 0.7;
 
-      const availableWidth = containerWidth * 0.9;
+      const availableWidth = containerWidth * 0.6;
 
       let minSize = 16;
-      let maxSize = containerHeight * 0.7;
+      let maxSize = containerHeight * 0.6;
       let bestSize = minSize;
       while (maxSize - minSize > 1) {
         const midSize = (minSize + maxSize) / 2;
