@@ -10,21 +10,29 @@ describe("Save nametag button", () => {
     const pronoun = "He/Him";
     const disclosure = "I love spaghetti! 🍝";
     const fullMessage = `Hi! My name is ${displayName} and I am a ${pronoun}. ${disclosure}`;
-    cy.contains("Preferred Name").click().type(`{selectall}${displayName}`);
-    cy.contains("Pronouns").next().select(pronoun);
-    cy.contains("Something About Me").click().type(`{selectall}${disclosure}`);
+
+    cy.get("#name").clear().type(displayName);
+
+    cy.get("#pronouns").click();
+    cy.contains("li", pronoun).click();
+
+    cy.get("#disclosure").clear().type(disclosure);
+
     cy.get('[data-testid="full-message-textarea"]')
       .should("exist")
+      .clear()
       .type(fullMessage);
+
     // and save it
     cy.contains("button", "Save").first().click();
 
     // Go back to homepage
     cy.reload();
+
     // Check that saved info is still there
-    cy.contains("Something About Me").next().should("have.value", disclosure);
-    cy.contains("Pronouns").next().should("have.value", pronoun);
-    cy.contains("Preferred Name").next().should("have.value", displayName);
+    cy.get("#name").should("have.value", displayName);
+    cy.get("#pronouns").should("have.text", pronoun);
+    cy.get("#disclosure").should("have.value", disclosure);
     cy.get('[data-testid="full-message-textarea"]')
       .should("exist")
       .should("have.value", fullMessage);
