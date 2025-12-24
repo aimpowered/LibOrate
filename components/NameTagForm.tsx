@@ -4,6 +4,9 @@ import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Tooltip from "@mui/material/Tooltip";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import TextField from "@mui/material/TextField";
 
 import "@/app/css/NameTag.css";
 import Switch from "@mui/material/Switch";
@@ -32,8 +35,7 @@ export function NameTagForm({
   onNameTagContentChange,
   onSaveButtonClick,
 }: NameTagProps) {
-  const { register, handleSubmit, control, watch, setValue } =
-    useForm<NameTagContent>();
+  const { handleSubmit, control, watch, setValue } = useForm<NameTagContent>();
   const maxDisclosureLength = 30;
   const disclosureValue = watch("disclosure", content.disclosure ?? "");
   const isOverLimit = disclosureValue.length > maxDisclosureLength;
@@ -88,51 +90,81 @@ export function NameTagForm({
           <label htmlFor="name" className="form-field-label">
             Preferred Name
           </label>
-          <input
-            className="text-input"
-            id="name"
-            defaultValue={content.preferredName}
-            {...register("preferredName", { required: true })}
+          <Controller
+            name="preferredName"
+            control={control}
+            defaultValue={content.preferredName || ""}
+            rules={{ required: true }}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                id="name"
+                fullWidth
+                className="mui-text-input"
+              />
+            )}
           />
         </div>
         <div className="form-field-container">
           <label htmlFor="pronouns" className="form-field-label">
             Pronouns
           </label>
-          <select
-            className="select-input"
-            id="pronouns"
-            defaultValue={content.pronouns}
-            {...register("pronouns")}
-          >
-            <option value="">Select Pronouns</option>
-            <option value="He/Him">He/Him</option>
-            <option value="She/Her">She/Her</option>
-            <option value="They/Them">They/Them</option>
-            <option value="other">Other</option>
-          </select>
+          <Controller
+            name="pronouns"
+            control={control}
+            defaultValue={content.pronouns || ""}
+            render={({ field }) => (
+              <Select
+                {...field}
+                displayEmpty
+                id="pronouns"
+                className="mui-select-input"
+                MenuProps={{
+                  disablePortal: true,
+                  PaperProps: {
+                    className: "mui-select-menu",
+                  },
+                }}
+              >
+                <MenuItem value="">Select Pronouns</MenuItem>
+                <MenuItem value="He/Him">He/Him</MenuItem>
+                <MenuItem value="She/Her">She/Her</MenuItem>
+                <MenuItem value="They/Them">They/Them</MenuItem>
+                <MenuItem value="Other">Other</MenuItem>
+              </Select>
+            )}
+          />
         </div>
         <div className="form-field-container">
           <label htmlFor="disclosure" className="form-field-label">
             Something About Me
           </label>
-          <input
-            className="text-input"
-            id="disclosure"
-            data-testid="disclosure-input"
-            defaultValue={content.disclosure}
-            placeholder="e.g. I have a stutter; sick at home"
-            {...register("disclosure", { maxLength: maxDisclosureLength })}
+          <Controller
+            name="disclosure"
+            control={control}
+            defaultValue={content.disclosure || ""}
+            rules={{ maxLength: maxDisclosureLength }}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                id="disclosure"
+                fullWidth
+                className="mui-text-input"
+                placeholder="e.g. I have a stutter; sick at home"
+                inputProps={{ "data-testid": "disclosure-input" }}
+              />
+            )}
           />
           <div className={`char-count ${isOverLimit ? "warning" : ""}`}>
             <span>
               {disclosureValue.length}/{maxDisclosureLength}
             </span>
             <span className="char-limit-info">
+              {" "}
               (Maximum characters allowed)
             </span>
             {isOverLimit && (
-              <span className="warning-message">Exceeded length limit!</span>
+              <span className="warning-message"> Exceeded length limit!</span>
             )}
           </div>
         </div>
@@ -179,28 +211,27 @@ export function NameTagForm({
               <div>
                 Disclosure Message
                 <Tooltip title="A longer message to educate others about what you have disclosed">
-                  <InfoOutlinedIcon
-                    fontSize="small"
-                    style={{
-                      cursor: "pointer",
-                      color: "#888",
-                      marginLeft: "0.25rem",
-                    }}
-                  />
+                  <InfoOutlinedIcon fontSize="small" className="info-icon" />
                 </Tooltip>
               </div>
             </label>
-            <div>
-              <textarea
-                className="text-input"
-                id="fullMessage"
-                rows={3}
-                placeholder="Example: Stuttering is a neurodiversity and is incurable. As a person who stutters, I sometimes need extra time for responses and appreciate your patience and respect."
-                defaultValue={content.fullMessage}
-                {...register("fullMessage")}
-                data-testid="full-message-textarea"
-              />
-            </div>
+            <Controller
+              name="fullMessage"
+              control={control}
+              defaultValue={content.fullMessage || ""}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  id="fullMessage"
+                  fullWidth
+                  multiline
+                  rows={3}
+                  className="mui-text-input"
+                  placeholder="Example: Stuttering is a neurodiversity and is incurable. As a person who stutters, I sometimes need extra time for responses and appreciate your patience and respect."
+                  inputProps={{ "data-testid": "full-message-textarea" }}
+                />
+              )}
+            />
             <div className="switch-group">
               <div className="form-container">
                 <div className="controller-container">

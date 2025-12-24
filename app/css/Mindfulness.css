@@ -21,7 +21,9 @@
 }
 
 .video-title {
-  font-size: clamp(1.125rem, 2vw, 1.5rem);
+  font-size: var(--text-lg);
   display: inline-block;
-  margin-top: 0.625rem;
+  margin-top: var(--spacing-sm);
+  color: var(--text-primary);
+  font-weight: 600;
 }

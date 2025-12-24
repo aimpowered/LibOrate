@@ -177,9 +177,9 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: white;
-  padding: clamp(16px, 4vw, 24px);
-  border-radius: 12px;
+  background-color: var(--bg-white);
+  padding: clamp(1rem, 4vw, 1.5rem);
+  border-radius: var(--radius-lg);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
   width: min(500px, 90vw);
   max-height: 90vh;
@@ -191,14 +191,14 @@
 @media (max-width: 640px) {
   .carousel-slide-modal {
     width: 95vw;
-    padding: 16px;
+    padding: var(--spacing-md);
   }
 }
 
 @media (max-width: 480px) {
   .carousel-slide-modal {
     width: 98vw;
-    padding: 12px;
+    padding: var(--spacing-sm);
   }
 }
 
@@ -214,12 +214,12 @@
 }
 
 .carousel-slide-modal-body {
-  padding: 12px 0;
+  padding: var(--spacing-sm) 0;
 }
 
 .carousel-slide-modal-body p {
-  font-size: clamp(14px, 2vw, 16px);
-  color: #374151;
+  font-size: var(--text-sm);
+  color: var(--text-primary);
   margin: 0;
   text-align: center;
   line-height: 1.5;
@@ -227,11 +227,11 @@
 
 .carousel-slide-modal-textarea {
   width: 100%;
-  padding: 12px;
-  font-size: clamp(14px, 2vw, 16px);
+  padding: var(--spacing-sm);
+  font-size: var(--text-sm);
   font-family: inherit;
-  border: 2px solid #e5e7eb;
-  border-radius: 8px;
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
   min-height: 100px;
   max-height: 300px;
   height: clamp(100px, 20vh, 150px);
@@ -251,17 +251,17 @@
 
 .carousel-slide-modal-textarea:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(214, 128, 113, 0.1);
 }
 
 .carousel-slide-modal-btn {
-  padding: 10px 24px;
+  padding: 0.625rem 1.5rem;
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   cursor: pointer;
-  font-size: clamp(14px, 2vw, 15px);
+  font-size: var(--text-sm);
   font-weight: 500;
   transition: all 0.2s ease;
   position: relative;
@@ -271,17 +271,17 @@
 
 @media (max-width: 640px) {
   .carousel-slide-modal-btn {
-    padding: 8px 16px;
+    padding: var(--spacing-xs) var(--spacing-md);
   }
 }
 
 /* Cancel button (first button) */
 .carousel-slide-modal-actions .carousel-slide-modal-btn:first-child {
-  background-color: #6b7280;
+  background-color: var(--secondary-color);
 }
 
 .carousel-slide-modal-actions .carousel-slide-modal-btn:first-child:hover {
-  background-color: #4b5563;
+  background-color: var(--secondary-hover);
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(107, 114, 128, 0.3);
 }
@@ -293,18 +293,18 @@
 
 /* Save/Confirm button (second button) */
 .carousel-slide-modal-actions .carousel-slide-modal-btn:last-child {
-  background-color: #3b82f6;
+  background-color: var(--primary-color);
 }
 
 .carousel-slide-modal-actions .carousel-slide-modal-btn:last-child:hover {
-  background-color: #2563eb;
+  background-color: var(--primary-hover);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 4px 12px rgba(214, 128, 113, 0.3);
 }
 
 .carousel-slide-modal-actions .carousel-slide-modal-btn:last-child:active {
   transform: translateY(0);
-  box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 2px 6px rgba(214, 128, 113, 0.3);
 }
 
 .carousel-slide-modal-btn:disabled {
@@ -317,6 +317,6 @@
 .carousel-slide-modal-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 8px;
-  margin-top: 20px;
+  gap: var(--spacing-xs);
+  margin-top: var(--spacing-lg);
 }
