@@ -40,7 +40,10 @@ export function NameTagForm({
   const disclosureValue = watch("disclosure", content.disclosure ?? "");
   const isOverLimit = disclosureValue.length > maxDisclosureLength;
   const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [alertCtx, setAlertCtx] = useState<{message: string; severity: "success" | "info"}>({message: "", severity: "success"});
+  const [alertCtx, setAlertCtx] = useState<{
+    message: string;
+    severity: "success" | "info";
+  }>({ message: "", severity: "success" });
 
   // Button click handler to manually update database with specific fields
   const handleSaveButtonClick = () => {
@@ -58,7 +61,10 @@ export function NameTagForm({
   const handleSendToMeeting = async () => {
     const fullMessage = watch("fullMessage", content.fullMessage ?? "");
     if (fullMessage.trim() === "") {
-      setAlertCtx({message: "Please type a disclosure message before sending", severity: "info"});
+      setAlertCtx({
+        message: "Please type a disclosure message before sending",
+        severity: "info",
+      });
       setOpenSnackbar(true);
       return;
     }
@@ -81,7 +87,10 @@ export function NameTagForm({
     setValue("sendToMeeting", false);
 
     // Show success toast
-    setAlertCtx({message: "Message sent to the meeting chat", severity: "success"});
+    setAlertCtx({
+      message: "Message sent to the meeting chat",
+      severity: "success",
+    });
     setOpenSnackbar(true);
   };
 

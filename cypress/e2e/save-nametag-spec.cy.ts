@@ -40,14 +40,12 @@ describe("Save nametag button", () => {
 
   it("should show info toast when Send to Meeting is clicked with empty message", () => {
     // Clear full message
-    cy.get('[data-testid="full-message-textarea"]')
-      .should("exist")
-      .clear();
+    cy.get('[data-testid="full-message-textarea"]').should("exist").clear();
 
     cy.contains("button", "Send to Chat").click();
 
     cy.contains("Please type a disclosure message before sending").should(
-      "be.visible"
+      "be.visible",
     );
 
     cy.contains("Please type a disclosure message before sending", {
