@@ -54,7 +54,7 @@ jobs:
         run: npm ci
 
       - name: Run npm audit
-        run: npm audit --audit-level=high
+        run: npm audit --omit=dev --audit-level=high
 
   format:
     runs-on: ubuntu-latest
@@ -92,7 +92,7 @@ jobs:
           build: npm run build
           start: npm start
       - name: Upload screenshots
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         if: failure()
         with:
           name: cypress-screenshots

@@ -58,7 +58,7 @@ jobs:
           snyk-to-html -o snyk-code.html -i snyk-code.json 
 
       - name: Upload Snyk Code HTML Report
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: snyk-code-report.html
           path: snyk-code.html
