@@ -38,6 +38,21 @@ describe("Save nametag button", () => {
       .should("have.value", fullMessage);
   });
 
+  it("should show info toast when Send to Meeting is clicked with empty message", () => {
+    // Clear full message
+    cy.get('[data-testid="full-message-textarea"]').should("exist").clear();
+
+    cy.contains("button", "Send to Chat").click();
+
+    cy.contains("Please type a disclosure message before sending").should(
+      "be.visible",
+    );
+
+    cy.contains("Please type a disclosure message before sending", {
+      timeout: 4000,
+    }).should("not.exist");
+  });
+
   it("should show toast notification when Send to Meeting is clicked", () => {
     // Enter full message
     const fullMessage = "Hello everyone! This is my disclosure message.";

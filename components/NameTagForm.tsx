@@ -39,7 +39,10 @@ export function NameTagForm({
   const maxDisclosureLength = 30;
   const disclosureValue = watch("disclosure", content.disclosure ?? "");
   const isOverLimit = disclosureValue.length > maxDisclosureLength;
-  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [alertCtx, setAlertCtx] = useState<{
+    message: string;
+    severity: "success" | "info";
+  }>();
 
   // Button click handler to manually update database with specific fields
   const handleSaveButtonClick = () => {
@@ -55,6 +58,14 @@ export function NameTagForm({
   };
 
   const handleSendToMeeting = async () => {
+    const fullMessage = watch("fullMessage", content.fullMessage ?? "");
+    if (fullMessage.trim() === "") {
+      setAlertCtx({
+        message: "Please type a disclosure message before sending",
+        severity: "info",
+      });
+      return;
+    }
     // Set sendToMeeting to true
     setValue("sendToMeeting", true);
 
@@ -63,7 +74,7 @@ export function NameTagForm({
       pronouns: watch("pronouns", content.pronouns ?? ""),
       disclosure: disclosureValue,
       visible: watch("visible", content.visible ?? false),
-      fullMessage: watch("fullMessage", content.fullMessage ?? ""),
+      fullMessage: fullMessage,
       sendToMeeting: true,
     };
 
@@ -74,11 +85,14 @@ export function NameTagForm({
     setValue("sendToMeeting", false);
 
     // Show success toast
-    setOpenSnackbar(true);
+    setAlertCtx({
+      message: "Message sent to the meeting chat",
+      severity: "success",
+    });
   };
 
   const handleCloseSnackbar = () => {
-    setOpenSnackbar(false);
+    setAlertCtx(undefined);
   };
 
   return (
@@ -263,17 +277,17 @@ export function NameTagForm({
         </div>
       </form>
       <Snackbar
-        open={openSnackbar}
+        open={alertCtx !== undefined}
         autoHideDuration={2000}
         onClose={handleCloseSnackbar}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
         <Alert
           onClose={handleCloseSnackbar}
-          severity="success"
+          severity={alertCtx?.severity}
           sx={{ width: "100%" }}
         >
-          Message sent to the meeting chat
+          {alertCtx?.message}
         </Alert>
       </Snackbar>
     </div>
