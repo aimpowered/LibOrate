@@ -39,11 +39,10 @@ export function NameTagForm({
   const maxDisclosureLength = 30;
   const disclosureValue = watch("disclosure", content.disclosure ?? "");
   const isOverLimit = disclosureValue.length > maxDisclosureLength;
-  const [openSnackbar, setOpenSnackbar] = useState(false);
   const [alertCtx, setAlertCtx] = useState<{
     message: string;
     severity: "success" | "info";
-  }>({ message: "", severity: "success" });
+  }>();
 
   // Button click handler to manually update database with specific fields
   const handleSaveButtonClick = () => {
@@ -65,7 +64,6 @@ export function NameTagForm({
         message: "Please type a disclosure message before sending",
         severity: "info",
       });
-      setOpenSnackbar(true);
       return;
     }
     // Set sendToMeeting to true
@@ -91,11 +89,10 @@ export function NameTagForm({
       message: "Message sent to the meeting chat",
       severity: "success",
     });
-    setOpenSnackbar(true);
   };
 
   const handleCloseSnackbar = () => {
-    setOpenSnackbar(false);
+    setAlertCtx(undefined);
   };
 
   return (
@@ -280,17 +277,17 @@ export function NameTagForm({
         </div>
       </form>
       <Snackbar
-        open={openSnackbar}
+        open={alertCtx !== undefined}
         autoHideDuration={2000}
         onClose={handleCloseSnackbar}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
         <Alert
           onClose={handleCloseSnackbar}
-          severity={alertCtx.severity}
+          severity={alertCtx?.severity}
           sx={{ width: "100%" }}
         >
-          {alertCtx.message}
+          {alertCtx?.message}
         </Alert>
       </Snackbar>
     </div>
