@@ -116,8 +116,8 @@ describe("AffirmationCarousel Component", () => {
     fireEvent.click(saveButton);
     expect(mockUpdate).toHaveBeenCalledWith(
       0,
-      "Hello, world!",
       "Say what I want to say, whatever happens will help me grow",
+      "Hello, world!",
     );
   });
 

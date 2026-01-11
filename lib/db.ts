@@ -29,14 +29,6 @@ function getDatabaseUrl() {
 }
 
 function createConnection(url: string) {
-  if (mongoose.connection.readyState === 1) {
-    return Promise.resolve(mongoose);
-  }
-  if (mongoose.connection.readyState === 2) {
-    return new Promise<mongoose.Mongoose>((resolve) => {
-      mongoose.connection.once("connected", () => resolve(mongoose));
-    });
-  }
   console.log(`
 ================================================================
 Starting database with URL: ${url}

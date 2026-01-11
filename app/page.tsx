@@ -19,13 +19,6 @@ function App() {
   const router = useRouter();
 
   useEffect(() => {
-    if (status === "loading") return;
-
-    if (status === "authenticated" && session) {
-      router.replace("/main");
-      return;
-    }
-
     if (effectRan.current) return;
 
     effectRan.current = true;

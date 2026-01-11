@@ -94,7 +94,7 @@ export function AffirmationCarousel({
     const newSlides = [...slides];
     newSlides[index] = text;
     setSlides(newSlides);
-    onUpdate(index, text, oldText);
+    onUpdate(index, oldText, text);
   };
 
   function resizeCarousel(e: MouseEvent) {
