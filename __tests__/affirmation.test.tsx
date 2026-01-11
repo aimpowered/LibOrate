@@ -114,7 +114,11 @@ describe("AffirmationCarousel Component", () => {
     fireEvent.change(textArea, { target: { value: "Hello, world!" } });
     const saveButton = screen.getByText("Save");
     fireEvent.click(saveButton);
-    expect(mockUpdate).toHaveBeenCalledWith(0, "Hello, world!");
+    expect(mockUpdate).toHaveBeenCalledWith(
+      0,
+      "Say what I want to say, whatever happens will help me grow",
+      "Hello, world!",
+    );
   });
 
   it("calls onDelete when affirmation is deleted", () => {
@@ -132,7 +136,10 @@ describe("AffirmationCarousel Component", () => {
     fireEvent.click(deleteItem);
     const confirmButton = screen.getByText("Confirm");
     fireEvent.click(confirmButton);
-    expect(mockDelete).toHaveBeenCalledWith(0);
+    expect(mockDelete).toHaveBeenCalledWith(
+      0,
+      "Say what I want to say, whatever happens will help me grow",
+    );
   });
 
   it("calls onAdd when affirmation is updated", async () => {

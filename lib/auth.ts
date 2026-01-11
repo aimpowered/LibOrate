@@ -49,7 +49,7 @@ export const getZoomAccessToken = (
     .then((response) => response.data);
 };
 
-interface ZoomUserProfile {
+export interface ZoomUserProfile {
   id: string;
   first_name: string;
   last_name: string;

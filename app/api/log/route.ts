@@ -25,7 +25,6 @@ export const POST = async (req: Request): Promise<NewResponse> => {
   const userEmail = session?.user?.email ?? rest.userEmail ?? "NO_EMAIL";
 
   await startDB();
-
   const log = await LogActionModel.create({ ...rest, userEmail, action });
 
   return NextResponse.json({

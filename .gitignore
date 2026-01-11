@@ -38,3 +38,7 @@ next-env.d.ts
 *.swp
 
 cypress/screenshots/*
+
+dist/
+test.html
+mail.html

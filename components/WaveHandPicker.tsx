@@ -31,9 +31,10 @@ interface WaveHandPickerProps {
   onAdd: (text: string) => void;
   /**
    * Function to call when a hand wave is deleted.
+   * @param id - The ID of the hand wave to delete.
    * @param text - The text of the hand wave to delete.
    */
-  onDelete: (id: number) => void;
+  onDelete: (id: number, text: string) => void;
 }
 
 export function WaveHandPicker({
@@ -74,8 +75,10 @@ export function WaveHandPicker({
   };
 
   const deleteHand = (id: number) => {
+    if (id < 0 || id >= hands.length) return;
+    const waveText = hands[id];
     setHands((prev) => prev.filter((_, i) => i !== id));
-    onDelete(id);
+    onDelete(id, waveText);
   };
 
   return (

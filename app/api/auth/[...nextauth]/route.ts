@@ -6,6 +6,8 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { DefaultUser } from "next-auth";
 import startDB from "@/lib/db";
 import { getZoomAccessToken, getZoomUser } from "@/lib/auth";
+import LogActionModel from "@/models/logActionModel";
+import { Action } from "@/lib/log";
 declare module "next-auth" {
   interface User extends DefaultUser {
     role: string;
@@ -39,6 +41,10 @@ const authOptions: NextAuthOptions = {
         let user = await UserModel.findOne({ email: userProfile.email });
         if (!user) {
           user = await UserModel.create({ email: userProfile.email });
+          await LogActionModel.create({
+            userEmail: user.email,
+            action: Action.SIGN_UP,
+          });
         }
         return {
           id: user.id,
