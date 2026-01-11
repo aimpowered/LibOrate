@@ -6,12 +6,11 @@ on:
     - cron: '0 1 * * *'
   workflow_dispatch:
 
-permissions:
-  contents: read
-
 jobs:
   send-report:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
       - uses: actions/checkout@v6
