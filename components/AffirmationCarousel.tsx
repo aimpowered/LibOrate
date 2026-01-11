@@ -15,13 +15,15 @@ export interface AffirmationCarouselProps {
    * Callback function to update the text of an affirmation card
    * @param id - The id of the affirmation card to be updated
    * @param updatedText - The new text for the affirmation card
+   * @param oldText - The old text of the affirmation card
    */
-  onUpdate: (id: number, updatedText: string) => void;
+  onUpdate: (id: number, updatedText: string, oldText: string) => void;
   /**
    * Callback function to delete an affirmation card
    * @param id - The id of the affirmation card to be deleted
+   * @param text - The text of the affirmation card to be deleted
    */
-  onDelete: (id: number) => void;
+  onDelete: (id: number, text: string) => void;
   /**
    * Callback function to add a new affirmation card
    * @param text - The text for the new affirmation card
@@ -57,15 +59,6 @@ export function AffirmationCarousel({
   }, [emblaApi]);
 
   useEffect(() => {
-    console.log(
-      "canScrollPrev:",
-      canScrollPrev,
-      "canScrollNext:",
-      canScrollNext,
-    );
-  }, [canScrollNext, canScrollPrev]);
-
-  useEffect(() => {
     if (!emblaApi) return;
     emblaApi.on("select", onSelect);
     onSelect();
@@ -90,16 +83,18 @@ export function AffirmationCarousel({
 
   const deleteSlide = (index: number) => {
     if (index < 0 || index >= slides.length) return;
+    const text = slides[index];
     setSlides((prev) => prev.filter((_, i) => i !== index));
-    onDelete(index);
+    onDelete(index, text);
   };
 
   const editSlide = (index: number, text: string) => {
     if (index < 0 || index >= slides.length) return;
+    const oldText = slides[index];
     const newSlides = [...slides];
     newSlides[index] = text;
     setSlides(newSlides);
-    onUpdate(index, text);
+    onUpdate(index, text, oldText);
   };
 
   function resizeCarousel(e: MouseEvent) {

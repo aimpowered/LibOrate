@@ -12,12 +12,20 @@ import { LoadingComponent } from "@/components/LoadingComponent";
 
 function App() {
   const [error, setError] = useState("");
-  const { data: session } = useSession();
+  const session = useSession();
+  const status = session?.status;
   const effectRan = useRef(false);
 
   const router = useRouter();
 
   useEffect(() => {
+    if (status === "loading") return;
+
+    if (status === "authenticated" && session) {
+      router.replace("/main");
+      return;
+    }
+
     if (effectRan.current) return;
 
     effectRan.current = true;
@@ -39,17 +47,18 @@ function App() {
             return setError(res.error);
           }
           router.replace("/main");
-          if (session?.user?.email) {
-            log(Action.LOG_IN, session.user.email);
-          }
         });
       } catch (error) {
+        log(Action.ERROR, undefined, {
+          message: (error as Error).message,
+          source: "app/page.tsx",
+        });
         setError((error as Error).message);
       }
     }
 
     handleAuth();
-  }, []);
+  }, [status, session, router]);
 
   if (error) {
     return <Alert value={error} />;

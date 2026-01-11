@@ -1,7 +1,47 @@
 "use client";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useRef } from "react";
+import { Action, log } from "@/lib/log";
+import { ZoomUserProfile } from "@/lib/auth";
 
 export default function Home() {
+  const searchParams = useSearchParams();
+  const code = searchParams.get("code");
+  const hasLoggedRef = useRef(false);
+
+  useEffect(() => {
+    if (code && !hasLoggedRef.current) {
+      fetch(`/api/auth/zoom?code=${code}`)
+        .then(async (res) => {
+          if (!res.ok) {
+            const errorData = await res.json().catch(() => ({}));
+            throw {
+              status: res.status,
+              statusText: res.statusText,
+              message: errorData.error || errorData.message || res.statusText,
+            };
+          }
+          return res.json();
+        })
+        .then((data: ZoomUserProfile) => {
+          const userEmail = data.email;
+          log(Action.APP_INSTALLED, userEmail);
+        })
+        .catch((error) => {
+          log(Action.ERROR, undefined, {
+            status: error.status || 0,
+            statusText: error.statusText || "Network Error",
+            message: error.message || "Unknown error",
+            source: "post-installation/page.tsx",
+          });
+        })
+        .finally(() => {
+          hasLoggedRef.current = true;
+        });
+    }
+  }, [code]);
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-white">
       <div className="container max-w-4xl mx-auto text-center py-12 px-4">
