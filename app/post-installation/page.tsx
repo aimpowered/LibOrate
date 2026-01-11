@@ -1,11 +1,12 @@
 "use client";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, Suspense } from "react";
 import { Action, log } from "@/lib/log";
 import { ZoomUserProfile } from "@/lib/auth";
+import { LoadingComponent } from "@/components/LoadingComponent";
 
-export default function Home() {
+function PostInstallationContent() {
   const searchParams = useSearchParams();
   const code = searchParams.get("code");
   const hasLoggedRef = useRef(false);
@@ -76,5 +77,13 @@ export default function Home() {
         </p>
       </div>
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<LoadingComponent />}>
+      <PostInstallationContent />
+    </Suspense>
   );
 }
