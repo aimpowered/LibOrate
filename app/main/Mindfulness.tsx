@@ -41,6 +41,11 @@ function VideoPlayer({
         videoId,
         playerVars: {
           mute: 1,
+          modestbranding: 1,
+          rel: 0,
+          enablejsapi: 1,
+          origin: window.location.origin,
+          showinfo: 0,
         },
         events: {
           onStateChange: (event: YT.OnStateChangeEvent) => {
