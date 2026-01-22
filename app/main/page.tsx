@@ -21,6 +21,7 @@ import {
 } from "@/lib/affirmation_db";
 import { getZoomApi } from "@/lib/zoomapi_loader";
 import { ZoomApiWrapper } from "@/lib/zoomapi";
+import { SessionProvider, useSession } from "next-auth/react";
 
 const defaultNameTag: NameTagContent = {
   visible: false,
@@ -44,6 +45,14 @@ function App() {
 
   const foregroundDrawerRef = useRef<DrawBadgeApi | null>(null);
   const zoomApiRef = useRef<ZoomApiWrapper | null>(null);
+  const session = useSession();
+  const logged = useRef(false);
+
+  useEffect(() => {
+    if (session.status !== "authenticated" || logged.current) return;
+    log(Action.LOG_IN, session.data.user?.email || undefined);
+    logged.current = true;
+  }, [session, logged]);
 
   useEffect(() => {
     const init = async () => {
@@ -73,13 +82,25 @@ function App() {
 
   const updateNameTagContent: SubmitHandler<NameTagContent> = (data) => {
     if (nameTagContent.visible !== data.visible) {
-      log(data.visible ? Action.NAME_BADGE_ON : Action.NAME_BADGE_OFF);
+      if (data.visible) {
+        log(Action.NAME_BADGE_ON, session?.data?.user?.email || undefined, {
+          preferredName: data.preferredName,
+          pronouns: data.pronouns,
+          disclosure: data.disclosure,
+          fullMessage: data.fullMessage,
+        });
+      } else {
+        log(Action.NAME_BADGE_OFF, session?.data?.user?.email || undefined);
+      }
     }
     if (
       data.sendToMeeting &&
       (!nameTagContent.sendToMeeting ||
         data.fullMessage !== nameTagContent.fullMessage)
     ) {
+      log(Action.DISCLOSURE_SENT, session?.data?.user?.email || undefined, {
+        fullMessage: data.fullMessage,
+      });
       zoomApiRef.current?.sendMessageToChat(data.fullMessage);
     }
     setNameTagContent(data);
@@ -87,7 +108,64 @@ function App() {
   };
 
   const updateHandWaveBadge = (badge: HandWaveBadge) => {
+    if (badge.visible) {
+      log(Action.HAND_WAVE_ON, session?.data?.user?.email || undefined, {
+        waveText: badge.waveText,
+      });
+    } else {
+      log(Action.HAND_WAVE_OFF, session?.data?.user?.email || undefined);
+    }
     foregroundDrawerRef.current?.drawHandWave(badge);
+  };
+
+  const addWaveHandToDBWithLog = (waveText: string) => {
+    log(Action.HAND_WAVE_ADDED, session?.data?.user?.email || undefined, {
+      waveText,
+    });
+    addWaveHandToDB(waveText);
+  };
+
+  const deleteWaveHandFromDBWithLog = (id: number, waveText: string) => {
+    log(Action.HAND_WAVE_DELETED, session?.data?.user?.email || undefined, {
+      waveText,
+    });
+    deleteWaveHandFromDB(id);
+  };
+
+  const updateNameTagInDBWithLog = (nameTagContent: NameTagContent) => {
+    log(Action.NAME_BADGE_UPDATED, session?.data?.user?.email || undefined, {
+      preferredName: nameTagContent.preferredName,
+      pronouns: nameTagContent.pronouns,
+      disclosure: nameTagContent.disclosure,
+      fullMessage: nameTagContent.fullMessage,
+    });
+    updateNameTagInDB(nameTagContent);
+  };
+
+  const addAffirmationToDBWithLog = (text: string) => {
+    log(Action.AFFIRMATION_ADDED, session?.data?.user?.email || undefined, {
+      affirmation: text,
+    });
+    addAffirmationToDB(text);
+  };
+
+  const deleteAffirmationFromDBWithLog = (id: number, text: string) => {
+    log(Action.AFFIRMATION_DELETED, session?.data?.user?.email || undefined, {
+      affirmation: text,
+    });
+    deleteAffirmationFromDB(id);
+  };
+
+  const updateAffirmationFromDBWithLog = (
+    id: number,
+    oldText: string,
+    newText: string,
+  ) => {
+    log(Action.AFFIRMATION_UPDATED, session?.data?.user?.email || undefined, {
+      oldAffirmation: oldText,
+      newAffirmation: newText,
+    });
+    updateAffirmationFromDB(id, newText);
   };
 
   const fetchUser = async () => {
@@ -105,7 +183,10 @@ function App() {
       setHasError(false);
       setIsLoading(false);
     } catch (err) {
-      console.error(err);
+      log(Action.ERROR, session?.data?.user?.email || undefined, {
+        message: (err as Error).message,
+        source: "app/main/page.tsx - fetchUser",
+      });
       setHasError(true);
       setIsLoading(false);
     }
@@ -121,9 +202,9 @@ function App() {
         {!isLoading && (
           <AffirmationCarousel
             initialAffirmations={affirmations}
-            onAdd={addAffirmationToDB}
-            onDelete={deleteAffirmationFromDB}
-            onUpdate={updateAffirmationFromDB}
+            onAdd={addAffirmationToDBWithLog}
+            onDelete={deleteAffirmationFromDBWithLog}
+            onUpdate={updateAffirmationFromDBWithLog}
           />
         )}
       </div>
@@ -139,8 +220,8 @@ function App() {
               updateHandWaveBadge={updateHandWaveBadge}
               hasError={hasError}
               onRetry={fetchUser}
-              onAdd={addWaveHandToDB}
-              onDelete={deleteWaveHandFromDB}
+              onAdd={addWaveHandToDBWithLog}
+              onDelete={deleteWaveHandFromDBWithLog}
             />
           )}
         </div>
@@ -154,13 +235,24 @@ function App() {
                 <NameTagForm
                   content={nameTagContent}
                   onNameTagContentChange={updateNameTagContent}
-                  onSaveButtonClick={updateNameTagInDB}
+                  onSaveButtonClick={updateNameTagInDBWithLog}
                 />
               )}
             </div>
 
             <div page-label="mindfulness">
-              <Mindfulness />
+              <Mindfulness
+                onPlay={(videoId: string, name: string) =>
+                  log(
+                    Action.MINDFULNESS_VIDEO_PLAYED,
+                    session?.data?.user?.email || undefined,
+                    {
+                      videoId,
+                      name,
+                    },
+                  )
+                }
+              />
             </div>
           </Tabs>
         </div>
@@ -169,4 +261,10 @@ function App() {
   );
 }
 
-export default App;
+export default function MainPage() {
+  return (
+    <SessionProvider>
+      <App />
+    </SessionProvider>
+  );
+}

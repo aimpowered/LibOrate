@@ -30,6 +30,14 @@ jest.mock("../lib/user_db", () => ({
   }),
 }));
 
+// Mock fetch
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    ok: true,
+    json: () => Promise.resolve({}),
+  }),
+) as jest.Mock;
+
 // Mock ResizeObserver since JSDOM doesn't implement it
 class ResizeObserverMock {
   callback: ResizeObserverCallback;
