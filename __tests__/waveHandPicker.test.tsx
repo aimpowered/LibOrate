@@ -66,7 +66,7 @@ describe("WaveHandPicker", () => {
     expect(deleteBtn).not.toBeNull();
 
     fireEvent.click(deleteBtn!);
-    expect(mockOnDelete).toHaveBeenCalledWith(0);
+    expect(mockOnDelete).toHaveBeenCalledWith(0, "👋");
   });
 
   it("renders RetryError if hasError is true", () => {
