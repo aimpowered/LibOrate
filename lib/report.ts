@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import nodemailer from "nodemailer";
 import dayjs from "dayjs";
 import LogActionModel from "../models/logActionModel";
@@ -139,9 +138,6 @@ export async function run() {
   console.log("Sending report email...");
   await sendMail(reportText);
   console.log("Report email sent.");
-
-  await mongoose.disconnect();
-  console.log("Disconnected from database.");
 }
 
 async function sendMail(html: string) {
@@ -181,8 +177,3 @@ async function sendMail(html: string) {
     throw err;
   }
 }
-
-run().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
