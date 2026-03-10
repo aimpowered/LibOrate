@@ -1,7 +1,7 @@
-import mongoose from "mongoose";
 import nodemailer from "nodemailer";
 import dayjs from "dayjs";
 import LogActionModel from "../models/logActionModel";
+import startDB from "./db";
 
 function renderActionTable(grouped: Record<string, number>) {
   const rows = Object.entries(grouped)
@@ -108,8 +108,8 @@ function renderEmailHTML({
 `;
 }
 
-async function run() {
-  await mongoose.connect(process.env.MONGODB_URI!);
+export async function run() {
+  await startDB();
 
   const end = new Date();
   const start = dayjs(end).subtract(1, "day").toDate();
@@ -138,12 +138,16 @@ async function run() {
   console.log("Sending report email...");
   await sendMail(reportText);
   console.log("Report email sent.");
-
-  await mongoose.disconnect();
-  console.log("Disconnected from database.");
 }
 
 async function sendMail(html: string) {
+  const receiver = process.env.RECEIVE_EMAIL?.split(",").map((email) =>
+    email.trim(),
+  );
+  if (!receiver || receiver.length === 0) {
+    console.warn("No receiver email configured. Skipping email sending.");
+    return;
+  }
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_SERVER!,
     port: process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT) : 465,
@@ -155,16 +159,21 @@ async function sendMail(html: string) {
     },
   });
 
-  await transporter.sendMail({
-    from: `"LibOrate Bot" <${process.env.SEND_EMAIL!}>`,
-    to: process.env.RECEIVE_EMAIL!,
-    subject: "LibOrate Daily Report",
-    text: "Please view this email in an HTML-compatible email client.",
-    html: html.trim(),
-  });
+  try {
+    const p = Promise.all(
+      receiver.map((email) =>
+        transporter.sendMail({
+          from: `"LibOrate Bot" <${process.env.SEND_EMAIL!}>`,
+          to: email,
+          subject: "LibOrate Daily Report",
+          text: "Please view this email in an HTML-compatible email client.",
+          html: html.trim(),
+        }),
+      ),
+    );
+    await p;
+  } catch (err) {
+    console.error("Error sending email:", err);
+    throw err;
+  }
 }
-
-run().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
